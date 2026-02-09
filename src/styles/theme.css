@@ -1,0 +1,6 @@
+:root {
+  --bg: #242424;
+  --card-bg: #333;
+  --text: rgba(255, 255, 255, 0.87);
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

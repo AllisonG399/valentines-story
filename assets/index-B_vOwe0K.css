@@ -1,1 +1,0 @@
-.app{min-height:100vh;display:flex;align-items:center;justify-content:center;background-color:var(--bg);color:var(--text)}.card{background-color:var(--card-bg);padding:2rem;border-radius:16px;text-align:center}:root{--bg: #242424;--card-bg: #333;--text: rgba(255, 255, 255, .87);font-family:system-ui,Avenir,Helvetica,Arial,sans-serif}

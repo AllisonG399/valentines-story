@@ -69,7 +69,9 @@ export default function ValentinesLanding() {
 
           {/* Card Selection */}
           <section className="card-options">
-            <button className="card-option">
+            <button className="card-option"
+                onClick={() => window.location.hash = '#/create/message'}
+            >
                 <img
                     src={envelopeIcon}
                     alt="Envelope with heart icon"
@@ -79,7 +81,9 @@ export default function ValentinesLanding() {
                 <p>A beautiful message, simply delivered.</p>
             </button>
 
-            <button className="card-option featured">
+            <button className="card-option featured"
+                onClick={() => window.location.hash = '#/create/story'}
+            >
                 <img
                     src={storyBookIcon}
                     alt="Open story book with stars icon"

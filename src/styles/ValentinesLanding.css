@@ -113,20 +113,22 @@
 }
 
 .title {
+  position: absolute;
+  top: 30vh; 
   font-size: 4rem;
   opacity: 0;
   animation: fadeScale 2s forwards;
-}
-
-.title.small {
-  font-size: 2.5rem;
-  animation: moveUp 1s forwards;
+  text-align: center;
+  font-style: italic
 }
 
 .subtitle {
+    position: absolute;
+    top: 50vh;
   margin-top: 20px;
   font-size: 2rem;
   opacity: 0;
+  text-align: center;
   animation: fadeIn 1s forwards 0.3s;
 }
 

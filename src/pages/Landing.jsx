@@ -1,61 +1,108 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import envelopeIcon from '../assets/icons/valentine_envelope.png';
+import storyBookIcon from '../assets/icons/valentine_card.png';
+import { FullScreenHearts } from "../components/animations/FullScreenHearts";
+import { MainHearts } from "../components/animations/MainHearts";
 
 export default function ValentinesLanding() {
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [stage, setStage] = useState(0);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [introVisible, setIntroVisible] = useState(true);
+
+    useEffect(() => {
+  const timers = [];
+
+  timers.push(setTimeout(() => setStage(1), 2000));  // show subtitle
+  timers.push(setTimeout(() => setStage(2), 3000));  // show hearts
+
+  // Start fade out at 9s
+  timers.push(setTimeout(() => setFadeOut(true), 9000)); 
+
+  // After fade-out duration (1s), remove intro and show main page
+  timers.push(setTimeout(() => {
+    setStage(3);
+    setIntroVisible(false);
+  }, 10000)); 
+
+  return () => timers.forEach(t => clearTimeout(t));
+}, []);
 
   return (
     <main className={`landing ${reduceMotion ? "reduce-motion" : ""}`}>
-      {/* Header */}
-      <header className="header">
-        <h1 className="site-title">Valentines Story</h1>
-        <div className="divider" />
-      </header>
+      
+        {/* --- Intro Animation --- */}
+            {introVisible && (
+            <div className={`intro ${stage === 2 ? "hearts" : ""} ${fadeOut ? "fade-out" : ""}`}>
+                <h1 className={`title ${stage > 0 ? "small" : ""}`}>Valentines Story</h1>
 
-      {/* Hero */}
-      <section className="hero">
-        <h2 className="hero-title">
-          Send a Valentine they’ll actually keep.
-        </h2>
-        <p className="hero-subtitle">
-          Choose a simple card or an interactive story to share something
-          meaningful.
-        </p>
-        <span className="heart">♥</span>
-      </section>
+                {stage >= 1 && <h2 className="subtitle">Send a Valentine they’ll actually keep</h2>}
 
-      {/* Card Selection */}
-      <section className="card-options">
-        <button className="card-option">
-          <div className="icon envelope" />
-          <h3>Static Card</h3>
-          <p>A beautiful message, simply delivered.</p>
-        </button>
+                {stage === 2 && !reduceMotion && <FullScreenHearts />}
+            </div>
+        )}
 
-        <button className="card-option featured">
-          <div className="icon book" />
-          <h3>Story Card</h3>
-          <p>A guided, interactive love story.</p>
-        </button>
-      </section>
+      {/* --- Main Page --- */}
+      {stage === 3 && (
+        <>
+          {/* Header */}
+          <header className="header">
+            <h1 className="site-title">Valentines Story</h1>
+            <div className="divider" />
+          </header>
 
-      {/* Floating Hearts */}
-      {!reduceMotion && (
-        <div className="floating-hearts">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="floating-heart">♥</span>
-          ))}
-        </div>
+          {/* Hero */}
+          <section className="hero">
+            <h2 className="hero-title">
+              Send a Valentine they’ll actually keep.
+            </h2>
+            <p className="hero-subtitle">
+              Choose a simple card or an interactive story to share something
+              meaningful.
+            </p>
+            <div className="divider-heart">
+                <div className="divider" />
+                <span className="heart">♥</span>
+                <div className="divider" />
+            </div>
+          </section>
+
+          {/* Card Selection */}
+          <section className="card-options">
+            <button className="card-option">
+                <img
+                    src={envelopeIcon}
+                    alt="Envelope with heart icon"
+                    className="icon"
+                />    
+                <h3>Static Card</h3>
+                <p>A beautiful message, simply delivered.</p>
+            </button>
+
+            <button className="card-option featured">
+                <img
+                    src={storyBookIcon}
+                    alt="Open story book with stars icon"
+                    className="icon"
+                />
+              <h3>Story Card</h3>
+              <p>A guided, interactive love story.</p>
+            </button>
+          </section>
+
+            {!reduceMotion && <MainHearts />}
+
+          {/* Accessibility */}
+          <footer className="accessibility">
+            <button
+              className="accessibility-btn"
+              onClick={() => setReduceMotion(!reduceMotion)}
+            >
+              ⚙ Accessibility Options
+            </button>
+          </footer>
+        </>
       )}
-
-      {/* Accessibility */}
-      <footer className="accessibility">
-        <button
-          className="accessibility-btn"
-          onClick={() => setReduceMotion(!reduceMotion)}
-        >
-          ⚙ Accessibility Options
-        </button>
-      </footer>
     </main>
   );
 }

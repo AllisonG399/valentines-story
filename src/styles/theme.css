@@ -1,6 +1,44 @@
+/* Global design tokens / theme 
+    Colors, fonts, spacing, etc. */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Manrope:wght@200..800&display=swap');
+
 :root {
-  --bg: #242424;
-  --card-bg: #333;
-  --text: rgba(255, 255, 255, 0.87);
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --cream: #faf7f2;
+  --white-linen: #fffdf9;
+  --vanilla: #cfbfab;
+  --soft-pink: #f3c1cf;
+  --rose: #d97a8a;
+  --deep-rose: #9b2c3e;
+  --text-primary: #2b2b2b;
+  --text-secondary: #6f6a64;
+}
+
+main {
+    font-family: "Manrope", sans-serif;
+}
+
+body {
+    background: var(--cream); 
+    color: var(--text-primary);
+}
+
+h1, h2 {
+    font-family: "Cormorant Garamond", serif;
+    color: var(--deep-rose)
+}
+
+h2 {
+    font-size: 2.8rem;
+}
+
+.divider {
+    background-color: var(--vanilla);
+}
+
+.site-title {
+    font-weight: 300;
+    font-style: italic;
+    font-size: 2rem;
 }

@@ -1,0 +1,136 @@
+
+
+
+
+/* Hero */
+.hero {
+  max-width: 700px;
+  text-align: center;
+  margin: 80px 20px 60px;
+}
+
+.hero-title {
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.heart {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--rose);
+  font-size: 1.2rem;
+}
+
+/* Cards */
+.card-options {
+  display: flex;
+  gap: 32px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-option {
+  background: var(--white-linen);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 32px;
+  width: 260px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-option:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card-option h3 {
+  font-family: "Playfair Display", serif;
+  color: var(--deep-rose);
+  margin: 16px 0 8px;
+}
+
+.card-option p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.card-option.featured {
+  border: 1px solid var(--soft-pink);
+}
+
+/* Icons */
+.icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+}
+
+.envelope {
+  border: 2px solid var(--rose);
+  border-radius: 6px;
+}
+
+.book {
+  border-bottom: 4px solid var(--rose);
+  border-left: 2px solid var(--rose);
+  border-right: 2px solid var(--rose);
+}
+
+/* Floating Hearts */
+.floating-hearts {
+  position: absolute;
+  bottom: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.floating-heart {
+  color: var(--soft-pink);
+  font-size: 1.4rem;
+  animation: floatUp 6s infinite ease-in-out;
+}
+
+.floating-heart:nth-child(even) {
+  animation-delay: 2s;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+}
+
+/* Accessibility */
+.accessibility {
+  margin-top: auto;
+  padding: 40px 0;
+}
+
+.accessibility-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.reduce-motion .floating-heart {
+  animation: none;
+}

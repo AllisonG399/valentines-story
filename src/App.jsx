@@ -7,6 +7,7 @@ import ViewStory from './pages/ViewStory';
 import Expired from './pages/Expired';
 import './styles/index.css';
 import './styles/theme.css';
+import './styles/ValentinesLanding.css';
 
 export default function App() {
   const [route, setRoute] = useState(

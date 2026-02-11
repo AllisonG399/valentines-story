@@ -4,6 +4,10 @@ import { useState } from 'react';
 export default function ViewMessage() {
 
     const [isOpen, setIsOpen] = useState(false);
+    const [to, setTo] = useState('');
+    const [from, setFrom] = useState('');
+    const [message, setMessage] = useState('');
+
 
     return (
         <main className="view-message">
@@ -19,7 +23,7 @@ export default function ViewMessage() {
                     Your Valentine Message
                 </h2>
                 <p className="hero-subtitle">
-                    Below is the message you created for your Valentine. You can share this page with them so they can see your heartfelt message.
+                    Below is the valentine card written for you, from your special someone. Click on the envelope to open and read the message!
                 </p>
                 <div className="divider-heart">
                     <div className="divider" />
@@ -32,11 +36,14 @@ export default function ViewMessage() {
                 {/* This is where the message content will be displayed */}
                 <div className="envelope-wrapper" onClick={() => setIsOpen(!isOpen)}>
                     <div className={`envelope ${isOpen ? "open" : ""}`}>
+                        
                         <div className="envelope-flap"></div>
                         <div className="envelope-body"></div>
 
                         <div className={`letter ${isOpen ? "show-letter" : ""}`}>
-                            <p>Happy Valentine’s Day 💖</p>
+                            <p>Dear {to},</p>
+                            <p>{message}</p>
+                            <p>Sincerely, {from}</p>
                         </div>
                     </div>
                 </div>  

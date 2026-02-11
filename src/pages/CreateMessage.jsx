@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { encodeData } from '../utils/encode';
+import Sparkles from "../components/animations/Sparkles";
 
 export default function CreateMessage() {
 
   const [to, setTo] = useState('');
   const [message, setMessage] = useState('');
   const [from, setFrom] = useState('');
-  const [selected, setSelected] = useState("1");
+  const [passcode, setPasscode] = useState('');
+  const [selectedColor, setSelectedColor] = useState("#F8C8DC");
+  const [selectedSparkle, setSelectedSparkle] = useState("hearts");
+  const [isPreviewing, setIsPreviewing] = useState(false);
+  const [selectedExpiration, setSelectedExpiration] = useState("1");
 
   const envelopeColors = [
   { name: "Soft Pink", value: "#F8C8DC" },
@@ -24,7 +29,6 @@ export default function CreateMessage() {
   { name: "Corduroy", value: "#5e5f5e"},
   { name: "Heavy Metal", value: "#333432"},
 ];
-const [selectedColor, setSelectedColor] = useState(envelopeColors[0].value);
 
 const sparkleOptions = [
   { name: "Hearts", value: "hearts", icon: "❤️" },
@@ -41,7 +45,6 @@ const sparkleOptions = [
   { name: "Flowers", value: "flowers", icon: "🌹" },
   { name: "Stars", value: "stars", icon: "✨" },
 ];
-const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
 
   const handleGenerate = () => {
     const payload = { to, message, from };
@@ -99,53 +102,25 @@ const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
               onChange={(e) => setFrom(e.target.value)}
               placeholder="Your Name"
             />
+            <label>Passcode:</label>
+            <input 
+              type="text"
+              value={passcode}
+              onChange={(e) => setPasscode(e.target.value)}
+              placeholder="Passcode to view card"
+            />
 
             <label className="expiration-label">Expiration:</label>
-            {/* Radio Button Options for expiration*/}
             <div className="expiration-group">
-              <label className="expiration-option">
-                <span className="expiration-text">24 Hours</span>
-
-                <input
-                  type="radio"
-                  name="expirationTime"
-                  value="1"
-                  checked={selected === "1"}
-                  onChange={(e) => setSelected(e.target.value)}
-                />
-
-                <span className="custom-radio"></span>
-              </label>
-
-              <label className="expiration-option">
-                <span className="expiration-text">3 Days</span>
-
-                <input
-                  type="radio"
-                  name="expirationTime"
-                  value="3"
-                  checked={selected === "3"}
-                  onChange={(e) => setSelected(e.target.value)}
-                />
-
-                <span className="custom-radio"></span>
-              </label>
-
-              <label className="expiration-option">
-                <span className="expiration-text">7 Days</span>
-
-                <input
-                  type="radio"
-                  name="expirationTime"
-                  value="7"
-                  checked={selected === "7"}
-                  onChange={(e) => setSelected(e.target.value)}
-                />
-
-                <span className="custom-radio"></span>
-              </label>
+              {["1","3","7"].map((val) => (
+                <label key={val} className="expiration-option">
+                  <span className="expiration-text">{val === "1" ? "24 Hours" : val === "3" ? "3 Days" : "7 Days"}</span>
+                  <input type="radio" name="expirationTime" value={val} checked={selectedExpiration === val} onChange={(e) => setSelectedExpiration(e.target.value)} />
+                  <span className="custom-radio"></span>
+                </label>
+              ))}
             </div>
-            
+
             <label className="expiration-label">Envelope Color:</label>
             <div className="color-picker">
               {envelopeColors.map((color) => (
@@ -154,7 +129,7 @@ const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
                   className={`color-swatch ${selectedColor === color.value ? "selected" : ""}`}
                   style={{ backgroundColor: color.value }}
                   onClick={() => setSelectedColor(color.value)}
-                  title={color.name} // optional tooltip
+                  title={color.name}
                 />
               ))}
             </div>
@@ -166,21 +141,33 @@ const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
                   key={option.value}
                   className={`sparkle-swatch ${selectedSparkle === option.value ? "selected" : ""}`}
                   onClick={() => setSelectedSparkle(option.value)}
-                  title={option.name} // tooltip
+                  title={option.name}
                 >
                   {option.icon}
                 </button>
               ))}
             </div>
 
-
             {/* Generate Button */}
             <button onClick={handleGenerate}>Generate Card</button>
           </div>
 
+
           {/* Preview */}
           <div className="preview-container">
-            
+            <h3 className="static-card">Card Preview</h3>
+            <div className="divider" />
+
+            <CardPreview
+              to={to}
+              from={from}
+              message={message}
+              color={selectedColor}
+              sparkle={selectedSparkle}
+              isPreviewing={isPreviewing}
+            />
+
+            <button onClick={() => setIsPreviewing(!isPreviewing)}>Preview Animation</button>
           </div>
         </section>
 
@@ -194,5 +181,76 @@ const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
           </button>
         </footer>
     </main>
+  );
+}
+
+// ------------------------
+// Card Preview Component
+// ------------------------
+function CardPreview({ to, from, message, color, sparkle, isPreviewing }) {
+  return (
+    <div className={`envelope-wrapper-view ${isPreviewing ? "open" : ""}`}>
+      <div className={`envelope-view ${isPreviewing ? "open" : ""}`}>
+
+        <div className="envelope-flap" style={{ backgroundColor: lightenColor(color, 5) }} />
+        <div className="envelope-flap-back" style={{ backgroundColor: darkenColor(color, 5) }} />
+        <div className="envelope-body" style={{ backgroundColor: color }} />
+
+        {/* Sparkles go here */}
+        {isPreviewing && sparkle && <Sparkles type={sparkle} />}
+
+        <div className={`letter ${isPreviewing ? "show-letter" : ""}`}>
+          <p>Dear {to || "Valentine"},</p>
+          <p>{message || "Write your message here..."}</p>
+          <p>Sincerely, {from || "You"}</p>
+        </div>
+
+        {/* Sparkles */}
+        {/*isPreviewing && sparkle === "hearts" && <MainHearts />*/}
+        {/* TODO: Add other sparkle components for flowers, stars, etc. */}
+      </div>
+    </div>
+  );
+}
+
+function lightenColor(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+
+  const R = (num >> 16) + amt;
+  const G = ((num >> 8) & 0x00ff) + amt;
+  const B = (num & 0x0000ff) + amt;
+
+  return (
+    "#" +
+    (
+      0x1000000 +
+      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 1 ? 0 : B) : 255)
+    )
+      .toString(16)
+      .slice(1)
+  );
+}
+
+function darkenColor(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+
+  const R = (num >> 16) - amt;
+  const G = ((num >> 8) & 0x00ff) - amt;
+  const B = (num & 0x0000ff) - amt;
+
+  return (
+    "#" +
+    (
+      0x1000000 +
+      (R < 255 ? (R < 0 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 0 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 0 ? 0 : B) : 255)
+    )
+      .toString(16)
+      .slice(1)
   );
 }

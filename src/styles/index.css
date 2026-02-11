@@ -41,7 +41,8 @@ input, textarea {
 }
 
 button {
-    margin-top: 20px;
+    margin-top: 40px;
+    z-index: 1;
 }
 
 .divider {
@@ -78,7 +79,7 @@ button {
 
 .message-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 50px;
     padding: 15px 30px;
@@ -89,6 +90,13 @@ button {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    padding: 15px 30px;
+}
+
+.preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 15px 30px;
 }
 
@@ -110,11 +118,80 @@ button {
     }
 
     .form-container, .preview-container {
-        width: 80vw;
+        width: 90vw;
     }
 
     .expiration-group {
         padding: 10px;
     }
+
+    .envelope-view {
+        width: 75vw !important;
+    }
+
+    .envelope-wrapper-view.open {
+        margin-top: 160px !important;
+    }
+
+    @keyframes riseAndFallMobile {
+        0% {
+        opacity: 0;
+        transform: translateX(0) translateY(0);
+        z-index: 5;
+        }
+        20% {
+        opacity: 1;
+        z-index: 5;
+        }
+        50% {
+        transform: translateX(var(--horizontal-offset)) translateY(-180px); /* more rise */
+        opacity: 1;
+        z-index: 5;
+        }
+        100% {
+        transform: translateX(var(--horizontal-offset)) translateY(50vw); /* fallen lower */
+        opacity: 0.8;
+        z-index: 5;
+        animation-timing-function: ease-out;
+        }
+    }
+
+    /* Apply mobile keyframes to sparkles */
+    .sparkle {
+        animation-name: riseAndFallMobile !important;
+    }
 }
+
+@media (min-width: 1024px) {
+    @keyframes riseAndFallLarge {
+        0% {
+        opacity: 0;
+        transform: translateX(0) translateY(0);
+        z-index: 5;
+        }
+        20% {
+        opacity: 1;
+        z-index: 5;
+        }
+        50% {
+        transform: translateX(var(--horizontal-offset)) translateY(-180px); /* more rise */
+        opacity: 1;
+        z-index: 5;
+        }
+        100% {
+        transform: translateX(var(--horizontal-offset)) translateY(14vw); /* fallen lower */
+        opacity: 0.8;
+        z-index: 5;
+        animation-timing-function: ease-out;
+        }
+    }
+
+    /* Apply mobile keyframes to sparkles */
+    .sparkle {
+        animation-name: riseAndFallLarge !important;
+    }
+}
+
+
+
 

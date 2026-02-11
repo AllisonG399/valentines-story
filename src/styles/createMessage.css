@@ -5,6 +5,7 @@
 .expiration-group {
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .expiration-option {
@@ -70,6 +71,7 @@
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-top: 8px;
 }
 
 .color-swatch.selected {
@@ -96,6 +98,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
+  margin-top: 8px;
 }
 
 .sparkle-swatch:hover {

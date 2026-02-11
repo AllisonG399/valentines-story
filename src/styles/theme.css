@@ -129,4 +129,5 @@ input, textarea {
     background-color: var(--white-linen);
     border-radius: 16px; 
     border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }

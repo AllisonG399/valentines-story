@@ -82,7 +82,7 @@ button {
     align-items: flex-start;
     justify-content: center;
     gap: 50px;
-    padding: 15px 30px;
+    margin-bottom: 50px;
 }
 
 .form-container {
@@ -115,6 +115,7 @@ button {
     .message-container {
         flex-direction: column;
         gap: 30px;
+        align-items: center;
     }
 
     .form-container, .preview-container {

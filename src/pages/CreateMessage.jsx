@@ -67,7 +67,9 @@ const sparkleOptions = [
               Write a Message to Your Valentine
             </h2>
             <p className="hero-subtitle">
-              Fill in the fields below to create a personalized Valentines card. Once completed, you will get a customized link to share with your Valentine for them to view the card.
+              Fill in the fields below to create a personalized Valentines card. 
+              Once completed, click the button "Generate Card" to receive your customized card link to share with your Valentine.
+              Preview the card and animation by clicking the "Preview Animation" button below.
             </p>
             <div className="divider-heart">
                 <div className="divider" />
@@ -204,10 +206,6 @@ function CardPreview({ to, from, message, color, sparkle, isPreviewing }) {
           <p>{message || "Write your message here..."}</p>
           <p>Sincerely, {from || "You"}</p>
         </div>
-
-        {/* Sparkles */}
-        {/*isPreviewing && sparkle === "hearts" && <MainHearts />*/}
-        {/* TODO: Add other sparkle components for flowers, stars, etc. */}
       </div>
     </div>
   );

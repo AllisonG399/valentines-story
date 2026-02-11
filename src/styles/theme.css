@@ -16,8 +16,6 @@
   --text-secondary: #6f6a64;
 }
 
-
-
 main {
     font-family: "Manrope", sans-serif;
 }
@@ -51,7 +49,39 @@ p {
     font-size: 0.9rem;
 }
 
+label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+}
 
+button {
+    background-color: var(--pearl-blush);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: "Cormorant Garamond", serif;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--soft-pink);
+}
+
+input, textarea {
+    color: var(--text-primary);
+    font-family: "Manrope", sans-serif;
+    font-size: 0.9rem;
+}
+
+/* Classes */
 .divider {
     background-color: var(--pearl-blush);
 }
@@ -68,11 +98,15 @@ p {
     color: var(--text-secondary);
     cursor: pointer;
     font-size: 0.85rem;
+    font-family: "Manrope", sans-serif;
 }
 
 .accessibility-btn:hover {
     text-decoration: underline;
     color: blue;
+    transform: none;
+    box-shadow: none;
+    border: none;
 }
 
 /* Clickable button card container*/
@@ -89,4 +123,10 @@ p {
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--soft-pink);
+}
+
+.form-container, .preview-container {
+    background-color: var(--white-linen);
+    border-radius: 16px; 
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }

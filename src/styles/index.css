@@ -33,6 +33,17 @@ footer {
     align-items: flex-start;
 }
 
+input, textarea {
+    padding: 10px;
+    border: 1px solid var(--pearl-blush);
+    border-radius: 4px;
+    width: 100%;
+}
+
+button {
+    margin-top: 20px;
+}
+
 .divider {
     height: 1px;
     margin: 0;
@@ -62,5 +73,44 @@ footer {
     margin-left: 20px;
     margin-bottom: 10px;
     padding: 10px;
+    margin-top: 0;
+}
+
+.message-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    padding: 15px 30px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px 30px;
+}
+
+.form-container, .preview-container {
+    width: 30vw;
+
+}
+
+.static-card {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .message-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .form-container, .preview-container {
+        width: 80vw;
+    }
 }
 

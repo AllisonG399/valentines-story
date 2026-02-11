@@ -1,0 +1,108 @@
+.expiration-label {
+    margin-top: 25px;
+}
+
+.expiration-group {
+  display: flex;
+  gap: 2rem;
+}
+
+.expiration-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.expiration-text {
+    font-size: 0.9rem;
+}
+
+.expiration-option input {
+  display: none; /* hide default circle */
+}
+
+.custom-radio {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid var(--soft-pink);
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+/* inner filled circle */
+.expiration-option input:checked + .custom-radio::after {
+  content: "";
+  position: absolute;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--deep-rose);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.expiration-option input:checked + .custom-radio {
+  transform: scale(1.1);
+  border-color: var(--deep-rose);
+}
+
+/* hover effect */
+.expiration-option:hover .custom-radio {
+  box-shadow: 0 0 8px rgba(255, 182, 193, 0.5);
+}
+
+
+/* Envelope Colors */
+.color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.color-swatch.selected {
+  border-color: var(--deep-rose);
+  transform: scale(1.1);
+}
+
+/* Sparkle Options */
+.sparkle-picker {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sparkle-swatch {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.sparkle-swatch:hover {
+  box-shadow: 0 0 8px rgba(0,0,0,0.15);
+}
+
+.sparkle-swatch.selected {
+  border-color: var(--deep-rose);
+  box-shadow: 0 0 12px rgba(255, 0, 128, 0.3);
+}

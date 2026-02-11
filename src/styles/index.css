@@ -93,7 +93,7 @@ button {
 }
 
 .form-container, .preview-container {
-    width: 30vw;
+    width: 40vw;
 
 }
 
@@ -111,6 +111,10 @@ button {
 
     .form-container, .preview-container {
         width: 80vw;
+    }
+
+    .expiration-group {
+        padding: 10px;
     }
 }
 

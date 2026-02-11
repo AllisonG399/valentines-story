@@ -6,6 +6,42 @@ export default function CreateMessage() {
   const [to, setTo] = useState('');
   const [message, setMessage] = useState('');
   const [from, setFrom] = useState('');
+  const [selected, setSelected] = useState("1");
+
+  const envelopeColors = [
+  { name: "Soft Pink", value: "#F8C8DC" },
+  { name: "Blush", value: "#D8A7B1" },
+  { name: "Rose", value: "#E75480" },
+  { name: "Burgundy", value: "#9C1B30" },
+  { name: "Milano Red", value: "#ac050a" },
+  { name: "Moss Green", value: "#c7e4bf"},
+  { name: "Norway", value: "#97b98d"},
+  { name: "Woodland", value: "#35552c"},
+  { name: "Powder Blue", value: "#bcdce8"},
+  { name: "Glacier", value: "#79b1c7"},
+  { name: "Elm", value: "#20647e"},
+  { name: "Nobel", value: "#b6b6b6"},
+  { name: "Corduroy", value: "#5e5f5e"},
+  { name: "Heavy Metal", value: "#333432"},
+];
+const [selectedColor, setSelectedColor] = useState(envelopeColors[0].value);
+
+const sparkleOptions = [
+  { name: "Hearts", value: "hearts", icon: "❤️" },
+  { name: "Black Heart", value: "black-heart", icon: "🖤" },
+  { name: "Heart Emoji", value: "heart-emoji", icon: "😍" },
+  { name: "Kiss Emoji", value: "kiss-emoji", icon: "😘" },
+  { name: "Skulls", value: "skulls", icon: "💀" },
+  { name: "Taco", value: "taco", icon: "🌮" },
+  { name: "Pizza", value: "pizza", icon: "🍕" },
+  { name: "Sushi", value: "sushi", icon: "🍣" },
+  { name: "Cookie", value: "cookie", icon: "🍪" },
+  { name: "Book", value: "book", icon: "📖" },
+  { name: "Heart Envelope", value: "heart-envelope", icon: "💌" },
+  { name: "Flowers", value: "flowers", icon: "🌹" },
+  { name: "Stars", value: "stars", icon: "✨" },
+];
+const [selectedSparkle, setSelectedSparkle] = useState(sparkleOptions[0].value);
 
   const handleGenerate = () => {
     const payload = { to, message, from };
@@ -63,6 +99,82 @@ export default function CreateMessage() {
               onChange={(e) => setFrom(e.target.value)}
               placeholder="Your Name"
             />
+
+            <label className="expiration-label">Expiration:</label>
+            {/* Radio Button Options for expiration*/}
+            <div className="expiration-group">
+              <label className="expiration-option">
+                <span className="expiration-text">24 Hours</span>
+
+                <input
+                  type="radio"
+                  name="expirationTime"
+                  value="1"
+                  checked={selected === "1"}
+                  onChange={(e) => setSelected(e.target.value)}
+                />
+
+                <span className="custom-radio"></span>
+              </label>
+
+              <label className="expiration-option">
+                <span className="expiration-text">3 Days</span>
+
+                <input
+                  type="radio"
+                  name="expirationTime"
+                  value="3"
+                  checked={selected === "3"}
+                  onChange={(e) => setSelected(e.target.value)}
+                />
+
+                <span className="custom-radio"></span>
+              </label>
+
+              <label className="expiration-option">
+                <span className="expiration-text">7 Days</span>
+
+                <input
+                  type="radio"
+                  name="expirationTime"
+                  value="7"
+                  checked={selected === "7"}
+                  onChange={(e) => setSelected(e.target.value)}
+                />
+
+                <span className="custom-radio"></span>
+              </label>
+            </div>
+            
+            <label className="expiration-label">Envelope Color:</label>
+            <div className="color-picker">
+              {envelopeColors.map((color) => (
+                <button
+                  key={color.value}
+                  className={`color-swatch ${selectedColor === color.value ? "selected" : ""}`}
+                  style={{ backgroundColor: color.value }}
+                  onClick={() => setSelectedColor(color.value)}
+                  title={color.name} // optional tooltip
+                />
+              ))}
+            </div>
+
+            <label className="expiration-label">Sparkle Animation:</label>
+            <div className="sparkle-picker">
+              {sparkleOptions.map((option) => (
+                <button
+                  key={option.value}
+                  className={`sparkle-swatch ${selectedSparkle === option.value ? "selected" : ""}`}
+                  onClick={() => setSelectedSparkle(option.value)}
+                  title={option.name} // tooltip
+                >
+                  {option.icon}
+                </button>
+              ))}
+            </div>
+
+
+            {/* Generate Button */}
             <button onClick={handleGenerate}>Generate Card</button>
           </div>
 

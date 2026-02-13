@@ -109,3 +109,29 @@
   border-color: var(--deep-rose);
   box-shadow: 0 0 12px rgba(255, 0, 128, 0.3);
 }
+
+.form-error {
+    margin-top: 15px;
+    color: red;
+    font-size: 0.9rem;
+}
+
+.generated-link-container {
+  margin-top: 20px;
+  width: 100%;
+  padding: 15px;
+  background: var(--vanilla);
+  border-radius: 12px;
+}
+
+.generated-link {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+}
+
+.link-actions {
+  display: flex;
+  gap: 10px;
+}

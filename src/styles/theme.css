@@ -131,3 +131,15 @@ input, textarea {
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
+
+.expiration-banner {
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  width: fit-content;
+  transition: all 0.3s ease;
+}

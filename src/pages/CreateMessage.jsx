@@ -12,6 +12,8 @@ export default function CreateMessage() {
   const [selectedSparkle, setSelectedSparkle] = useState("hearts");
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [selectedExpiration, setSelectedExpiration] = useState("1");
+  const [error, setError] = useState("");
+  const [generatedLink, setGeneratedLink] = useState("");
 
   const envelopeColors = [
   { name: "Soft Pink", value: "#F8C8DC" },
@@ -46,12 +48,50 @@ const sparkleOptions = [
   { name: "Stars", value: "stars", icon: "✨" },
 ];
 
-  const handleGenerate = () => {
-    const payload = { to, message, from };
-    console.log(payload); // temporary
+  const handleGenerate = (e) => {
+    e.preventDefault(); // prevent page refresh
+
+    if (!to.trim() || !message.trim() || !from.trim() || !passcode.trim()) {
+      setError("Please fill out all required fields.");
+      e.preventDefault(); // prevent page refresh
+      return;
+    }
+
+    if (passcode.length < 4) {
+      setError("Passcode must be at least 4 characters.");
+      e.preventDefault(); // prevent page refresh
+      return;
+    }
+
+    setError("");  
+
+    const now = Date.now();
+
+    const expirationMap = {
+      "1": 24 * 60 * 60 * 1000,
+      "3": 3 * 24 * 60 * 60 * 1000,
+      "7": 7 * 24 * 60 * 60 * 1000,
+    };
+
+    const expiresAt = now + expirationMap[selectedExpiration];
+
+    const payload = {
+      to,
+      message,
+      from,
+      passcode,
+      color: selectedColor,
+      sparkle: selectedSparkle,
+      expiresAt,
+    };
+
     const encoded = encodeData(payload);
-    window.location.hash = `#/v/${encoded}`;
+
+    const link = `${window.location.origin}/#/vm/${encoded}`;
+    setGeneratedLink(link);
   };
+
+
 
   return (
     <main className="create-message">
@@ -80,7 +120,7 @@ const sparkleOptions = [
 
         <section className="message-container">
           {/* Form */}
-          <div className="form-container">
+          <form className="form-container" onSubmit={handleGenerate}>
             <h3 className="static-card">Static Card</h3>
             <div className="divider" />
 
@@ -90,12 +130,14 @@ const sparkleOptions = [
               value={to}
               onChange={(e) => setTo(e.target.value)}
               placeholder="Your Valentine's Name"
+              required
             />
             <label>Message:</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your heartfelt message here..."
+              required
             />
             <label>From:</label>
             <input
@@ -103,6 +145,7 @@ const sparkleOptions = [
               value={from}
               onChange={(e) => setFrom(e.target.value)}
               placeholder="Your Name"
+              required
             />
             <label>Passcode:</label>
             <input 
@@ -110,6 +153,7 @@ const sparkleOptions = [
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
               placeholder="Passcode to view card"
+              required
             />
 
             <label className="expiration-label">Expiration:</label>
@@ -128,6 +172,7 @@ const sparkleOptions = [
               {envelopeColors.map((color) => (
                 <button
                   key={color.value}
+                  type="button"
                   className={`color-swatch ${selectedColor === color.value ? "selected" : ""}`}
                   style={{ backgroundColor: color.value }}
                   onClick={() => setSelectedColor(color.value)}
@@ -141,6 +186,7 @@ const sparkleOptions = [
               {sparkleOptions.map((option) => (
                 <button
                   key={option.value}
+                  type="button"
                   className={`sparkle-swatch ${selectedSparkle === option.value ? "selected" : ""}`}
                   onClick={() => setSelectedSparkle(option.value)}
                   title={option.name}
@@ -151,8 +197,38 @@ const sparkleOptions = [
             </div>
 
             {/* Generate Button */}
-            <button onClick={handleGenerate}>Generate Card</button>
-          </div>
+            <button type="submit">Generate Card</button>
+            {error && <div className="form-error">{error}</div>}
+
+            {generatedLink && (
+              <div className="generated-link-container">
+                <p>Your Valentine link is ready 💌</p>
+
+                <input
+                  type="text"
+                  value={generatedLink}
+                  readOnly
+                  className="generated-link"
+                />
+
+                <div className="link-actions">
+                  <button
+                    onClick={() => navigator.clipboard.writeText(generatedLink)}
+                  >
+                    Copy Link
+                  </button>
+
+                  <button
+                    onClick={() => window.location.href = generatedLink}
+                  >
+                    Open Card
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
+
+
 
 
           {/* Preview */}

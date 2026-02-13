@@ -26,7 +26,8 @@ export default function App() {
   }, []);
 
   const renderPage = () => {
-    if (route.startsWith('#/v/')) return <ViewStory />;
+    if (route.startsWith('#/vm/')) return <ViewMessage />;
+    if (route.startsWith('#/vs/')) return <ViewStory />;
 
     switch (route) {
       case '#/create':

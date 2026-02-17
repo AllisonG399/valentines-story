@@ -96,15 +96,7 @@ export default function ValentinesLanding() {
 
             {!reduceMotion && <MainHearts />}
 
-          {/* Accessibility */}
-          <footer className="accessibility">
-            <button
-              className="accessibility-btn"
-              onClick={() => setReduceMotion(!reduceMotion)}
-            >
-              ⚙ Accessibility Options
-            </button>
-          </footer>
+          
         </>
       )}
     </main>

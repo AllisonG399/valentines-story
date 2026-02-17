@@ -95,7 +95,7 @@ export default function ViewMessage() {
           <div className="divider" />
         </header>
 
-        <section className="hero view-hero">
+        <section className="hero view-hero passcode-hero">
           <h2 className="hero-title">This Card Is Locked 🔒</h2>
           <p className="hero-subtitle">
             Enter the passcode to reveal your Valentine.
@@ -168,6 +168,9 @@ export default function ViewMessage() {
         <div className="reveal-overlay">
             <div className="card-back">
                 <p>💌 You have a Valentine!</p>
+                <div className="envelope-back" 
+                    style={{ backgroundColor: card.color }}
+                />
                 <p><strong>To:</strong> {card.to}</p>
                 <p><strong>From:</strong> {card.from}</p>
             </div>

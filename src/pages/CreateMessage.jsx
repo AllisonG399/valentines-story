@@ -249,15 +249,7 @@ const sparkleOptions = [
           </div>
         </section>
 
-        {/* Accessibility */}
-        <footer className="accessibility">
-          <button
-            className="accessibility-btn"
-            onClick={() => setReduceMotion(!reduceMotion)}
-          >
-            ⚙ Accessibility Options
-          </button>
-        </footer>
+        
     </main>
   );
 }

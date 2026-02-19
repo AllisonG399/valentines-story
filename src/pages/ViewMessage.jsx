@@ -119,8 +119,7 @@ export default function ViewMessage() {
                 
                 setTimeout(() => {
                     setShowReveal(false); // remove overlay
-                    setShowCard(true);    // show actual card
-                }, 2000); // 2 seconds for reveal animation
+                }, 6000); // 6 seconds for reveal animation
               }
             }}
           >
@@ -164,21 +163,25 @@ export default function ViewMessage() {
         </div>
       </section>
 
+      {/* Reveal Overlay */}
       {showReveal && card && (
         <div className="reveal-overlay">
-            <div className="card-back">
-                <p>💌 You have a Valentine!</p>
-                <div className="envelope-back" 
-                    style={{ backgroundColor: card.color }}
-                />
-                <p><strong>To:</strong> {card.to}</p>
-                <p><strong>From:</strong> {card.from}</p>
+            <div className="reveal-message">
+                <p>You have a Valentine!</p>
+            </div>
+            <div className="envelope-back" 
+                style={{ backgroundColor: card.color,
+                    color: getContrastTextColor(card.color)
+                }}> 
+                <p className="envelope-back-from"><strong>From:</strong> {card.from}</p>
+                <div className="envelope-back-stamp"/>
+                <p className="envelope-back-to"><strong>To:</strong> {card.to}</p>
             </div>
         </div>
       )}
 
       {/* Envelope */}
-      {showCard && card && (
+      {card && (
         <section className="message-display">
           <div
             className="envelope-wrapper"
@@ -290,3 +293,18 @@ function formatTime(ms) {
 
   return `${minutes}m ${seconds}s`;
 }
+
+function getContrastTextColor(hex) {
+  const cleaned = hex.replace("#", "");
+
+  const r = parseInt(cleaned.substring(0, 2), 16);
+  const g = parseInt(cleaned.substring(2, 4), 16);
+  const b = parseInt(cleaned.substring(4, 6), 16);
+
+  // Perceived brightness formula
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return brightness > 155
+    ? "var(--text-primary)"   // dark text
+    : "var(--white-linen)";   // light text
+};

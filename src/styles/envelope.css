@@ -210,7 +210,7 @@
 }
 
 
-
+/* Intro Animation to viewing card */
 
 .reveal-overlay {
   position: fixed;       /* cover the whole viewport */
@@ -218,22 +218,80 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.85); /* dark background */
+  background-color: rgba(255, 255, 255, 0.925); /* dark background */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;
   z-index: 999;          /* above everything else */
   opacity: 1;
-  animation: fadeOut 1s ease 1.5s forwards; /* start fading after 1.5s */
+  animation: fadeOut 2s ease 4s forwards; /* start fading after 4s */
 }
 
-.card-back {
+.reveal-message p {
   text-align: center;
-  background-color: #444; /* optional card-back color */
   padding: 30px 50px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  color: var(--deep-rose);
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 700;
+  font-size: 3rem;
+}
+
+.envelope-back {
+    background: #f8c8dc;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+    position: relative;
+    width: clamp(220px, 80vw, 400px);
+    aspect-ratio: 3 / 2; /* keeps 300x200 proportion */
+    perspective: 1000px; /* important for 3D flip */
+    transition: filter 0.6s ease;
+    transform: rotate(-1deg);
+}
+
+.envelope-back p {
+    color: inherit;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.envelope-back-to {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.envelope-back-stamp {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 50px;
+  height: 50px;
+  background: pink; /* replace with image later */
+  border: 2px dashed #fff; /* gives stamp feel */
+  border-radius: 6px;
+}
+
+.envelope-back-from {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.envelope-back-to strong,
+.envelope-back-from strong {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
 }
 
 /* Fade out animation */

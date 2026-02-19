@@ -16,20 +16,20 @@ export default function CreateMessage() {
   const [generatedLink, setGeneratedLink] = useState("");
 
   const envelopeColors = [
-  { name: "Soft Pink", value: "#F8C8DC" },
-  { name: "Blush", value: "#D8A7B1" },
-  { name: "Rose", value: "#E75480" },
-  { name: "Burgundy", value: "#9C1B30" },
-  { name: "Milano Red", value: "#ac050a" },
-  { name: "Moss Green", value: "#c7e4bf"},
-  { name: "Norway", value: "#97b98d"},
-  { name: "Woodland", value: "#35552c"},
-  { name: "Powder Blue", value: "#bcdce8"},
-  { name: "Glacier", value: "#79b1c7"},
-  { name: "Elm", value: "#20647e"},
-  { name: "Nobel", value: "#b6b6b6"},
-  { name: "Corduroy", value: "#5e5f5e"},
-  { name: "Heavy Metal", value: "#333432"},
+  { name: "Soft Pink", value: "#F8C8DC" }, // light
+  { name: "Blush", value: "#D8A7B1" }, // light
+  { name: "Rose", value: "#E75480" }, // light
+  { name: "Burgundy", value: "#9C1B30" }, // dark
+  { name: "Milano Red", value: "#ac050a" }, // dark
+  { name: "Moss Green", value: "#c7e4bf"}, // light
+  { name: "Norway", value: "#97b98d"}, // light
+  { name: "Woodland", value: "#35552c"}, // dark
+  { name: "Powder Blue", value: "#bcdce8"}, // light
+  { name: "Glacier", value: "#79b1c7"}, // light
+  { name: "Elm", value: "#20647e"}, // dark
+  { name: "Nobel", value: "#b6b6b6"}, // light
+  { name: "Corduroy", value: "#5e5f5e"}, // dark
+  { name: "Heavy Metal", value: "#333432"}, // dark
 ];
 
 const sparkleOptions = [

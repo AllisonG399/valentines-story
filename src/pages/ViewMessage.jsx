@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { decodeData } from "../utils/encode";
 import Sparkles from "../components/animations/Sparkles";
+import stampImage from '../assets/icons/stamp.png';
 
 export default function ViewMessage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -174,7 +175,10 @@ export default function ViewMessage() {
                     color: getContrastTextColor(card.color)
                 }}> 
                 <p className="envelope-back-from"><strong>From:</strong> {card.from}</p>
-                <div className="envelope-back-stamp"/>
+                <div
+                  className="envelope-back-stamp"
+                  style={{ backgroundImage: `url(${stampImage})` }}
+                ></div>
                 <p className="envelope-back-to"><strong>To:</strong> {card.to}</p>
             </div>
         </div>

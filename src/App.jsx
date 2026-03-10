@@ -11,6 +11,7 @@ import './styles/theme.css';
 import './styles/ValentinesLanding.css';
 import './styles/envelope.css';
 import './styles/createMessage.css';
+import './styles/createStory.css';
 
 export default function App() {
   const [route, setRoute] = useState(

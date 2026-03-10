@@ -1,0 +1,45 @@
+.memory-block {
+  background-color: var(--cream);
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  position: relative;
+  width: 100%;
+}
+
+.memory-remove-btn {
+  position: absolute;
+  right: 10px;
+    top: -35px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+
+  color: #888;
+}
+
+.memory-remove-btn:hover {
+  color: #ff4d4d;
+}
+
+.add-memory-btn {
+    margin-top: 5px;
+}
+
+.sub-section {
+    margin-top: 50px;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.memory-label {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.memory-input {
+    margin-bottom: 10px;
+}
+

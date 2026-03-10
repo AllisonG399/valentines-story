@@ -14,6 +14,7 @@ export default function CreateMessage() {
   const [selectedExpiration, setSelectedExpiration] = useState("1");
   const [error, setError] = useState("");
   const [generatedLink, setGeneratedLink] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const envelopeColors = [
   { name: "Soft Pink", value: "#F8C8DC" }, // light
@@ -197,7 +198,12 @@ const sparkleOptions = [
             </div>
 
             {/* Generate Button */}
-            <button type="submit">Generate Card</button>
+            <button
+              type="button"
+              onClick={() => setShowConfirmModal(true)}
+            >
+              Generate Card
+            </button>
             {error && <div className="form-error">{error}</div>}
 
             {generatedLink && (
@@ -223,6 +229,39 @@ const sparkleOptions = [
                   >
                     Open Card
                   </button>
+                </div>
+              </div>
+            )}
+
+            {showConfirmModal && (
+              <div className="confirm-overlay">
+                <div className="confirm-modal">
+                  <h3>💌 Ready to generate your Love Letter?</h3>
+                  <p>
+                    Once generated, you'll receive a special link to share with your
+                    Valentine.
+                  </p>
+
+                  <div className="confirm-actions">
+                    <button
+                      type="button"
+                      className="cancel-btn"
+                      onClick={() => setShowConfirmModal(false)}
+                    >
+                      Go Back
+                    </button>
+
+                    <button
+                      type="button"
+                      className="confirm-btn"
+                      onClick={(e) => {
+                        setShowConfirmModal(false);
+                        handleGenerate(e);
+                      }}
+                    >
+                      Generate Card
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

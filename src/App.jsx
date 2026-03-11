@@ -6,6 +6,7 @@ import CreateStory from './pages/CreateStory';
 import ViewStory from './pages/ViewStory';
 import Expired from './pages/Expired';
 import ViewMessage from './pages/ViewMessage';
+import ViewStory from './pages/ViewStory';
 import './styles/index.css';
 import './styles/theme.css';
 import './styles/ValentinesLanding.css';

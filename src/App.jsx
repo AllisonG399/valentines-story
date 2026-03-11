@@ -6,7 +6,7 @@ import CreateStory from './pages/CreateStory';
 import ViewStory from './pages/ViewStory';
 import Expired from './pages/Expired';
 import ViewMessage from './pages/ViewMessage';
-import ViewStory from './pages/ViewStory';
+import Intro from './storyScenes/IntroScene';
 import './styles/index.css';
 import './styles/theme.css';
 import './styles/ValentinesLanding.css';
@@ -42,6 +42,8 @@ export default function App() {
         return <Expired />;
       case '#/view/message':
         return <ViewMessage />;  
+      case '#/scene/intro':
+        return <Intro />;
       case '#/':
       default:
         return <Landing />;

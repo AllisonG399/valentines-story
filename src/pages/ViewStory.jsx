@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { decodeData } from "../utils/encode";
+import Intro from "../storyScenes/IntroScene";
 
 export default function ViewStory() {
   const [expired, setExpired] = useState(false);
@@ -11,13 +12,9 @@ export default function ViewStory() {
 
   const [currentScene, setCurrentScene] = useState(0);
   const [isView, setIsView] = useState(false);
-  const storyScenes = [
-    { id: "intro"},
-    { id: "memories"},
-    { id: "feelings"},
-    { id: "favorite-thing"},
-    { id: "not-said"}
-  ];
+
+  const [card, setCard] = useState(null);
+
 
   useEffect(() => {
     try {
@@ -133,6 +130,22 @@ export default function ViewStory() {
     );
   }
 
+  const storyScenes = card
+    ? [
+        {
+          id: "intro",
+          component: Intro,
+          props: {
+            to: card.to,
+            from: card.from,
+            message: card.message,
+            sparkle: card.sparkle,
+            color: card.color
+          }
+        }
+      ]
+    : [];
+
   return (
     <main className="view-message">
       {/* Header */}
@@ -181,17 +194,34 @@ export default function ViewStory() {
 
           {/* Scene Content */}
           <div className="story-scene">
-            {currentScene === 0 && <IntroScene />}
-            {currentScene === 1 && <MemoryScene />}
-            {currentScene === 2 && <FeelScene />}
-            {currentScene === 3 && <ThingsIDontSayScene />}
-            {currentScene === 4 && <EndingScene />}
+            {storyScenes.length > 0 && (() => {
+              const Scene = storyScenes[currentScene].component;
+              const props = storyScenes[currentScene].props;
+              return <Scene {...props} />;
+            })()}
           </div>
 
           {/* Navigation */}
           <div className="story-controls">
-            <button onClick={() => setCurrentScene(prev => prev - 1)}>←</button>
-            <button onClick={() => setCurrentScene(prev => prev + 1)}>→</button>
+            <button
+              onClick={() =>
+                setCurrentScene((prev) =>
+                  Math.max(prev - 1, 0)
+                )
+              }
+            >
+              ←
+            </button>
+
+            <button
+              onClick={() =>
+                setCurrentScene((prev) =>
+                  Math.min(prev + 1, storyScenes.length - 1)
+                )
+              }
+            >
+              →
+            </button>
           </div>
 
         </div>

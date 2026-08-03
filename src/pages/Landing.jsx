@@ -49,24 +49,34 @@ export default function ValentinesLanding() {
       
       {/* --- Intro Animation --- */}
       {introVisible && (
-        <button 
+        <div
           className={`intro ${stage === 2 ? "hearts" : ""} ${fadeOut ? "fade-out" : ""}`}
-          onClick={skipIntro}
-          type="button"
-          aria-label="Skip introduction"
         >
+          {/* Intro Title */}
           <h1 className={`title ${stage > 0 ? "small" : ""}`}>
             Love Letter
           </h1>
 
           {stage >= 1 && (
-            <h2 className="subtitle">
+            <p className="subtitle">
               Send a Love Letter they'll actually keep
-            </h2>
+            </p>
           )}
 
+          {/* Heart Animation */}
           {stage === 2 && !reduceMotion && <FullScreenHearts />}
-        </button>
+
+          {/* Skip Animation Button */}
+          <button
+            type="button"
+            className="skip-intro"
+            onClick={skipIntro}
+            aria-label="Skip animation introduction and continue to Love Letter"
+          >
+            Skip Intro
+          </button>
+
+        </div>
       )}
 
       {/* --- Main Page --- */}
@@ -90,7 +100,7 @@ export default function ValentinesLanding() {
               meaningful.
             </p>
 
-            <div className="divider-heart">
+            <div className="divider-heart" aria-hidden="true">
               <div className="divider" />
               <span className="heart">♥</span>
               <div className="divider" />
@@ -101,13 +111,17 @@ export default function ValentinesLanding() {
           <section className="card-options">
 
             {/* Static Card Option */}
-            <button className="card-option"
+            <button 
+              type="button"
+              className="card-option"
               onClick={() => window.location.hash = '#/create/message'}
+              aria-label="Create a Static Card: A beautiful message, simply delivered"
             >
               <img
                 src={envelopeIcon}
-                alt="Envelope with heart icon"
+                alt=""
                 className="icon"
+                aria-hidden="true"
               /> 
 
               <h3>Static Card</h3>
@@ -116,13 +130,17 @@ export default function ValentinesLanding() {
             </button>
 
             {/* Story Card Option */}
-            <button className="card-option featured"
+            <button 
+              type="button"
+              className="card-option featured"
               onClick={() => window.location.hash = '#/create/story'}
+              aria-label="Create a Story Card: A guided, interactive love story"
             >
               <img
                 src={storyBookIcon}
-                alt="Open story book with stars icon"
+                alt=""
                 className="icon"
+                aria-hidden="true"
               />
 
               <h3>Story Card</h3>

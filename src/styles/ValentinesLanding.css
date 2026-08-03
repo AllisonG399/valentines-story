@@ -8,15 +8,14 @@
 
 .hero-title {
   margin-bottom: 20px;
-  padding-left: 5px;
-  padding-right: 5px;
-  font-size: 2.5rem;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .hero-subtitle {
     text-align: center;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .heart {
@@ -29,7 +28,7 @@
 .card-options {
   display: flex;
   gap: 32px;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 60px;
   flex-wrap: wrap;
   justify-content: center;
@@ -108,11 +107,6 @@
     z-index: 50;
     opacity: 1;
     transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-    font: inherit;
-    
 }
 
 .intro.fade-out {
@@ -120,13 +114,14 @@
   transform: scale(0.95);
 }
 
-.intro:hover {
-  border: none;
-  box-shadow: none;
+.skip-intro {
+  position: fixed;
+  top: 10;
+  right: 15%;
 }
 
 .title {
-    margin-top: 25vh;
+  margin-top: 25vh;
   font-size: 4rem;
   opacity: 0;
   animation: fadeScale 2s forwards;
@@ -136,10 +131,12 @@
 
 .subtitle {
   margin-top: 5vh;
-  font-size: 2rem;
   opacity: 0;
   text-align: center;
   animation: fadeIn 1s forwards 0.3s;
+  font-family: "Cormorant Garamond", serif;
+  color: var(--deep-rose);
+  font-size: 2.5rem;
 }
 
 .intro-floating-hearts {

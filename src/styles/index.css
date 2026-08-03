@@ -56,8 +56,10 @@ button {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 20px 0;
+    margin: 5px 0;
     width: 40vw;
+    min-width:300px;
+    max-width:500px;
     justify-content: center;
 }
 

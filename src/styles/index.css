@@ -235,6 +235,16 @@ button {
     
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .intro-floating-hearts {
+        display: none;
+    }
+
+    .floating-hearts-container {
+        display: none;
+    }
+}
+
 
 
 

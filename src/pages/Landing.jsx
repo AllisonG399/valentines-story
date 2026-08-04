@@ -5,7 +5,6 @@ import { FullScreenHearts } from "../components/animations/FullScreenHearts";
 import { MainHearts } from "../components/animations/MainHearts";
 
 export default function ValentinesLanding() {
-  const [reduceMotion, setReduceMotion] = useState(false);
   const [stage, setStage] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
   const [introVisible, setIntroVisible] = useState(true);
@@ -45,7 +44,7 @@ export default function ValentinesLanding() {
   };
 
   return (
-    <main className={`landing ${reduceMotion ? "reduce-motion" : ""}`}>
+    <main className={`landing`}>
       
       {/* --- Intro Animation --- */}
       {introVisible && (
@@ -64,7 +63,7 @@ export default function ValentinesLanding() {
           )}
 
           {/* Heart Animation */}
-          {stage === 2 && !reduceMotion && <FullScreenHearts />}
+          {stage === 2 && <FullScreenHearts />}
 
           {/* Skip Animation Button */}
           <button
@@ -82,12 +81,6 @@ export default function ValentinesLanding() {
       {/* --- Main Page --- */}
       {stage === 3 && (
         <>
-          {/* Header */}
-          <header className="header">
-            <h1 className="site-title">Love Letter</h1>
-            <div className="divider" />
-          </header>
-
           {/* Hero */}
           <section className="hero">
 
@@ -149,7 +142,7 @@ export default function ValentinesLanding() {
             </button>
           </section>
 
-          {!reduceMotion && <MainHearts />}
+          {<MainHearts />}
 
         </>
       )}

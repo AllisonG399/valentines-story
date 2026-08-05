@@ -64,11 +64,15 @@ export default function Navbar({
         }
     }, [showConfirmModal]);
 
-    // Allow Escape to close the modal
+    // Allow Escape to close the modal and lock background scrolling
     useEffect(() => {
         if (!showConfirmModal) {
             return;
         }
+
+        // Lock background scrolling
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
 
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
@@ -80,6 +84,9 @@ export default function Navbar({
         document.addEventListener("keydown", handleKeyDown);
 
         return () => {
+            // Restore original scrolling behavior
+            document.body.style.overflow = originalOverflow;
+
             document.removeEventListener("keydown", handleKeyDown);
         };
     }, [showConfirmModal]);
@@ -100,6 +107,8 @@ export default function Navbar({
 
         setPendingNavigation(null);
     };
+
+
 
 
     return (

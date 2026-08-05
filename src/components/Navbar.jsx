@@ -212,14 +212,15 @@ export default function Navbar({
                         >
                             Story Card
                         </a>
-
                     </div>
                 </div>
             </nav>
 
             {/* Confirmation Modal */}
             <AnimatePresence>
+
                 {showConfirmModal && (
+                    
                     <motion.div
                         className="confirm-overlay"
                         role="presentation"

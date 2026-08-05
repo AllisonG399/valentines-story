@@ -125,6 +125,24 @@ input, textarea {
         font-size: 1.5rem !important;
     }
 
+    /* Footer */
+    footer {
+        padding: 1px 5px !important;
+    }
+
+    .footer-copyright {
+        font-size: 0.55rem !important;
+        max-width: 30vw;
+    }
+
+    .footer-quote {
+        font-size: 0.6rem !important;
+        gap: 5px !important;
+    }
+
+    .footer-quote span {
+        font-size: 1rem !important;
+    }
 }
 
 /* Desktop / devices with a real hover */
@@ -264,6 +282,27 @@ input, textarea {
 }
 
 
+/*-----------------
+      Footer
+-----------------*/
+.footer-copyright {
+    font-size: 0.9rem;
+    font-family: "Manrope", sans-serif;
+}
+
+.footer-quote {
+    color: var(--deep-rose);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    
+}
+
+.footer-quote span {
+    color: var(--rose);
+    font-size: 2rem;
+}
 
 
 /* Clickable button card container*/

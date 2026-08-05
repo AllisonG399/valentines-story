@@ -8,9 +8,11 @@ import { FullScreenHearts } from "../components/animations/FullScreenHearts";
 import { MainHearts } from "../components/animations/MainHearts";
 
 export default function ValentinesLanding() {
+  const skipIntroOnLoad = new URLSearchParams(window.location.search).get("skipIntro") === "true";
+
   const [stage, setStage] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
-  const [introVisible, setIntroVisible] = useState(true);
+  const [introVisible, setIntroVisible] = useState(!skipIntroOnLoad);
 
   // Detect user's operating system reduced-motion preference
   const reduceMotion = useReducedMotion();
@@ -19,6 +21,11 @@ export default function ValentinesLanding() {
   const timersRef = useRef([]);
 
   useEffect(() => {
+    if (skipIntroOnLoad) {
+      setStage(3);
+      return;
+    };
+
     timersRef.current = [
       setTimeout(() => setStage(1), 2000), // show subtitle
       setTimeout(() => setStage(2), 3000), // show hearts
@@ -36,7 +43,7 @@ export default function ValentinesLanding() {
     return () => {
       timersRef.current.forEach(clearTimeout);
     };
-  }, []);
+  }, [skipIntroOnLoad]);
 
   // Intro Animation Click Handler
   const skipIntro = () => {

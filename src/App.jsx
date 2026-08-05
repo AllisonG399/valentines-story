@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import Landing from './pages/Landing';
 import CreateType from './pages/CreateType';
 import CreateMessage from './pages/CreateMessage';
@@ -7,6 +8,9 @@ import ViewStory from './pages/ViewStory';
 import Expired from './pages/Expired';
 import ViewMessage from './pages/ViewMessage';
 import Intro from './storyScenes/IntroScene';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+
 import './styles/index.css';
 import './styles/theme.css';
 import './styles/ValentinesLanding.css';
@@ -19,13 +23,24 @@ export default function App() {
     window.location.hash || '#/'
   );
 
+  // Tracks whether the current page has information that would be lost if the user navigates away
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Listen for changes to the hash-based route
   useEffect(() => {
     const onHashChange = () =>
       setRoute(window.location.hash || '#/');
+
     window.addEventListener('hashchange', onHashChange);
+
     return () =>
       window.removeEventListener('hashchange', onHashChange);
   }, []);
+
+  // Reset unsaved changes when leaving
+  useEffect(() => {
+    setHasUnsavedChanges(false);
+  }, [route]);
 
   const renderPage = () => {
     if (route.startsWith('#/vm/')) return <ViewMessage />;
@@ -35,9 +50,16 @@ export default function App() {
       case '#/create':
         return <CreateType />;
       case '#/create/message':
-        return <CreateMessage />;
+        return (
+          <CreateMessage 
+            setHasUnsavedChanges={setHasUnsavedChanges}
+          />
+        );
       case '#/create/story':
-        return <CreateStory />;
+        return (
+          <CreateStory 
+          />
+        );
       case '#/expired':
         return <Expired />;
       case '#/view/message':
@@ -50,5 +72,18 @@ export default function App() {
     }
   };
 
-  return <div className="app">{renderPage()}</div>;
+  return (
+    <div className="app">
+      <Navbar 
+        currentRoute={route}
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
+
+      <main>
+        {renderPage()}
+      </main>
+
+      <Footer />
+    </div>
+  );
 }

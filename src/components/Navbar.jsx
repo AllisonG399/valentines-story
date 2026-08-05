@@ -13,6 +13,8 @@ export default function Navbar({
 
     // Reference to the Cancel button to move keyboard focus into the modal when it opens
     const cancelButtonRef = useRef(null);
+    const triggerRef = useRef(null);
+    const modalRef = useRef(null);
 
     /*  Handle Navigation
      *  If there are no unsaved changes, navigate immediately
@@ -41,6 +43,9 @@ export default function Navbar({
             return;
         }
 
+        // Remember which navigation link opened the modal
+        triggerRef.current = event.currentTarget;
+
         // Unsaved changes --> save where the user wanted to go and show confirmation
         setPendingNavigation(destination);
         setShowConfirmModal(true);
@@ -60,8 +65,16 @@ export default function Navbar({
     // When modal opens, move focus to the Cancel button
     useEffect(() => {
         if (showConfirmModal) {
-            cancelButtonRef.current?.focus();
+            setTimeout(() => {
+                cancelButtonRef.current?.focus();
+            }, 0);
+
+            return;
         }
+
+        triggerRef.current?.focus();
+        triggerRef.current = null;
+
     }, [showConfirmModal]);
 
     // Allow Escape to close the modal and lock background scrolling
@@ -74,10 +87,53 @@ export default function Navbar({
         const originalOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
 
+        // Escape closes the modal
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
+                event.preventDefault();
+
                 setShowConfirmModal(false);
                 setPendingNavigation(null);
+                return;
+            }
+
+            // Keep keyboard focus inside the modal
+            if (event.key === "Tab") {
+                const modal = modalRef.current;
+
+                if (!modal) {
+                    return;
+                }
+
+                const focusableElements = modal.querySelectorAll(
+                    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+
+                if (focusableElements.length === 0) {
+                    return;
+                }
+
+                const firstElement = focusableElements[0];
+                const lastElement =
+                    focusableElements[focusableElements.length - 1];
+
+                // Shift + Tab from first element → go to last
+                if (
+                    event.shiftKey &&
+                    document.activeElement === firstElement
+                ) {
+                    event.preventDefault();
+                    lastElement.focus();
+                }
+
+                // Tab from last element → go to first
+                else if (
+                    !event.shiftKey &&
+                    document.activeElement === lastElement
+                ) {
+                    event.preventDefault();
+                    firstElement.focus();
+                }
             }
         };
 
@@ -132,6 +188,7 @@ export default function Navbar({
                             href="/?skipIntro=true"
                             className={currentRoute === "#/" ? "active" : ""}
                             onClick={(event) => handleNavigation(event, "/")}
+                            aria-current={currentRoute === "#/" ? "page" : undefined}
                         >
                             Home
                         </a>
@@ -141,6 +198,7 @@ export default function Navbar({
                             href="#/create/message"
                             className={currentRoute === "#/create/message" ? "active" : ""}
                             onClick={(event) => handleNavigation(event, "#/create/message")}
+                            aria-current={currentRoute === "#/create/message" ? "page" : undefined}
                         >
                             Static Card
                         </a>
@@ -150,6 +208,7 @@ export default function Navbar({
                             href="#/create/story"
                             className={currentRoute === "#/create/story" ? "active" : ""}
                             onClick={(event) => handleNavigation(event, "#/create/story")}
+                            aria-current={currentRoute === "#/create/story" ? "page" : undefined}
                         >
                             Story Card
                         </a>
@@ -167,16 +226,13 @@ export default function Navbar({
                         initial={reduceMotion ? false : {opacity: 0 }}
                         animate={{ opacity: 1}}
                         exit={reduceMotion ? undefined : {opacity: 0}}
-                        onMouseDown={(event) => {
-                            if (event.target === event.currentTarget) {
-                                handleCancel();
-                            }
-                        }}
+                        
                     >
 
                         <motion.div
+                            ref={modalRef}
                             className="confirm-modal"
-                            role="dialog"
+                            role="alertdialog"
                             aria-modal="true"
                             aria-labelledby="confirm-title"
                             aria-describedby="confirm-description"
@@ -199,10 +255,14 @@ export default function Navbar({
                                     scale: 0.98,
                                 }
                             }
-                            transition={{
-                                duration: 0.25,
-                                ease: "easeOut",
-                            }}
+                            transition={
+                                reduceMotion
+                                    ? { duration: 0 }
+                                    : {
+                                        duration: 0.25,
+                                        ease: "easeOut",
+                                    }
+                            }
                         >
 
                             <div

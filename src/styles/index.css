@@ -33,7 +33,7 @@ nav {
 }
 
 .navbar {
-    max-width: 72rem;
+    max-width: 130rem;
     display: flex;
     flex-direction: row;
     padding: 10px 15px;

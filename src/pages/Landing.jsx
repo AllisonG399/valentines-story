@@ -219,6 +219,8 @@ export default function ValentinesLanding() {
               type="button"
               className="card-option"
               variants={cardItem}
+              whileHover={reduceMotion ? undefined : { y: -8 }}
+              transition={{ duration: 0.10, ease: "easeOut" }}
               onClick={() => window.location.hash = '#/create/message'}
               aria-label="Create a Static Card: A beautiful message, simply delivered"
             >
@@ -239,6 +241,8 @@ export default function ValentinesLanding() {
               type="button"
               className="card-option featured"
               variants={cardItem}
+              whileHover={reduceMotion ? undefined : { y: -8 }}
+              transition={{ duration: 0.10, ease: "easeOut" }}
               onClick={() => window.location.hash = '#/create/story'}
               aria-label="Create a Story Card: A guided, interactive love story"
             >

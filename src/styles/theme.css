@@ -47,7 +47,7 @@ h2 {
 
 h3 {
     font-weight: 500;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
 }
 
 h4 {
@@ -63,11 +63,16 @@ p {
     
 }
 
-label {
+label, legend {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-family: "Manrope", sans-serif;
     font-weight: 500;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
 }
 
 button {
@@ -83,11 +88,6 @@ button {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-button:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--soft-pink);
-}
 
 input, textarea {
     color: var(--text-primary);
@@ -101,7 +101,7 @@ input, textarea {
         font-size: 2.3rem;
     }
     h3 {
-        font-size: 1.2rem;
+        font-size: 1.6rem;
     }
     h4 {
         font-size: 0.9rem;
@@ -143,6 +143,29 @@ input, textarea {
     .footer-quote span {
         font-size: 1rem !important;
     }
+
+    /* Divider */ 
+    .divider-heart-card {
+        max-width: 500px !important;
+    }
+
+    .card-heart {
+        font-size: 1.2rem !important;
+    }
+
+    .divider-card {
+        height: 1px !important;
+    }
+
+    /* Create Message & Story */
+    label, legend {
+        font-size: 0.95rem;
+    }
+
+    /* Create Buttons */
+    .generate-button {
+        font-size: 1.1rem !important;
+    }
 }
 
 /* Desktop / devices with a real hover */
@@ -154,6 +177,12 @@ input, textarea {
     .logo:hover::after {
         transform: scaleX(1);
         transform-origin: left;
+    }
+
+    button:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--soft-pink);
     }
 }
 
@@ -339,3 +368,15 @@ input, textarea {
   width: fit-content;
   transition: all 0.3s ease;
 }
+
+/* Divider */
+.card-heart {
+  color: var(--rose);
+  font-size: 2rem;
+  text-align: center;
+}
+
+.divider-card {
+    background-color: var(--pearl-blush);
+}
+

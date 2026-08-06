@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { encodeData } from '../utils/encode';
 import Sparkles from "../components/animations/Sparkles";
 
@@ -19,9 +19,13 @@ export default function CreateMessage({
   const [form, setForm] = useState(initialForm);
 
   const [isPreviewing, setIsPreviewing] = useState(false);
+
+  const confirmCancelRef = useRef(null);
+  const confirmModalRef = useRef(null);
   const [error, setError] = useState("");
   const [generatedLink, setGeneratedLink] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
 
   const updateForm = (field, value) => {
     setForm((previous) => ({
@@ -29,29 +33,30 @@ export default function CreateMessage({
         [field]: value,
     }));
 
-    // The previously generated link no longer represents
-    // the current form data.
+    // The previously generated link no longer represents the current form data.
     setGeneratedLink("");
   };
 
 
+  // Envelope Colors
   const envelopeColors = [
-    { name: "Soft Pink", value: "#F8C8DC" }, // light
-    { name: "Blush", value: "#D8A7B1" }, // light
-    { name: "Rose", value: "#E75480" }, // light
-    { name: "Burgundy", value: "#9C1B30" }, // dark
-    { name: "Milano Red", value: "#ac050a" }, // dark
-    { name: "Moss Green", value: "#c7e4bf"}, // light
-    { name: "Norway", value: "#97b98d"}, // light
-    { name: "Woodland", value: "#35552c"}, // dark
-    { name: "Powder Blue", value: "#bcdce8"}, // light
-    { name: "Glacier", value: "#79b1c7"}, // light
-    { name: "Elm", value: "#20647e"}, // dark
-    { name: "Nobel", value: "#b6b6b6"}, // light
-    { name: "Corduroy", value: "#5e5f5e"}, // dark
-    { name: "Heavy Metal", value: "#333432"}, // dark
+    { name: "Soft Pink", value: "#F8C8DC" },
+    { name: "Blush", value: "#D8A7B1" },
+    { name: "Rose", value: "#E75480" }, 
+    { name: "Burgundy", value: "#9C1B30" }, 
+    { name: "Milano Red", value: "#ac050a" },
+    { name: "Moss Green", value: "#c7e4bf"}, 
+    { name: "Norway", value: "#97b98d"}, 
+    { name: "Woodland", value: "#35552c"}, 
+    { name: "Powder Blue", value: "#bcdce8"}, 
+    { name: "Glacier", value: "#79b1c7"}, 
+    { name: "Elm", value: "#20647e"}, 
+    { name: "Nobel", value: "#b6b6b6"}, 
+    { name: "Corduroy", value: "#5e5f5e"}, 
+    { name: "Heavy Metal", value: "#333432"}, 
   ];
 
+  // Sparkle Options
   const sparkleOptions = [
     { name: "Hearts", value: "hearts", icon: "❤️" },
     { name: "Black Heart", value: "black-heart", icon: "🖤" },
@@ -87,12 +92,14 @@ export default function CreateMessage({
   const handleGenerate = (e) => {
     e.preventDefault(); // prevent page refresh
 
+    // Trims off any spaces to ensure fields are filled
     if (!to.trim() || !message.trim() || !from.trim() || !passcode.trim()) {
       setError("Please fill out all required fields.");
       e.preventDefault(); // prevent page refresh
       return;
     }
 
+    // Check that passcode is at least 4 characters
     if (passcode.length < 4) {
       setError("Passcode must be at least 4 characters.");
       e.preventDefault(); // prevent page refresh
@@ -136,38 +143,28 @@ export default function CreateMessage({
   return (
     <main className="create-message">
 
-        {/* Header */}
-        <header className="header">
-
-          <h1 className="site-title">
-            Valentines Story
-          </h1>
-
-          <div className="divider" />
-        </header>
-
         {/* Hero */}
-          <section className="hero">
+        <section className="hero">
 
-            <h2 className="hero-title">
-              Write a Message to Your Valentine
-            </h2>
+          <h2 className="hero-title">
+            Write a Message to Your Valentine
+          </h2>
 
-            <p className="hero-subtitle">
-              Fill in the fields below to create a personalized Valentines card. 
-              Once completed, click the button "Generate Card" to receive your customized card link to share with your Valentine.
-              Preview the card and animation by clicking the "Preview Animation" button below.
-            </p>
+          <p className="hero-subtitle">
+            Fill in the fields below to create a personalized Valentines card. 
+            Once completed, click the button "Generate Card" to receive your customized card link to share with your Valentine.
+            Preview the card and animation by clicking the "Preview Animation" button below.
+          </p>
 
-            <div 
-              className="divider-heart"
-              aria-hidden="true"
-            >
-                <div className="divider" />
-                <span className="heart">♥</span>
-                <div className="divider" />
-            </div>
-          </section>
+          <div 
+            className="divider-heart-card"
+            aria-hidden="true"
+          >
+              <div className="divider-card" />
+              <span className="card-heart">♥</span>
+              <div className="divider-card" />
+          </div>
+        </section>
 
         <section className="message-container">
 
@@ -262,43 +259,45 @@ export default function CreateMessage({
             />
 
             {/* Expiration */}
-            <fieldset className="expiration-group">
+            <fieldset className="expiration-fieldset">
 
               <legend className="expiration-label">
                 Expiration:
               </legend>
 
-              {["1","3","7"].map((val) => (
+              <div className="expiration-group">
+                {["1","3","7"].map((val) => (
 
-                <label 
-                  key={val} 
-                  className="expiration-option"
-                >
+                  <label 
+                    key={val} 
+                    className="expiration-option"
+                  >
 
-                  <span className="expiration-text">
-                    {val === "1" ? "24 Hours" : val === "3" ? "3 Days" : "7 Days"}
-                  </span>
+                    <span className="expiration-text">
+                      {val === "1" ? "24 Hours" : val === "3" ? "3 Days" : "7 Days"}
+                    </span>
 
-                  <input 
-                    type="radio" 
-                    name="expirationTime" 
-                    value={val} 
-                    checked={form.expiration === val} 
-                    onChange={(e) => 
-                      updateForm(
-                        "expiration",
-                        e.target.value
-                      )
-                    } 
-                  />
+                    <input 
+                      type="radio" 
+                      name="expirationTime" 
+                      value={val} 
+                      checked={form.expiration === val} 
+                      onChange={(e) => 
+                        updateForm(
+                          "expiration",
+                          e.target.value
+                        )
+                      } 
+                    />
 
-                  <span className="custom-radio" aria-hidden="true"/>
-                </label>
-              ))}
+                    <span className="custom-radio" aria-hidden="true"/>
+                  </label>
+                ))}
+              </div>
             </fieldset>
 
             {/* Envelope Color */}
-            <fieldset>
+            <fieldset className="expiration-fieldset">
 
               <legend className="expiration-label">
                 Envelope Color:
@@ -326,7 +325,7 @@ export default function CreateMessage({
             </fieldset>
             
             {/* Sparkle Animation */}
-            <fieldset>
+            <fieldset className="expiration-fieldset">
 
               <legend className="expiration-label">
                 Sparkle Animation:
@@ -356,13 +355,19 @@ export default function CreateMessage({
               </div>
             </fieldset>
 
+            <div className="divider" aria-hidden="true"/>
+
             {/* Generate Button */}
-            <button
-              type="submit"
-              onClick={() => setShowConfirmModal(true)}
-            >
-              Generate Card
-            </button>
+            <div className="generate-button-cont">
+              
+              <button
+                className="generate-button"
+                type="submit"
+                onClick={() => setShowConfirmModal(true)}
+              >
+                Generate Card
+              </button>
+            </div>
 
             {/* Error */}
             {error && 
@@ -498,13 +503,20 @@ export default function CreateMessage({
               isPreviewing={isPreviewing}
             />
 
+            
+
             {/* Preview Animation Button */}
-            <button 
-              type="button"
-              onClick={() => setIsPreviewing(!isPreviewing)}
-            >
-              Preview Animation
-            </button>
+            <div className="animation-btn-cont">
+              <div className="divider animation-btn-divider" aria-hidden="true"/>
+
+              <button 
+                className="generate-button"
+                type="button"
+                onClick={() => setIsPreviewing(!isPreviewing)}
+              >
+                Preview Animation
+              </button>
+            </div>
           </div>
         </section>
 

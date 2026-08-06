@@ -58,12 +58,17 @@ nav {
 }
 
 footer {
+   width: 100%;
+}
+
+.footerContainer {
     display: flex;
     flex-direction: row;
-    padding: 2px 30px;
     justify-content: space-between;
     max-width: 130rem;
     align-items: center;
+    padding: 0px 5px;
+    margin: 0 auto;
 }
 
 input, textarea {
@@ -71,6 +76,10 @@ input, textarea {
     border: 1px solid var(--pearl-blush);
     border-radius: 4px;
     width: 100%;
+}
+
+textarea {
+    resize: vertical;
 }
 
 button {
@@ -88,29 +97,35 @@ button {
 .divider-heart {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin: 5px 0;
+    gap: 16px;
+    margin: 5px 0 15px 0;
     width: 40vw;
     min-width:250px;
     max-width:500px;
     justify-content: center;
 }
 
+.divider-card {
+    height: 2px;
+    margin: 0;
+    width: 100%;
+}
+
+.divider-heart-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 5px;
+    margin-bottom: 60px;
+    width: 40vw;
+    min-width:250px;
+    max-width:700px;
+    justify-content: center;
+}
+
 .site-title {
     margin-bottom: 5px;
     margin-left: 20px;
-}
-
-.accessibility {
-    margin-top: auto;
-    padding: 10px 10px;
-}
-
-.accessibility-btn {
-    margin-left: 20px;
-    margin-bottom: 10px;
-    padding: 10px;
-    margin-top: 0;
 }
 
 .card-options {
@@ -124,6 +139,7 @@ button {
     gap: 50px;
     margin-bottom: 50px;
     padding-bottom: 100px;
+    max-width: 100rem;
 }
 
 .form-container {
@@ -168,10 +184,7 @@ button {
 
     .form-container, .preview-container {
         width: 90vw;
-    }
-
-    .expiration-group {
-        padding: 10px;
+        padding: 15px 10px;
     }
 
     .envelope-view {

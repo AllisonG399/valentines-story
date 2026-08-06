@@ -1,5 +1,15 @@
+/*-----------------
+    EXPIRATION 
+-----------------*/
+
+.expiration-fieldset {
+  border: none;
+  padding: 0;
+  margin: 25px 0 0;
+}
+
 .expiration-label {
-    margin-top: 25px;
+  margin: 0 0 12px;
 }
 
 .expiration-group {
@@ -9,6 +19,7 @@
 }
 
 .expiration-option {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -17,13 +28,19 @@
 }
 
 .expiration-text {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
+/* Visually hide the native radio,
+   but keep it accessible to keyboard users */
 .expiration-option input {
-  display: none; /* hide default circle */
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
 }
 
+/* Custom radio */
 .custom-radio {
   width: 1.2rem;
   height: 1.2rem;
@@ -33,7 +50,7 @@
   transition: all 0.25s ease;
 }
 
-/* inner filled circle */
+/* Inner filled circle */
 .expiration-option input:checked + .custom-radio::after {
   content: "";
   position: absolute;
@@ -46,18 +63,27 @@
   transform: translate(-50%, -50%);
 }
 
+/* Selected state */
 .expiration-option input:checked + .custom-radio {
   transform: scale(1.1);
   border-color: var(--deep-rose);
 }
 
-/* hover effect */
+/* Mouse hover */
 .expiration-option:hover .custom-radio {
   box-shadow: 0 0 8px rgba(255, 182, 193, 0.5);
 }
 
+/* Keyboard focus */
+.expiration-option input:focus-visible + .custom-radio {
+  outline: 3px solid rgba(231, 84, 128, 0.4);
+  outline-offset: 3px;
+}
 
-/* Envelope Colors */
+
+/*-----------------
+  ENVELOPE COLORS 
+-----------------*/
 .color-picker {
   display: flex;
   flex-wrap: wrap;
@@ -198,3 +224,41 @@
 .confirm-btn:hover {
   background: #d6416c;
 }
+
+/*-----------------
+   Create Buttons
+-----------------*/
+.generate-button-cont {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate-button {
+  font-size: 1.3rem;
+  padding: 7px 15px;
+  font-weight: 700;
+  transition: all 0.25s ease;
+}
+
+.animation-btn-cont {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.animation-btn-divider {
+  width: 100%;
+}
+
+
+
+/* Desktop / devices with a real hover */
+@media (hover: hover) and (pointer: fine) {
+  .generate-button:hover {
+    background: rgba(243, 193, 207, 0.5);
+  }
+}
+

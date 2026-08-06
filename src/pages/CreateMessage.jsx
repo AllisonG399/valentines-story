@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { encodeData } from '../utils/encode';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Sparkles from "../components/animations/Sparkles";
 
 const initialForm = {
@@ -17,15 +19,22 @@ export default function CreateMessage({
 }) {
 
   const [form, setForm] = useState(initialForm);
+  const [showPasscode, setShowPasscode] = useState(false);
 
   const [isPreviewing, setIsPreviewing] = useState(false);
 
   const confirmCancelRef = useRef(null);
   const confirmModalRef = useRef(null);
+  const wasModalOpenRef = useRef(false);
+  const generateButtonRef = useRef(null);
+  const copyLinkButtonRef = useRef(null);
+
   const [error, setError] = useState("");
   const [generatedLink, setGeneratedLink] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+  const [linkCopied, setLinkCopied] = useState(false);
+  
 
   const updateForm = (field, value) => {
     setForm((previous) => ({
@@ -88,56 +97,185 @@ export default function CreateMessage({
     setHasUnsavedChanges,
   ]);
 
-  // Generate Card
-  const handleGenerate = (e) => {
-    e.preventDefault(); // prevent page refresh
+  // Validate form 
+  const validateForm = () => {
+    setError("");
 
-    // Trims off any spaces to ensure fields are filled
-    if (!to.trim() || !message.trim() || !from.trim() || !passcode.trim()) {
+    const trimmedTo = form.to.trim();
+    const trimmedMessage = form.message.trim();
+    const trimmedFrom = form.from.trim();
+    const trimmedPasscode = form.passcode.trim();
+
+    if (!trimmedTo || !trimmedMessage || !trimmedFrom || !trimmedPasscode) {
       setError("Please fill out all required fields.");
-      e.preventDefault(); // prevent page refresh
-      return;
+      return false;
     }
 
-    // Check that passcode is at least 4 characters
-    if (passcode.length < 4) {
+    if (trimmedPasscode.length < 4) {
       setError("Passcode must be at least 4 characters.");
-      e.preventDefault(); // prevent page refresh
+      return false;
+    }
+
+    if (!["1", "3", "7"].includes(form.expiration)) {
+      setError("Please select an expiration time.");
+      return false;
+    }
+
+    return true;
+  };
+
+  // Validate form prior to showing the generate modal
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
       return;
     }
 
-    setError("");  
+    setShowConfirmModal(true);
+  };
 
-    const now = Date.now();
+  // Handle Generating the Link
+  const handleGenerate = () => {
+    setError("");
 
+    // Set expiration timer
     const expirationMap = {
       "1": 24 * 60 * 60 * 1000,
       "3": 3 * 24 * 60 * 60 * 1000,
       "7": 7 * 24 * 60 * 60 * 1000,
     };
 
-    const expiresAt = now + expirationMap[form.expiration];
+    const expiresAt = Date.now() + expirationMap[form.expiration];
 
     const payload = {
-      to: form.to,
-      message: form.message,
-      from: form.from,
-      passcode: form.passcode,
+      to: form.to.trim(),
+      message: form.message.trim(),
+      from: form.from.trim(),
+      passcode: form.passcode.trim(),
       color: form.color,
       sparkle: form.sparkle,
       expiresAt,
     };
 
+    // Encode and create link
     const encoded = encodeData(payload);
 
     const link = `${window.location.origin}/#/vm/${encoded}`;
+
     setGeneratedLink(link);
 
-    // Card has been successfully generated, so leaving the page does not count as losing unsaved work
+    // Reset form after successful generation
+    setForm(initialForm);
+
+    // Reset copy status
+    setLinkCopied(false);
+
+    // Generation was successful
     setHasUnsavedChanges(false);
     setShowConfirmModal(false);
   };
 
+  // Set Modal focus
+  useEffect(() => {
+
+    // Modal is opening
+    if (showConfirmModal) {
+      wasModalOpenRef.current = true;
+
+      // Move focus into the modal
+      confirmCancelRef.current?.focus();
+
+      const originalOverflow = document.body.style.overflow;
+
+      // Prevent background scrolling
+      document.body.style.overflow = "hidden";
+
+      const handleKeyDown = (event) => {
+        // Escape closes modal
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setShowConfirmModal(false);
+          return;
+        }
+
+        // Trap Tab inside modal
+        if (event.key === "Tab") {
+          const modal = confirmModalRef.current;
+
+          if (!modal) {
+            return;
+          }
+
+          const focusableElements = modal.querySelectorAll(
+            'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+          );
+
+          if (focusableElements.length === 0) {
+            event.preventDefault();
+            return;
+          }
+
+          const firstElement = focusableElements[0];
+          const lastElement =
+            focusableElements[focusableElements.length - 1];
+
+          if (
+            event.shiftKey &&
+            document.activeElement === firstElement
+          ) {
+            event.preventDefault();
+            lastElement.focus();
+          } else if (
+            !event.shiftKey &&
+            document.activeElement === lastElement
+          ) {
+            event.preventDefault();
+            firstElement.focus();
+          }
+        }
+      };
+
+      document.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+
+    // Modal has just closed
+    if (wasModalOpenRef.current) {
+      wasModalOpenRef.current = false;
+
+      // Return focus to the button that opened the modal
+      generateButtonRef.current?.focus();
+    }
+  }, [showConfirmModal]);
+
+  // Copy Link Verification
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedLink);
+
+      setLinkCopied(true);
+
+      setTimeout(() => {
+        setLinkCopied(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Failed to copy link:", error);
+    }
+  };
+
+  // Focus Copy Link after successful generation
+  useEffect(() => {
+    if (!generatedLink) {
+      return;
+    }
+
+    copyLinkButtonRef.current?.focus();
+  }, [generatedLink]);
 
 
   return (
@@ -147,13 +285,13 @@ export default function CreateMessage({
         <section className="hero">
 
           <h2 className="hero-title">
-            Write a Message to Your Valentine
+            Write a Message to Your Loved One
           </h2>
 
           <p className="hero-subtitle">
-            Fill in the fields below to create a personalized Valentines card. 
-            Once completed, click the button "Generate Card" to receive your customized card link to share with your Valentine.
-            Preview the card and animation by clicking the "Preview Animation" button below.
+            Fill in the fields below to create a personalized Love Letter card. 
+            Preview your card and animation, then generate a shareable link when you're ready.
+            Share the link and passcode with your recipient so they can view the card.
           </p>
 
           <div 
@@ -171,13 +309,14 @@ export default function CreateMessage({
           {/* Form */}
           <form 
             className="form-container" 
-            onSubmit={(e) => {
-              e.preventDefault();
-              setShowConfirmModal(true);
-            }}
+            onSubmit={handleSubmit}
+            aria-labelledby="static-card-title"
           >
 
-            <h3 className="static-card">
+            <h3 
+              id="static-card-title"
+              className="static-card"
+            >
               Static Card
             </h3>
 
@@ -198,7 +337,7 @@ export default function CreateMessage({
                   e.target.value
                 )
               }
-              placeholder="Your Valentine's Name"
+              placeholder="Recipient"
               required
             />
 
@@ -244,19 +383,35 @@ export default function CreateMessage({
               Passcode:
             </label>
 
-            <input 
-              id="passcode"
-              type="text"
-              value={form.passcode}
-              onChange={(e) => 
-                updateForm(
-                  "passcode",
-                  e.target.value
-                )
-              }
-              placeholder="Passcode to view card"
-              required
-            />
+            <div className="passcode-input-wrapper">
+              <input 
+                id="passcode"
+                type={showPasscode ? "text" : "password"}
+                value={form.passcode}
+                onChange={(e) => 
+                  updateForm(
+                    "passcode",
+                    e.target.value
+                  )
+                }
+                placeholder="Passcode for recipient to view card"
+                required
+                minLength={4}
+              />
+
+              <button
+                type="button"
+                className="passcode-toggle"
+                onClick={() => setShowPasscode((previous) => !previous)}
+                aria-label={showPasscode ? "Hide passcode" : "Show passcode"}
+                aria-pressed={showPasscode}
+              >
+                <FontAwesomeIcon
+                  icon={showPasscode ? faEyeSlash : faEye}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
 
             {/* Expiration */}
             <fieldset className="expiration-fieldset">
@@ -316,7 +471,6 @@ export default function CreateMessage({
                         color.value
                       )
                     }
-                    title={color.name}
                     aria-label={`Choose ${color.name} envelope`}
                     aria-pressed={form.color === color.value}
                   />
@@ -361,9 +515,9 @@ export default function CreateMessage({
             <div className="generate-button-cont">
               
               <button
+                ref={generateButtonRef}
                 className="generate-button"
                 type="submit"
-                onClick={() => setShowConfirmModal(true)}
               >
                 Generate Card
               </button>
@@ -372,8 +526,10 @@ export default function CreateMessage({
             {/* Error */}
             {error && 
               <div 
+                id="form-error"
                 className="form-error" 
                 role="alert"
+                aria-live="assertive"
               >
                 {error}
               </div>
@@ -381,12 +537,21 @@ export default function CreateMessage({
 
             {/* Generated Link */}
             {generatedLink && (
+
               <div className="generated-link-container">
-                <p>
-                  Your Valentine link is ready 💌
+
+                <h4 className="generated-link-title">
+                  Your Love Letter link is ready 💌
+                </h4>
+
+                <p className="generated-link-description">
+                  Share the link and passcode with your recipient to view the card.
                 </p>
 
-                <label htmlFor="generated-link">
+                <label 
+                  className="generated-link-label"
+                  htmlFor="generated-link"
+                >
                   Your card link
                 </label>
 
@@ -402,22 +567,20 @@ export default function CreateMessage({
 
                   {/* Copy Link */}
                   <button
+                    ref={copyLinkButtonRef}
                     type="button"
-                    onClick={() => 
-                      navigator.clipboard.writeText(
-                        generatedLink
-                      )
-                    }
+                    onClick={handleCopyLink}
+                    aria-label={linkCopied ? "Link copied" : "Copy card link"}
                   >
-                    Copy Link
+                    {linkCopied ? "Copied! ✓" : "Copy Link"}
                   </button>
 
                   {/* Open Card */}
                   <button
                     type="button"
-                    onClick={() => 
-                      window.location.href = generatedLink
-                    }
+                    onClick={() => {
+                      window.open(generatedLink, "_blank", "noopener,noreferrer");
+                    }}
                   >
                     Open Card
                   </button>
@@ -434,6 +597,7 @@ export default function CreateMessage({
               >
 
                 <div 
+                  ref={confirmModalRef}
                   className="confirm-modal"
                   role="dialog"
                   aria-modal="true"
@@ -448,19 +612,20 @@ export default function CreateMessage({
                     💌
                   </div>
 
-                  <h3 id="generate-title">
+                  <h2 id="generate-title">
                     Ready to generate your Love Letter?
-                  </h3>
+                  </h2>
 
                   <p id="generate-description">
                     Once generated, you'll receive a special link to share with your
-                    Valentine.
+                    loved one.
                   </p>
 
                   <div className="confirm-actions">
 
                     {/* Back Button */}
                     <button
+                      ref={confirmCancelRef}
                       type="button"
                       className="cancel-btn"
                       onClick={() => setShowConfirmModal(false)}
@@ -472,10 +637,7 @@ export default function CreateMessage({
                     <button
                       type="button"
                       className="confirm-btn"
-                      onClick={(e) => {
-                        setShowConfirmModal(false);
-                        handleGenerate(e);
-                      }}
+                      onClick={handleGenerate}
                     >
                       Generate Card
                     </button>
@@ -514,7 +676,7 @@ export default function CreateMessage({
                 type="button"
                 onClick={() => setIsPreviewing(!isPreviewing)}
               >
-                Preview Animation
+                {isPreviewing ? "Close Preview" : "Preview Animation"}
               </button>
             </div>
           </div>
@@ -533,15 +695,33 @@ function CardPreview({ to, from, message, color, sparkle, isPreviewing }) {
     <div className={`envelope-wrapper-view ${isPreviewing ? "open" : ""}`}>
       <div className={`envelope-view ${isPreviewing ? "open" : ""}`}>
 
-        <div className="envelope-flap" style={{ backgroundColor: lightenColor(color, 5) }} />
-        <div className="envelope-flap-back" style={{ backgroundColor: darkenColor(color, 5) }} />
-        <div className="envelope-body" style={{ backgroundColor: color }} />
+        <div 
+          className="envelope-flap" 
+          style={{ backgroundColor: lightenColor(color, 5) }}
+          aria-hidden="true" 
+        />
 
-        {/* Sparkles go here */}
-        {isPreviewing && sparkle && <Sparkles type={sparkle} />}
+        <div 
+          className="envelope-flap-back" 
+          style={{ backgroundColor: darkenColor(color, 5) }} 
+          aria-hidden="true"
+        />
+
+        <div 
+          className="envelope-body" 
+          style={{ backgroundColor: color }} 
+          aria-hidden="true"
+        />
+
+        {/* Sparkle Emojis */}
+        {isPreviewing && sparkle && (
+          <div aria-hidden="true">
+            <Sparkles type={sparkle} />
+          </div>
+        )}
 
         <div className={`letter ${isPreviewing ? "show-letter" : ""}`}>
-          <p>Dear {to || "Valentine"},</p>
+          <p>Dear {to || "Significant Other"},</p>
           <p>{message || "Write your message here..."}</p>
           <p>Sincerely, {from || "You"}</p>
         </div>

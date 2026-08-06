@@ -59,7 +59,7 @@ h4 {
 
 p {
     color: var(--text-secondary);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     
 }
 
@@ -84,7 +84,7 @@ button {
     font-family: "Cormorant Garamond", serif;
     color: var(--text-primary);
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 700;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 

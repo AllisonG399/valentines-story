@@ -55,7 +55,11 @@ export default function Navbar({
     const navigate = (destination) => {
 
         if (destination === "/") {
-            window.location.href = "/?skipIntro=true";
+            const basePath = window.location.pathname.endsWith("/")
+                ? window.location.pathname
+                : `${window.location.pathname}/`;
+
+            window.location.href = `${basePath}?skipIntro=true`;
             return;
         }
 
@@ -220,7 +224,7 @@ export default function Navbar({
             <AnimatePresence>
 
                 {showConfirmModal && (
-                    
+
                     <motion.div
                         className="confirm-overlay"
                         role="presentation"

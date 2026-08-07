@@ -91,10 +91,6 @@ export default function ViewMessage() {
   if (card && card.passcode && !unlocked) {
     return (
       <main className="view-message">
-        <header className="header">
-          <h1 className="site-title">Valentines Story</h1>
-          <div className="divider" />
-        </header>
 
         <section className="hero view-hero passcode-hero">
           <h2 className="hero-title">This Card Is Locked 🔒</h2>
@@ -137,11 +133,6 @@ export default function ViewMessage() {
   return (
 
     <main className="view-message">
-      {/* Header */}
-      <header className="header">
-        <h1 className="site-title">Valentines Story</h1>
-        <div className="divider" />
-      </header>
 
       {/* Hero */}
       <section className="hero view-hero">

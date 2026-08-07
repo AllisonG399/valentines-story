@@ -175,9 +175,11 @@ input, textarea {
     }
 
     /* Create Buttons */
-    .generate-button {
+    .generate-button, .send-back-btn {
         font-size: 1.1rem !important;
     }
+
+    
 }
 
 /* Desktop / devices with a real hover */
@@ -195,6 +197,10 @@ input, textarea {
         transform: translateY(-6px);
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
         border: 1px solid var(--soft-pink);
+    }
+
+    .envelope-wrapper:hover {
+        border: none;
     }
 }
 

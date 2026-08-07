@@ -131,7 +131,7 @@ export default function ViewMessage() {
     return (
       <main className="view-message">
         <h2>
-          Invalid Love Letter Link 💔
+          Invalid Love Letter Link <span aria-hidden="true">💔</span>
         </h2>
         <p>
           This link appears to be corrupted, incomplete, or no longer valid.
@@ -147,7 +147,7 @@ export default function ViewMessage() {
   if (expired) {
     return (
       <main className="view-message">
-        <h2>This Love Letter Has Expired 💔</h2>
+        <h2>This Love Letter Has Expired <span aria-hidden="true">💔</span></h2>
         <p>The message is no longer available because its expiration time has passed.</p>
       </main>
     );
@@ -164,7 +164,7 @@ export default function ViewMessage() {
         <section className="hero view-hero passcode-hero">
 
           <h2 className="hero-title">
-            This Card Is Locked 🔒
+            This Card Is Locked <span aria-hidden="true">🔒</span>
           </h2>
 
           <p className="hero-subtitle">
@@ -172,7 +172,15 @@ export default function ViewMessage() {
           </p>
         </section>
 
-        <div className="passcode-container">
+        
+        <form
+          className="passcode-container"
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleUnlock();
+          }}
+        >
+          
 
           <div className="passcode-input-wrapper">
 
@@ -218,13 +226,12 @@ export default function ViewMessage() {
           )}
 
           <button
-            type="button"
+            type="submit"
             className="generate-button"
-            onClick={handleUnlock}
           >
             Unlock
           </button>
-        </div>
+        </form>
       </main>
     );
   }
@@ -238,9 +245,13 @@ export default function ViewMessage() {
 
       {/* Hero */}
       <section className="hero view-hero">
+
+        {/* Expiration Timer */}
         {card && timeLeft && (
-            <div className="expiration-banner">
-                💌 This message expires in {formatTime(timeLeft)}
+            <div 
+              className="expiration-banner"
+            >
+              <span style={{ fontStyle: "normal" }}>💌</span> This message expires in {formatTime(timeLeft)}
             </div>
         )}
 
@@ -259,32 +270,54 @@ export default function ViewMessage() {
 
       {/* Reveal Overlay */}
       {showReveal && card && (
-        <div className="reveal-overlay">
-            <div className="reveal-message">
-                <p>You have a Love Letter!</p>
-            </div>
-            <div className="envelope-back" 
-                style={{ backgroundColor: card.color,
-                    color: getContrastTextColor(card.color)
-                }}> 
-                <p className="envelope-back-from"><strong>From:</strong> {card.from}</p>
-                <div
-                  className="envelope-back-stamp"
-                  style={{ backgroundImage: `url(${stampImage})` }}
-                ></div>
-                <p className="envelope-back-to"><strong>To:</strong> {card.to}</p>
-            </div>
+      <div className="reveal-overlay">
+        <div className="reveal-content">
+
+          <div className="reveal-message">
+            <p>You have a Love Letter!</p>
+          </div>
+
+          <div
+            className="envelope-back"
+            style={{
+              backgroundColor: card.color,
+              color: getContrastTextColor(card.color)
+            }}
+          >
+            <p className="envelope-back-from">
+              <strong>From:</strong> {card.from}
+            </p>
+
+            <div
+              className="envelope-back-stamp"
+              style={{ backgroundImage: `url(${stampImage})` }}
+            />
+
+            <p className="envelope-back-to">
+              <strong>To:</strong> {card.to}
+            </p>
+          </div>
+
         </div>
-      )}
+      </div>
+    )}
 
       {/* Envelope */}
       {card && (
+
         <section className="message-display">
-          <div
+
+          <button
+            type="button"
             className="envelope-wrapper"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen((previous) => !previous)}
+            aria-expanded={isOpen}
+            aria-label={isOpen ? "Close Love Letter" : "Open Love Letter"}
           >
-            <div className={`envelope ${isOpen ? "open" : ""}`}>
+
+            <div 
+              className={`envelope ${isOpen ? "open" : ""}`}
+            >
 
               <div
                 className="envelope-flap"
@@ -304,13 +337,15 @@ export default function ViewMessage() {
                 <Sparkles type={card.sparkle} />
               )}
 
-              <div className={`letter ${isOpen ? "show-letter" : ""}`}>
-                <p>Dear {card.to},</p>
-                <p>{card.message}</p>
-                <p>Sincerely, {card.from}</p>
-              </div>
+              {isOpen && (
+                <div className="letter">
+                  <p>Dear {card.to},</p>
+                  <p>{card.message}</p>
+                  <p>Sincerely, {card.from}</p>
+                </div>
+              )}
             </div>
-          </div>
+          </button>
         </section>
         )}
 

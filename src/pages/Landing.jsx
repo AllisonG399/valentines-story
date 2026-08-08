@@ -147,7 +147,7 @@ export default function ValentinesLanding() {
 
           {stage >= 1 && (
             <p className="subtitle">
-              Send a Love Letter they'll actually keep
+              Send a Love Letter they'll actually keep.
             </p>
           )}
 
@@ -183,7 +183,7 @@ export default function ValentinesLanding() {
               className="hero-title"
               variants={heroItem}
             >
-              Send a Love Letter they will actually keep.
+              Send a Love Letter they will actually keep
             </motion.h2>
 
             <motion.p 

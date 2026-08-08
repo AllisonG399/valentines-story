@@ -47,7 +47,10 @@ export default function Sparkles({ type = "hearts", count = 80 }) {
   }, [count]);
 
   return (
-    <div className="sparkles-container">
+    <div 
+      className="sparkles-container"
+      aria-hidden="true"
+    >
       {sparkles.map((sparkle) => (
         <span
           key={sparkle.id}

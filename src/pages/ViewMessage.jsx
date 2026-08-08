@@ -19,6 +19,7 @@ export default function ViewMessage() {
   const [unlocked, setUnlocked] = useState(false);            // Toggling unlocking card
 
   const [timeLeft, setTimeLeft] = useState(null);
+  const [expirationAnnouncement, setExpirationAnnouncement] = useState("");
 
   const [showReveal, setShowReveal] = useState(false);
   const [showCard, setShowCard] = useState(false);
@@ -82,7 +83,12 @@ export default function ViewMessage() {
       setCard(decoded);
 
       // Set the initial countdown immediately
-      setTimeLeft(decoded.expiresAt - Date.now());
+      const initialTimeLeft = decoded.expiresAt - Date.now();
+
+      setTimeLeft(initialTimeLeft);
+      setExpirationAnnouncement(
+        `This Love Letter expires in ${formatTime(initialTimeLeft)}.`
+      );
 
       // Update countdown every second
       const interval = setInterval(() => {
@@ -130,9 +136,9 @@ export default function ViewMessage() {
   if (invalid) {
     return (
       <main className="view-message">
-        <h2>
+        <h1>
           Invalid Love Letter Link <span aria-hidden="true">💔</span>
-        </h2>
+        </h1>
         <p>
           This link appears to be corrupted, incomplete, or no longer valid.
           Please check that you have the complete link and try again.
@@ -147,7 +153,9 @@ export default function ViewMessage() {
   if (expired) {
     return (
       <main className="view-message">
-        <h2>This Love Letter Has Expired <span aria-hidden="true">💔</span></h2>
+        <h1>
+          This Love Letter Has Expired <span aria-hidden="true">💔</span>
+        </h1>
         <p>The message is no longer available because its expiration time has passed.</p>
       </main>
     );
@@ -163,9 +171,9 @@ export default function ViewMessage() {
 
         <section className="hero view-hero passcode-hero">
 
-          <h2 className="hero-title">
+          <h1 className="hero-title">
             This Card Is Locked <span aria-hidden="true">🔒</span>
-          </h2>
+          </h1>
 
           <p className="hero-subtitle">
             Enter the passcode to reveal your Love Letter
@@ -248,20 +256,38 @@ export default function ViewMessage() {
 
         {/* Expiration Timer */}
         {card && timeLeft && (
+          <>
             <div 
               className="expiration-banner"
+              aria-hidden="true"
             >
               <span style={{ fontStyle: "normal" }}>💌</span> This message expires in {formatTime(timeLeft)}
             </div>
+
+            {/* Screen reader announcement */}
+            <p 
+              className="sr-only"
+              role="status"
+            >
+              {expirationAnnouncement}
+            </p>
+          </>
         )}
 
-        <h2 className="hero-title">Your Love Letter Message</h2>
+        {/* Header */}
+        <h1 className="hero-title">
+          Your Love Letter Message
+        </h1>
+
         <p className="hero-subtitle">
           Below is the Love Letter written for you. Click the envelope to
           open and read the message!
         </p>
 
-        <div className="divider-heart">
+        <div 
+          className="divider-heart"
+          aria-hidden="true"
+        >
           <div className="divider" />
           <span className="heart">♥</span>
           <div className="divider" />
@@ -270,66 +296,79 @@ export default function ViewMessage() {
 
       {/* Reveal Overlay */}
       {showReveal && card && (
-      <div className="reveal-overlay">
-        <div className="reveal-content">
+        <div className="reveal-overlay">
+          <div className="reveal-content">
 
-          <div className="reveal-message">
-            <p>You have a Love Letter!</p>
-          </div>
-
-          <div
-            className="envelope-back"
-            style={{
-              backgroundColor: card.color,
-              color: getContrastTextColor(card.color)
-            }}
-          >
-            <p className="envelope-back-from">
-              <strong>From:</strong> {card.from}
-            </p>
+            {/* Announcement */}
+            <div className="reveal-message">
+              <p role="status">
+                You have a Love Letter!
+              </p>
+            </div>
 
             <div
-              className="envelope-back-stamp"
-              style={{ backgroundImage: `url(${stampImage})` }}
-            />
+              className="envelope-back"
+              style={{
+                backgroundColor: card.color,
+                color: getContrastTextColor(card.color)
+              }}
+            >
 
-            <p className="envelope-back-to">
-              <strong>To:</strong> {card.to}
-            </p>
+              {/* From */}
+              <p className="envelope-back-from">
+                <strong>From:</strong> {card.from}
+              </p>
+
+              {/* Stamp */}
+              <div
+                className="envelope-back-stamp"
+                style={{ backgroundImage: `url(${stampImage})` }}
+                aria-hidden="true"
+              />
+
+              <p className="envelope-back-to">
+                <strong>To:</strong> {card.to}
+              </p>
+            </div>
           </div>
-
         </div>
-      </div>
-    )}
+      )}
 
       {/* Envelope */}
       {card && (
-
         <section className="message-display">
-
           <button
             type="button"
             className="envelope-wrapper"
             onClick={() => setIsOpen((previous) => !previous)}
             aria-expanded={isOpen}
             aria-label={isOpen ? "Close Love Letter" : "Open Love Letter"}
+            aria-controls="love-letter-content"
           >
 
             <div 
               className={`envelope ${isOpen ? "open" : ""}`}
             >
 
+              {/* Envelope Front Flap */}
               <div
                 className="envelope-flap"
                 style={{ backgroundColor: lightenColor(card.color, 5) }}
+                aria-hidden="true"
               />
+
+              {/* Envelope Back Flap -> open */}
               <div
                 className="envelope-flap-back"
                 style={{ backgroundColor: darkenColor(card.color, 5) }}
+                aria-hidden="true"
               />
+
+              {/* Envelope Body */}
               <div
                 className="envelope-body"
                 style={{ backgroundColor: card.color }}
+                aria-hidden="true"
               />
 
               {/* Sparkles */}
@@ -337,8 +376,12 @@ export default function ViewMessage() {
                 <Sparkles type={card.sparkle} />
               )}
 
+              {/* Letter Content */}
               {isOpen && (
-                <div className="letter">
+                <div 
+                  id="love-letter-content"
+                  className="letter"
+                >
                   <p>Dear {card.to},</p>
                   <p>{card.message}</p>
                   <p>Sincerely, {card.from}</p>
@@ -347,15 +390,18 @@ export default function ViewMessage() {
             </div>
           </button>
         </section>
-        )}
+      )}
 
-        <div className="send-back-container">
-            <button 
-                type="button"
-                className="send-back-btn"
-                onClick={() => window.location.hash = '#/'}
-            >Send a Love Letter Back!</button>
-        </div>
+      {/* Send a love letter back button */}
+      <div className="send-back-container">
+        <button 
+          type="button"
+          className="send-back-btn"
+          onClick={() => window.location.hash = '#/'}
+        >
+          Send a Love Letter Back!
+        </button>
+      </div>
     </main>
   );
 }
@@ -381,8 +427,8 @@ function lightenColor(hex, percent) {
       (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
       (B < 255 ? (B < 1 ? 0 : B) : 255)
     )
-      .toString(16)
-      .slice(1)
+    .toString(16)
+    .slice(1)
   );
 }
 
@@ -402,8 +448,8 @@ function darkenColor(hex, percent) {
       (G < 255 ? (G < 0 ? 0 : G) : 255) * 0x100 +
       (B < 255 ? (B < 0 ? 0 : B) : 255)
     )
-      .toString(16)
-      .slice(1)
+    .toString(16)
+    .slice(1)
   );
 }
 

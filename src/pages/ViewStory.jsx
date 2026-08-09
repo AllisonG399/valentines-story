@@ -1,64 +1,134 @@
 import { useEffect, useState } from "react";
 import { decodeData } from "../utils/encode";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
 import Intro from "../storyScenes/IntroScene";
 
 export default function ViewStory() {
-  const [expired, setExpired] = useState(false);
-  const [invalid, setInvalid] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(null);
-  
-  const [enteredPasscode, setEnteredPasscode] = useState("");
-  const [unlocked, setUnlocked] = useState(false)
+  const [card, setCard] = useState(null);
 
+  const [expired, setExpired] = useState(false); // Card URL expired
+  const [invalid, setInvalid] = useState(false); // Card URL does not exist
+
+  // Password
+  const [enteredPasscode, setEnteredPasscode] = useState(""); // Entered password
+  const [showPasscode, setShowPasscode] = useState(false);    // Toggling passcode field visibility
+  const [passcodeError, setPasscodeError] = useState("");     // Wrong password alert
+  const [unlocked, setUnlocked] = useState(false);            // Toggling unlocking card
+
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [expirationAnnouncement, setExpirationAnnouncement] = useState("");
+  
   const [currentScene, setCurrentScene] = useState(0);
   const [isView, setIsView] = useState(false);
 
-  const [card, setCard] = useState(null);
-
-
   useEffect(() => {
     try {
-        const hash = window.location.hash;
-        if (!hash.startsWith("#/vs/")) {
-            setInvalid(true);
-            return;
-            }
+      const hash = window.location.hash;
 
-            const encoded = hash.replace("#/vs/", "");
-
-        if (!encoded) {
+      // Make sure the URL contains a message card route
+      if (!hash.startsWith("#/vs/")) {
         setInvalid(true);
         return;
-        }
+      }
 
-        const decoded = decodeData(encoded);
+      // Extract the encoded card data
+      const encoded = hash.replace("#/vs/", "");
 
-        if (Date.now() > decoded.expiresAt) {
+      if (!encoded) {
+      setInvalid(true);
+      return;
+      }
+
+      // Decode the card data
+      const decoded = decodeData(encoded);
+
+      // Make sure decoded data is valid
+      if (!decoded || typeof decoded !== "object") {
+        setInvalid(true);
+        return;
+      }
+
+      // Make sure required card fields are valid
+      if (
+        typeof decoded.to !== "string" ||
+        typeof decoded.message !== "string" ||
+        typeof decoded.from !== "string" ||
+        typeof decoded.passcode !== "string" ||
+        typeof decoded.color !== "string" ||
+        typeof decoded.sparkle !== "string"
+      ) {
+        setInvalid(true);
+        return;
+      }
+
+      // Make sure the expiration timestamp is valid
+      if (
+        typeof decoded.expiresAt !== "number" ||
+        !Number.isFinite(decoded.expiresAt)
+      ) {
+        setInvalid(true);
+        return;
+      }
+
+      // Check whether the card has already expired
+      if (Date.now() >= decoded.expiresAt) {
         setExpired(true);
         return;
-        }
+      }
 
-        setCard(decoded);
+      // Store the decoded card
+      setCard(decoded);
 
-        // Start countdown
-        const interval = setInterval(() => {
+      // Set the initial countdown immediately
+      const initialTimeLeft = decoded.expiresAt - Date.now();
+
+      setTimeLeft(initialTimeLeft);
+      setExpirationAnnouncement(
+        `This Love Letter expires in ${formatTime(initialTimeLeft)}.`
+      );
+
+      // Update countdown every second
+      const interval = setInterval(() => {
         const remaining = decoded.expiresAt - Date.now();
 
         if (remaining <= 0) {
-            clearInterval(interval);
-            setExpired(true);
+          clearInterval(interval);
+          setTimeLeft(0);
+          setExpired(true);
         } else {
-            setTimeLeft(remaining);
+          setTimeLeft(remaining);
         }
-        }, 1000);
+      }, 1000);
 
-        return () => clearInterval(interval);
+      // Clean up interval when component unmounts
+      return () => clearInterval(interval);
 
     } catch (err) {
         console.error("Invalid card data", err);
         setInvalid(true);
     }
-    }, []);
+  }, []);
+
+  const handleUnlock = () => {
+    if (enteredPasscode === card.passcode) {
+      setPasscodeError("");
+      setUnlocked(true);
+
+      // Start reveal sequence
+      setShowReveal(true);
+
+      setTimeout(() => {
+        setShowReveal(false);
+      }, 6000);
+
+      return;
+    }
+
+    setPasscodeError("Incorrect passcode. Please try again.");
+  };
 
   // -------------------------
   // Invalid URL
@@ -66,8 +136,13 @@ export default function ViewStory() {
   if (invalid) {
     return (
       <main className="view-message">
-        <h2>Invalid Love Letter Link 💔</h2>
-        <p>This link appears to be corrupted or incomplete.</p>
+        <h1>
+          Invalid Love Letter Link <span aria-hidden="true">💔</span>
+        </h1>
+        <p>
+          This link appears to be corrupted, incomplete, or no longer valid.
+          Please check that you have the complete link and try again.
+        </p>
       </main>
     );
   }
@@ -78,8 +153,10 @@ export default function ViewStory() {
   if (expired) {
     return (
       <main className="view-message">
-        <h2>This Love Letter Has Expired 💔</h2>
-        <p>The message is no longer available.</p>
+        <h1>
+          This Love Letter Has Expired <span aria-hidden="true">💔</span>
+        </h1>
+        <p>The message is no longer available because its expiration time has passed.</p>
       </main>
     );
   }
@@ -88,71 +165,103 @@ export default function ViewStory() {
   // Passcode Gate
   // -------------------------
   if (card && card.passcode && !unlocked) {
+
     return (
       <main className="view-message">
-        <header className="header">
-          <h1 className="site-title">Love Letter</h1>
-          <div className="divider" />
-        </header>
 
         <section className="hero view-hero passcode-hero">
-          <h2 className="hero-title">This Card Is Locked 🔒</h2>
+
+          <h1 className="hero-title">
+            This Card Is Locked <span aria-hidden="true">🔒</span>
+          </h1>
+
           <p className="hero-subtitle">
-            Enter the passcode to reveal your Love Letter.
+            Enter the passcode to reveal your Love Letter
           </p>
         </section>
 
-        <div className="passcode-container">
-          <input
-            type="password"
-            placeholder="Enter passcode"
-            value={enteredPasscode}
-            onChange={(e) => setEnteredPasscode(e.target.value)}
-          />
+        
+        <form
+          className="passcode-container"
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleUnlock();
+          }}
+        >
+          
+
+          <div className="passcode-input-wrapper">
+
+            <label htmlFor="card-passcode" className="sr-only">
+              Passcode
+            </label>
+
+            <input
+              id="card-passcode"
+              type={showPasscode ? "text" : "password"}
+              placeholder="Enter passcode"
+              value={enteredPasscode}
+              onChange={(e) => {
+                setEnteredPasscode(e.target.value);
+                setPasscodeError("");
+              }}
+              aria-invalid={!!passcodeError}
+              aria-describedby={passcodeError ? "passcode-error" : undefined}
+              autoComplete="off"
+            />
+
+            <button
+                type="button"
+                className="passcode-toggle"
+                onClick={() => setShowPasscode((previous) => !previous)}
+                aria-label={showPasscode ? "Hide passcode" : "Show passcode"}
+              >
+                <FontAwesomeIcon
+                  icon={showPasscode ? faEyeSlash : faEye}
+                  aria-hidden="true"
+                />
+              </button>
+          </div>
+
+          {passcodeError && (
+            <p
+              id="passcode-error"
+              className="form-error"
+              role="alert"
+            >
+              {passcodeError}
+            </p>
+          )}
+
           <button
-            onClick={() => {
-              if (enteredPasscode === card.passcode) {
-                setUnlocked(true);
-                
-                // Start reveal sequence
-                setShowReveal(true);
-                
-                setTimeout(() => {
-                    setShowReveal(false); // remove overlay
-                }, 6000); // 6 seconds for reveal animation
-              }
-            }}
+            type="submit"
+            className="generate-button"
           >
             Unlock
           </button>
-        </div>
+        </form>
       </main>
     );
   }
 
   const storyScenes = card
-    ? [
-        {
-          id: "intro",
-          component: Intro,
-          props: {
-            to: card.to,
-            from: card.from,
-            message: card.message,
-            sparkle: card.sparkle,
-            color: card.color
-          }
+  ? [
+      {
+        id: "intro",
+        component: Intro,
+        props: {
+          to: card.to,
+          from: card.from,
+          message: card.message,
+          sparkle: card.sparkle,
+          color: card.color
         }
-      ]
-    : [];
+      }
+    ]
+  : [];
 
   return (
     <main className="view-message">
-      {/* Header */}
-      <header className="header">
-        <h1 className="site-title">Love Letter</h1>
-        <div className="divider"/>
-      </header>
 
       {/* Hero */}
       <section className="hero view-hero">

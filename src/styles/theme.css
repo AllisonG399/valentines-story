@@ -35,26 +35,35 @@ footer {
     background-color: var(--pearl-blush);
 }
 
-h1, h2, h3 {
+h1, h2 {
     font-family: "Cormorant Garamond", serif;
     color: var(--deep-rose);
 }
 
-h2 {
+h1 {
     font-size: 2.8rem;
     text-align: center;
 }
 
-h3 {
+h2 {
     font-weight: 500;
     font-size: 1.8rem;
 }
 
-h4 {
+h3 {
     font-family: "Cormorant Garamond", serif;
     font-weight: 500;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     text-align: center;
+    color: var(--text-primary)
+}
+
+h4 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--text-primary)
 }
 
 p {
@@ -109,14 +118,18 @@ input, textarea {
 
 /* Phone Size */
 @media (max-width: 768px) {
-    h2 {
+
+    h1 {
         font-size: 2.3rem;
     }
-    h3 {
+    h2 {
         font-size: 1.6rem;
     }
+    h3 {
+        font-size: 1.4rem;
+    }
     h4 {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
     }
     p {
         font-size: 0.85rem;

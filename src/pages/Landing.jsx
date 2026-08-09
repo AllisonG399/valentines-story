@@ -179,12 +179,12 @@ export default function ValentinesLanding() {
             animate="visible"
           >
 
-            <motion.h2 
+            <motion.h1 
               className="hero-title"
               variants={heroItem}
             >
               Send a Love Letter they will actually keep
-            </motion.h2>
+            </motion.h1>
 
             <motion.p 
               className="hero-subtitle"
@@ -231,7 +231,7 @@ export default function ValentinesLanding() {
                 aria-hidden="true"
               /> 
 
-              <h3>Static Card</h3>
+              <h2>Static Card</h2>
 
               <p>A beautiful message, simply delivered.</p>
             </motion.button>
@@ -253,7 +253,7 @@ export default function ValentinesLanding() {
                 aria-hidden="true"
               />
 
-              <h3>Story Card</h3>
+              <h2>Story Card</h2>
 
               <p>A guided, interactive love story.</p>
             </motion.button>

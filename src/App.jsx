@@ -58,12 +58,15 @@ export default function App() {
       case '#/create/story':
         return (
           <CreateStory 
+            setHasUnsavedChanges={setHasUnsavedChanges}
           />
         );
       case '#/expired':
         return <Expired />;
       case '#/view/message':
         return <ViewMessage />;  
+      case '#/view/story':
+        return <ViewStory />;
       case '#/scene/intro':
         return <Intro />;
       case '#/':

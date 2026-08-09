@@ -294,7 +294,7 @@ export default function CreateStory({
       theWayYou: form.theWayYou.trim(),
       makeMeFeel: form.makeMeFeel.trim(),
 
-      favoriteThingYouDo: form.favoriteThingYou.trim(),
+      favoriteThingYouDo: form.favoriteThingYouDo.trim(),
       favoritePhysicalThingAboutYou: form.favoritePhysicalThingAboutYou.trim(),
       favoriteThingYouSay: form.favoriteThingYouSay.trim(),
       favoriteThingWeDoTogether: form.favoriteThingWeDoTogether.trim(),

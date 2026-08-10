@@ -1,138 +1,195 @@
-💌 Love Letter
+<h1>💌 Love Letter</h1>
 
-A personalized, interactive digital love letter experience built with React.
+<strong>A personalized, interactive digital love letter experience built with React.</strong>
 
-Love Letter is a client-side web application that lets users create and share personalized digital love letters through two different experiences: a Static Card for a focused, straightforward message and a Story Card for a deeper, interactive storytelling experience.
+Love Letter is a client-side web application that lets users create and share personalized digital love letters through two different experiences: a <strong>Static Card</strong> for a focused, straightforward message and a <strong>Story Card</strong> for a deeper, interactive storytelling experience.
 
 The project was designed to be more than a static form: it combines interactive storytelling, client-side data handling, accessibility, responsive design, validation, and thoughtful user experience into a single application.
 
-💌 Two Card Experiences
+<h2>💌 Two Card Experiences</h2>
 
 Love Letter provides two different ways to create and share a personalized message.
 
-💗 Static Card
+<h3>💗 Static Card</h3>
 
 The Static Card is designed around the core love-letter experience. It keeps the creation process focused on the essential information needed to deliver a personalized message.
 
-Users provide:
-
-Recipient
-Message
-Sender
-Passcode
-Expiration period
-Envelope color
-Sparkle animation
+<strong>Users provide:</strong>
+<ul>
+  <li>Recipient</li>
+  <li>Message</li>
+  <li>Sender</li>
+  <li>Passcode</li>
+  <li>Expiration period</li>
+  <li>Envelope color</li>
+  <li>Sparkle animation</li>
+</ul>
 
 The recipient can then open the generated link, verify the card, enter the passcode, and interact with the envelope to reveal the message.
 
 The Static Card is intentionally simple and focused on the message itself.
 
-💕 Story Card
+<h3>💕 Story Card</h3>
 
 The Story Card builds on the Static Card foundation while collecting significantly more personalized information to create a deeper storytelling experience.
 
 In addition to all of the Static Card fields, users can provide:
 
-Favorite Memories
+<strong>Favorite Memories</strong>
 
-Memory description
-Date
-Location
-Optional image
-Multiple memories
+<ul>
+  <li>Memory description</li>
+  <li>Date</li>
+  <li>Location</li>
+  <li>Optional image</li>
+  <li>Multiple memories</li>
+</ul>
 
-How You Make Me Feel
+<strong>How You Make Me Feel</strong>
 
-The way you...
-Makes me feel...
+<ul>
+  <li>The way you...</li>
+  <li>Makes me feel...</li>
+</ul>
 
-Favorite Things About You
+<strong>Favorite Things About You</strong>
 
-Favorite thing you do
-Favorite physical feature
-Favorite thing you say
-Favorite thing you do together
+<ul>
+  <li>Favorite thing you do</li>
+  <li>Favorite physical feature</li>
+  <li>Favorite thing you say</li>
+  <li>Favorite thing you do together</li>
+</ul>
 
-Things I Don't Say Enough
+<strong>Things I Don't Say Enough</strong>
 
-Multiple personalized entries
+<ul>
+  <li>Multiple personalized entries</li>
+</ul>
 
 This additional content gives the Story Card enough information to evolve beyond a single message into a personalized, scene-based experience.
 
-Static Card vs. Story Card
-Feature	💗 Static Card	💕 Story Card
-Recipient & Sender	✓	✓
-Main Message	✓	✓
-Passcode Protection	✓	✓
-Expiration	✓	✓
-Custom Envelope Color	✓	✓
-Sparkle Animation	✓	✓
-Favorite Memories	—	✓
-Memory Dates	—	✓
-Memory Locations	—	✓
-Memory Images	—	✓
-Personal Feelings	—	✓
-Favorite Things	—	✓
-Relationship Details	—	✓
-Multiple "Don't Say Enough" Entries	—	✓
-Scene-Based Presentation	—	✓
+<h3>Static Card vs. Story Card</h3>
 
-The two experiences share the same core principles around validation, accessibility, responsive design, expiration handling, and personalized presentation, while the Story Card extends those foundations with significantly more user-generated content and interactive storytelling.
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Feature</th>
+      <th scope="col">💗 Static Card</th>
+      <th scope="col">💕 Story Card</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Recipient & Sender</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Main Message</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Passcode Protection</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Expiration</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Custom Envelope Color</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Sparkle Animation</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Favorite Memories</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Memory Dates</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Memory Locations</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Memory Images</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Personal Feelings</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Favorite Things</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Multiple "Don't Say Enough" Entries</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Scene-Based Presentation</td>
+      <td>—</td>
+      <td>✓</td>
+    </tr>
+  </tbody>
+</table>
 
-✨ Features
-💌 Personalized Love Letters
+The two experiences share the same core principles around <strong>validation, accessibility, responsive design, expiration handling, and personalized presentation</strong>, while the Story Card extends those foundations with significantly more user-generated content and interactive storytelling.
 
-Users can create customized letters with:
-
-Recipient and sender names
-Personalized message
-Passcode protection
-Configurable expiration time
-Custom envelope colors
-Animated sparkle effects
-
-Story Cards additionally support:
-
-Favorite memories
-Memory dates and locations
-Optional memory images
-Personalized feelings
-Favorite things about the recipient
-Favorite things they do together
-"Things I Don't Say Enough" prompts
-Multiple entries for dynamic sections
-🔐 Private, Shareable Links
+<h2>🔐 Private, Shareable Links</h2>
 
 Each generated letter is converted into encoded data and included in a shareable URL.
 
-The recipient can:
+<strong>The recipient can:</strong>
 
-Open the generated link
-Pass URL and data validation
-Decode and validate the card data
-Verify that the letter has not expired
-Enter the required passcode
-Unlock the card
-Experience the appropriate card presentation
+<ul>
+  <li>Open the generated link</li>
+  <li>Pass URL and data validation</li>
+  <li>Decode and validate the card data</li>
+  <li>Verify that the letter has not expired</li>
+  <li>Enter the required passcode</li>
+  <li>Unlock the card</li>
+  <li>Experience the appropriate card presentation</li>
+</ul>
 
-Security note: Love Letter's client-side encoding is intended for privacy and obscurity, not cryptographic security. Sensitive information should not be treated as secure because the encoded data can ultimately be decoded by the client.
+<strong>Security note</strong>: Love Letter's client-side encoding is intended for privacy and obscurity, not cryptographic security. Sensitive information should not be treated as secure because the encoded data can ultimately be decoded by the client.
 
-⏳ Expiring Letters
+<h2>⏳ Expiring Letters</h2>
 
 Creators can choose an expiration period for their letter.
 
-The application:
+<strong>The application:</strong>
 
-Stores an expiration timestamp with the card
-Checks expiration when the link is opened
-Displays a live expiration countdown
-Prevents access after expiration
-Provides an accessible expiration announcement for screen-reader users
+<ul>
+  <li>Stores an expiration timestamp with the card</li>
+  <li>Checks expiration when the link is opened</li>
+  <li>Displays a live expiration countdown</li>
+  <li>Prevents access after expiration</li>
+  <li>Provides an accessible expiration announcement for screen-reader users</li>
+</ul>
 
 Expired cards are handled as a dedicated user-facing state rather than allowing expired content to remain accessible.
 
-📖 Interactive Storytelling
+<h2>📖 Interactive Storytelling</h2>
 
 Story Cards use a scene-based storytelling structure.
 

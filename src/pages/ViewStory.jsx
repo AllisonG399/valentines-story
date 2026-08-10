@@ -4,6 +4,9 @@ import { decodeData } from "../utils/encode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
+import Sparkles from "../components/animations/Sparkles";
+import stampImage from '../assets/icons/stamp.png';
+
 import Intro from "../storyScenes/IntroScene";
 
 export default function ViewStory() {
@@ -20,6 +23,9 @@ export default function ViewStory() {
 
   const [timeLeft, setTimeLeft] = useState(null);
   const [expirationAnnouncement, setExpirationAnnouncement] = useState("");
+
+  const [showReveal, setShowReveal] = useState(false);
+  const [showCard, setShowCard] = useState(false);
   
   const [currentScene, setCurrentScene] = useState(0);
   const [isView, setIsView] = useState(false);
@@ -265,85 +271,175 @@ export default function ViewStory() {
 
       {/* Hero */}
       <section className="hero view-hero">
+
+        {/* Expiration Timer */}
         {card && timeLeft && (
-            <div className="expiration-banner">
-                💌 This message expires in {formatTime(timeLeft)}
+          <>
+            <div 
+              className="expiration-banner"
+              aria-hidden="true"
+            >
+              <span style={{ fontStyle: "normal" }}>💌</span> This message expires in {formatTime(timeLeft)}
             </div>
+
+            {/* Screen reader announcement */}
+            <p 
+              className="sr-only"
+              role="status"
+            >
+              {expirationAnnouncement}
+            </p>
+          </>
         )}
 
-        <h2 className="hero-title">Your Love Letter</h2>
+        {/* Header */}
+        <h1 className="hero-title">
+          Your Love Letter Message
+        </h1>
+
         <p className="hero-subtitle">
-          Below is the Love Letter Interactive Story written for you. Click the envelope to
-          open and read the message!
+          Below is the Love Letter Story Card written for you. Click the Begin button to
+          start viewing your message!
         </p>
 
-        <div className="divider-heart">
+        <div 
+          className="divider-heart"
+          aria-hidden="true"
+        >
           <div className="divider" />
           <span className="heart">♥</span>
           <div className="divider" />
         </div>
+      </section>
+
+      {/* Reveal Overlay */}
+      {showReveal && card && (
+        <div className="reveal-overlay">
+          <div className="reveal-content">
+
+            {/* Announcement */}
+            <div className="reveal-message">
+              <p role="status">
+                You have a Love Letter!
+              </p>
+            </div>
+
+            <div
+              className="envelope-back"
+              style={{
+                backgroundColor: card.color,
+                color: getContrastTextColor(card.color)
+              }}
+            >
+
+              {/* From */}
+              <p className="envelope-back-from">
+                <strong>From:</strong> {card.from}
+              </p>
+
+              {/* Stamp */}
+              <div
+                className="envelope-back-stamp"
+                style={{ backgroundImage: `url(${stampImage})` }}
+                aria-hidden="true"
+              />
+
+              <p className="envelope-back-to">
+                <strong>To:</strong> {card.to}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <div className="story-nav-cont">
+
+        {/* Back Arrow */}
+        <button
+          type="button"
+          onClick={() =>
+            setCurrentScene((prev) =>
+              Math.max(prev - 1, 0)
+            )
+          }
+          aria-label="Previous story scene"
+          disabled={currentScene === 0}
+        >
+          <span aria-hidden="true">←</span>
+        </button>
 
         {/* View Story Button */}
-        <button onClick={() => setIsView(!isView)}>
-          View Love Story
+        <button 
+          type="button"
+          onClick={() => setIsView((previous) => !previous)}
+        >
+          {isView ? "Restart" : "Begin Love Story"}
         </button> 
 
-        {/* Story Preview */}
-        <div className={`story-preview ${isView ? "show" : ""}`}>
+        {/* Forward Arrow */}
+        <button
+          type="button"
+          onClick={() =>
+            setCurrentScene((prev) =>
+              Math.min(prev + 1, storyScenes.length - 1)
+            )
+          }
+          aria-label="Next story scene"
+          disabled={currentScene === storyScenes.length -1}
+        >
+          <span aria-hidden="true">→</span>
+        </button>
 
-          {/* Scene Progress Bar */}
-          <div className="story-progress">
-            {storyScenes.map((_, i) => (
-              <div
-                key={i}
-                className={`progress-bar ${i <= currentScene ? "active" : ""}`}
-              />
-            ))}
-          </div>
+      </div>
 
-          {/* Scene Content */}
-          <div className="story-scene">
-            {storyScenes.length > 0 && (() => {
-              const Scene = storyScenes[currentScene].component;
-              const props = storyScenes[currentScene].props;
-              return <Scene {...props} />;
-            })()}
-          </div>
+      {/* Scene Progress Bar */}
+      <div 
+        className="story-progress"
+        aria-hidden="true"
+      >
+        {storyScenes.map((_, i) => (
+          <div
+            key={i}
+            className={`progress-bar ${i <= currentScene ? "active" : ""}`}
+          />
+        ))}
+      </div>
 
-          {/* Navigation */}
-          <div className="story-controls">
-            <button
-              onClick={() =>
-                setCurrentScene((prev) =>
-                  Math.max(prev - 1, 0)
-                )
-              }
-            >
-              ←
-            </button>
+      {/* Screen Reader Status */}
+      <p className="sr-only" role="status">
+        Story scene {currentScene + 1} of {storyScenes.length}
+      </p>
 
-            <button
-              onClick={() =>
-                setCurrentScene((prev) =>
-                  Math.min(prev + 1, storyScenes.length - 1)
-                )
-              }
-            >
-              →
-            </button>
-          </div>
+      {/* Story Preview */}
+      <div className={`story-preview ${isView ? "show" : ""}`}>
 
+
+        {/* Scene Content */}
+        <div 
+          className="story-scene"
+          aria-label={`Story scene ${currentScene + 1}`}
+        >
+
+          {storyScenes.length > 0 && (() => {
+            const Scene = storyScenes[currentScene].component;
+            const props = storyScenes[currentScene].props;
+            return <Scene {...props} />;
+          })()}
         </div>
 
-        {/* Send a Card Back Button */}
-        <div className="send-back-container">
-            <button 
-                type="button"
-                className="send-back-btn"
-                onClick={() => window.location.hash = '#/'}
-            >Send a Love Letter Back!</button>
-        </div>
-      </section>
+
+      </div>
+
+      {/* Send a Card Back Button */}
+      <div className="send-back-container">
+          <button 
+              type="button"
+              className="send-back-btn"
+              onClick={() => window.location.hash = '#/'}
+          >Send a Love Letter Back!</button>
+      </div>
+      
     </main>
   );
 }
@@ -366,3 +462,18 @@ function formatTime(ms) {
 
   return `${minutes}m ${seconds}s`;
 }
+
+function getContrastTextColor(hex) {
+  const cleaned = hex.replace("#", "");
+
+  const r = parseInt(cleaned.substring(0, 2), 16);
+  const g = parseInt(cleaned.substring(2, 4), 16);
+  const b = parseInt(cleaned.substring(4, 6), 16);
+
+  // Perceived brightness formula
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return brightness > 155
+    ? "var(--text-primary)"   // dark text
+    : "var(--white-linen)";   // light text
+};

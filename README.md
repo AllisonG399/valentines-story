@@ -558,4 +558,4 @@ Love Letter is a personal portfolio project developed to explore the intersectio
 
 The project demonstrates how a common concept—a digital love letter—can be developed into <strong>two distinct user experiences</strong> while sharing a common foundation of reusable components, structured data, validation, accessibility, and responsive design.
 
-<strong>Built with curiosity, iteration, and a lot of 💌</strong
+<strong>Built with curiosity, iteration, and a lot of 💌</strong>

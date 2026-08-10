@@ -191,10 +191,11 @@ Expired cards are handled as a dedicated user-facing state rather than allowing 
 
 <h2>📖 Interactive Storytelling</h2>
 
-Story Cards use a scene-based storytelling structure.
+Story Cards use a <strong>scene-based storytelling structure</strong>.
 
 The story viewer uses reusable scene components that can be dynamically rendered based on the current scene:
 
+```javascript
 const storyScenes = [
   {
     id: "intro",
@@ -208,63 +209,99 @@ const storyScenes = [
     }
   }
 ];
+```
 
 This structure allows additional scenes to be added without rewriting the overall story viewer.
 
 As the Story Card grows, individual scenes can remain independent while sharing the same underlying card data.
 
-♿ Accessibility
+<h2>♿ Accessibility</h2>
 
 Accessibility has been considered throughout the application rather than added as a final step.
 
-Current accessibility work includes:
+<strong>Current Accessibility Work</strong>
 
-Semantic headings and HTML elements
-Proper form labels
-Keyboard-accessible controls
-Keyboard submission for passcode forms
-Accessible password visibility controls
-aria-expanded for interactive content
-aria-invalid and aria-describedby for validation errors
-Screen-reader announcements for important status changes
-Decorative emoji and graphics hidden from assistive technology
-Decorative animation hidden from screen readers
-Accessible navigation labels
-Disabled navigation controls when appropriate
-Focus management for confirmation modals
-Keyboard focus trapping inside modals
-Escape-key support for closing modals
-Focus restoration after modal interaction
-Reduced-motion considerations
+<ul>
+  <li>Semantic headings and HTML elements</li>
+  <li>Proper form labels</li>
+  <li>Keyboard-accessible controls</li>
+  <li>Keyboard submission for passcode forms</li>
+  <li>Accessible password visibility controls</li>
+  <li>aria-expanded for interactive content</li>
+  <li>aria-invalid and aria-describedby for validation errors</li>
+  <li>Screen-reader announcements for important status changes</li>
+  <li>Decorative emoji and graphics hidden from assistive technology</li>
+  <li>Decorative animation hidden from screen readers</li>
+  <li>Accessible navigation labels</li>
+  <li>Disabled navigation controls when appropriate</li>
+  <li>Focus management for confirmation modals</li>
+  <li>Keyboard focus trapping inside modals</li>
+  <li>Escape-key support for closing modals</li>
+  <li>Focus restoration after modal interaction</li>
+  <li>Reduced-motion considerations</li>
+</ul>
 
 The goal is for the experience to remain understandable and usable without relying solely on visual animation.
 
-📱 Responsive Design
+<h2>📱 Responsive Design</h2>
 
 The interface is designed to work across different screen sizes, from mobile devices to large desktop displays.
 
-Responsive considerations include:
+<strong>Responsive considerations include:</strong>
 
-Flexible layouts
-Mobile-friendly form controls
-Responsive typography
-Scalable interactive elements
-Touch-friendly buttons
-Content that remains usable at larger viewport sizes
-🛠️ Technology
-Technology	Purpose
-React	Component-based UI and application state
-JavaScript	Application logic and data handling
-CSS	Responsive styling, animations, and visual design
-Vite	Development and production tooling
-Font Awesome	Interface icons
-Git / GitHub	Version control and project development
-🧩 Application Structure
+<ul>
+  <li>Flexible layouts</li>
+  <li>Mobile-friendly form controls</li>
+  <li>Responsive typography</li>
+  <li>Scalable interactive elements</li>
+  <li>Touch-friendly buttons</li>
+  <li>Content that remains usable at larger viewport sizes</li>
+</ul>
+
+<h2>🛠️ Technology</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Technology</th>
+      <th scope="col">Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">React</th>
+      <td>Component-based UI and application state</td>
+    </tr>
+    <tr>
+      <th scope="row">JavaScript</th>
+      <td>Application logic and data handling</td>
+    </tr>
+    <tr>
+      <th scope="row">CSS</th>
+      <td>Responsive styling, animations, and visual design</td>
+    </tr>
+    <tr>
+      <th scope="row">Vite</th>
+      <td>Development and production tooling</td>
+    </tr>
+    <tr>
+      <th scope="row">Font Awesome</th>
+      <td>Interface icons</td>
+    </tr>
+    <tr>
+      <th scope="row">Git / GitHub</th>
+      <td>Version control and project development</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>🧩 Application Structure</h2>
 
 Love Letter is organized around reusable React components and separated responsibilities.
 
-A simplified structure looks like:
+<strong>Simplified Structure</strong>
 
+```text
 src/
 ├── components/
 │   ├── CreateStory
@@ -279,25 +316,31 @@ src/
 │   └── encode.js
 │
 └── ...
+```
 
-The application separates:
+<strong>The application separates</strong>:
 
-Card creation
-Form validation
-Dynamic form state
-Data encoding/decoding
-URL verification
-Expiration handling
-Passcode verification
-Story presentation
-Individual story scenes
-Reusable visual components
-Accessibility behavior
+<ul>
+  <li>Card creation</li>
+  <li>Form validation</li>
+  <li>Dynamic form state</li>
+  <li>Data encoding/decoding</li>
+  <li>URL verification</li>
+  <li>Expiration handling</li>
+  <li>Passcode verification</li>
+  <li>Story presentation</li>
+  <li>Individual story scenes</li>
+  <li>Reusable visual components</li>
+  <li>Accessibility behavior</li>
+</ul>
 
 This makes the project easier to extend as additional story scenes and functionality are introduced.
 
-🔄 User Flow
-Static Card
+<h2>🔄 User Flow</h2>
+
+<h3>Static Card</h3>
+
+```text
 Create Static Card
         │
         ▼
@@ -338,7 +381,11 @@ Interactive Envelope
         │
         ▼
 Reveal Message
-Story Card
+```
+
+<h3>Story Card</h3>
+
+```text
 Create Story Card
         │
         ▼
@@ -385,29 +432,35 @@ Interactive Story Scenes
         │
         ▼
 Personalized Content
-🧠 Engineering Highlights
-Form Validation
+```
+
+<h2>🧠 Engineering Highlights</h2>
+
+<h3>Form Validation</h3>
 
 The creation experience validates required fields before generating a card.
 
-Validation includes:
+<strong>Validation includes:</strong>
 
-Required field checks
-Whitespace trimming
-Passcode length requirements
-Expiration option validation
-Memory validation
-Dynamic prompt validation
-User-friendly error messaging
+<ul>
+  <li>Required field checks</li>
+  <li>Whitespace trimming</li>
+  <li>Passcode length requirements</li>
+  <li>Expiration option validation</li>
+  <li>Memory validation</li>
+  <li>Dynamic prompt validation</li>
+  <li>User-friendly error messaging</li>
+</ul>
 
 The application also tracks unsaved changes so users are warned before navigating away from unfinished work.
 
-Dynamic Form State
+<h3>Dynamic Form State</h3>
 
 Related data is maintained within structured state objects and arrays.
 
 For example, Story Card memories are managed dynamically:
 
+``` javascript
 {
   memories: [
     {
@@ -418,26 +471,29 @@ For example, Story Card memories are managed dynamically:
     }
   ]
 }
+```
 
 Users can add and remove memories while maintaining a consistent form structure.
 
-The same approach is used for other dynamic Story Card sections, such as "Things I Don't Say Enough."
+The same approach is used for other dynamic Story Card sections, such as <strong>"Things I Don't Say Enough."</strong>
 
-Reusable Components
+<h3>Reusable Components</h3>
 
 Interactive elements such as:
 
-Story scenes
-Sparkle animations
-Form controls
-Password visibility controls
-Modal interactions
+<ul>
+  <li>Story scenes</li>
+  <li>Sparkle animations</li>
+  <li>Form controls</li>
+  <li>Password visibility controls</li>
+  <li>Modal interactions</li>
+</ul>
 
 are designed to be reusable rather than tightly coupled to a single page.
 
 The Story Card's scene architecture also allows new experiences to be added without rebuilding the entire viewer.
 
-Error Handling
+<h3>Error Handling</h3>
 
 The application handles malformed or incomplete links without crashing the interface.
 
@@ -445,64 +501,61 @@ Decoding and validation occur inside guarded logic so invalid data can be presen
 
 The viewer distinguishes between different failure states, including:
 
-Invalid URLs
-Malformed card data
-Invalid card fields
-Expired cards
-Incorrect passcodes
-🔒 Security Considerations
+<ul>
+  <li>Invalid URLs</li>
+  <li>Malformed card data</li>
+  <li>Invalid card fields</li>
+  <li>Expired cards</li>
+  <li>Incorrect passcodes</li>
+</ul>
 
-Love Letter intentionally uses client-side encoded data rather than claiming that the URL provides true encryption.
+<h2>🔒 Security Considerations</h2>
+
+Love Letter intentionally uses <strong>client-side encoded data</strong> rather than claiming that the URL provides true encryption.
 
 The application validates decoded data before using it, including:
 
-Expected data types
-Required fields
-Valid expiration timestamps
-URL structure
-Passcode verification
+<ul>
+  <li>Expected data types</li>
+  <li>Required fields</li>
+  <li>Valid expiration timestamps</li>
+  <li>URL structure</li>
+  <li>Passcode verification</li>
+</ul>
 
-However, because the data is ultimately stored in the URL and processed client-side, this approach should not be used for sensitive or confidential information.
+However, because the data is ultimately stored in the URL and processed client-side, this approach should <strong>not</strong> be used for sensitive or confidential information.
 
-The passcode provides an additional access barrier within the application's experience, but it should not be considered equivalent to server-side authentication or cryptographic protection.
+The passcode provides an additional access barrier within the application's experience, but it should <strong>not be considered equivalent to server-side authentication or cryptographic protection</strong>.
 
-♿ Accessibility Philosophy
-
-One of the goals of Love Letter is to demonstrate that an animated and visually expressive application can still provide an accessible experience.
-
-For example, continuously changing visual information such as the expiration countdown is hidden from screen readers while a concise human-readable announcement communicates the relevant information.
-
-Likewise, decorative animations and imagery are separated from meaningful content so assistive technology users aren't forced to interpret purely visual effects.
-
-Accessibility considerations are incorporated while features are being developed rather than treated solely as a final testing step.
-
-🎯 What This Project Demonstrates
+<h2>🎯 What This Project Demonstrates</h2>
 
 Love Letter was built to practice and demonstrate practical front-end development skills, including:
 
-React component architecture
-State management
-Dynamic forms
-Client-side data validation
-Data encoding and decoding
-URL validation
-Conditional rendering
-Reusable components
-Interactive UI design
-Responsive CSS
-Accessibility-focused development
-Keyboard navigation
-Focus management
-Error handling
-User experience design
-Git-based development
+<ul>
+  <li>React component architecture</li>
+  <li>State management</li>
+  <li>Dynamic forms</li>
+  <li>Client-side data validation</li>
+  <li>Data encoding and decoding</li>
+  <li>URL validation</li>
+  <li>Conditional rendering</li>
+  <li>Reusable components</li>
+  <li>Interactive UI design</li>
+  <li>Responsive CSS</li>
+  <li>Accessibility-focused development</li>
+  <li>Keyboard navigation</li>
+  <li>Focus management</li>
+  <li>Error handling</li>
+  <li>User experience design</li>
+  <li>Git-based development</li>
+</ul>
 
-The project also reflects an emphasis on building for real users rather than only making an interface visually appealing—particularly through accessibility, responsive behavior, validation, and clear interaction states.
+The project also reflects an emphasis on building for <strong>real users rather than only making an interface visually appealing</strong>—particularly through accessibility, responsive behavior, validation, and clear interaction states.
 
-👩‍💻 Project
+<h2>👩‍💻 Project</h2>
 
-Love Letter is a personal portfolio project developed to explore the intersection of React development, interactive storytelling, accessibility, and user experience design.
+Love Letter is a personal portfolio project developed to explore the intersection of <strong>React development, interactive storytelling, accessibility, and user experience design</strong>.
 
-The project demonstrates how a common concept—a digital love letter—can be developed into two distinct user experiences while sharing a common foundation of reusable components, structured data, validation, accessibility, and responsive design.
+The project demonstrates how a common concept—a digital love letter—can be developed into <strong>two distinct user experiences</strong> while sharing a common foundation of reusable components, structured data, validation, accessibility, and responsive design.
 
-Built with curiosity, iteration, and a lot of 💌.
+<strong>Built with curiosity, iteration, and a lot of 💌</strong

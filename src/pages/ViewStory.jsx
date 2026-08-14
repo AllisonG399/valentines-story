@@ -260,11 +260,11 @@ export default function ViewStory() {
       {
         id: "reveal",
         component: StoryCover,
-        propes: {
-
-        }
-      }
-      ,
+        props: {
+          isOpen: isView,
+          onComplete: () => setCurrentScene(1),
+        },
+      },
       {
         id: "intro",
         component: Intro,
@@ -282,13 +282,13 @@ export default function ViewStory() {
   {/* Handle love story navigation */}
   const handleStoryToggle = () => {
     if (isView) {
-      // Reset story
+      // Reset
       setCurrentScene(0);
       setIsView(false);
       return;
     }
 
-    // Begin story
+    // Begin
     setCurrentScene(0);
     setIsView(true);
   };
@@ -387,11 +387,11 @@ export default function ViewStory() {
           type="button"
           onClick={() =>
             setCurrentScene((prev) =>
-              Math.max(prev - 1, 0)
+              Math.max(prev - 1, 1)
             )
           }
           aria-label="Previous story scene"
-          disabled={currentScene === 0}
+          disabled={currentScene <= 1}
         >
           <span aria-hidden="true">←</span>
         </button>
@@ -413,7 +413,10 @@ export default function ViewStory() {
             )
           }
           aria-label="Next story scene"
-          disabled={currentScene === storyScenes.length -1}
+          disabled={
+            currentScene === 0 ||
+            currentScene === storyScenes.length - 1
+          }
         >
           <span aria-hidden="true">→</span>
         </button>

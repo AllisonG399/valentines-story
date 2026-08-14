@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Sparkles from "../components/animations/Sparkles";
 
 export default function Intro({
@@ -11,7 +12,21 @@ export default function Intro({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <motion.div
+      className="intro-scene"
+      initial={{
+        opacity: 0,
+        y: 15,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.6,
+        ease: "easeOut",
+      }}
+    >
       {/* Envelope */}
       <section className="message-display">
 
@@ -84,7 +99,7 @@ export default function Intro({
         </button>
 
       </section>
-    </div>
+    </motion.div>
   );
 }
 

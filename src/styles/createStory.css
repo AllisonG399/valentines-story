@@ -83,16 +83,41 @@
   justify-content: center;
 }
 
-/* Story Cover Hearts */
+
+
+/*-----------------
+Story Cover Hearts
+-----------------*/
 .story-cover {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: auto;
+  width: 90vw;
+  max-width: 1200px;
+  height: 600px;
+  overflow: hidden;
 }
 
-/* Intro Scene Page */
+.story-cover-hearts {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.story-cover-heart {
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/*-----------------
+Intro Scene Page
+-----------------*/
 .no-hover:hover {
   box-shadow: none;
   border: none;

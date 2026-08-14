@@ -218,7 +218,7 @@ button {
         z-index: 5;
         }
         100% {
-        transform: translateX(var(--horizontal-offset)) translateY(50vw); /* fallen lower */
+        transform: translateX(var(--horizontal-offset)) translateY(200px); /* fallen lower */
         opacity: 0.8;
         z-index: 5;
         animation-timing-function: ease-out;
@@ -259,7 +259,7 @@ button {
         z-index: 5;
         }
         100% {
-        transform: translateX(var(--horizontal-offset)) translateY(14vw); /* fallen lower */
+        transform: translateX(var(--horizontal-offset)) translateY(250px); /* fallen lower */
         opacity: 0.8;
         z-index: 5;
         animation-timing-function: ease-out;

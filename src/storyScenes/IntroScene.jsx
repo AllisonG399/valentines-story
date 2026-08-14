@@ -8,65 +8,82 @@ export default function Intro({
   sparkle = "hearts",
   color = "#ff6b81"
 }) {
-
-  const [stage, setStage] = useState(0);
-
-  const handleClick = () => {
-    if (stage < 5) {
-      setStage(stage + 1);
-    }
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="story-scene">
+    <div>
+      {/* Envelope */}
+      <section className="message-display">
 
-      <div
-        className={`story-stage stage-${stage}`}
-        onClick={handleClick}
-      >
+        <button
+          type="button"
+          className="envelope-wrapper no-hover"
+          onClick={() => setIsOpen((previous) => !previous)}
+          aria-expanded={isOpen}
+          aria-label={
+            isOpen
+              ? "Close Love Letter"
+              : "Open Love Letter"
+          }
+          aria-controls="love-letter-content"
+        >
 
-        {/* BOX */}
-        <div className="box">
+          <div
+            className={`envelope ${isOpen ? "open" : ""}`}
+          >
 
-          <div className="box-front"></div>
-          <div className="box-side"></div>
-          <div className="box-inside"></div>
-
-          <div className="box-flap-left"></div>
-          <div className="box-flap-right"></div>
-
-        </div>
-
-        {/* BOOK */}
-        {stage >= 2 && (
-          <div className="book">
-
+            {/* Envelope Front Flap */}
             <div
-              className="book-cover"
-              style={{ backgroundColor: color }}
+              className="envelope-flap"
+              style={{
+                backgroundColor: lightenColor(color, 5)
+              }}
+              aria-hidden="true"
             />
 
-            <div className="book-page">
+            {/* Envelope Back Flap */}
+            <div
+              className="envelope-flap-back"
+              style={{
+                backgroundColor: darkenColor(color, 5)
+              }}
+              aria-hidden="true"
+            />
 
-              {stage >= 4 && (
-                <div className="letter">
+            {/* Envelope Body */}
+            <div
+              className="envelope-body"
+              style={{
+                backgroundColor: color
+              }}
+              aria-hidden="true"
+            />
 
-                  {sparkle && <Sparkles type={sparkle} />}
+            {/* Sparkles */}
+            {isOpen && sparkle && (
+              <Sparkles type={sparkle} />
+            )}
 
-                  <p>Dear {to},</p>
-                  <p>{message}</p>
-                  <p>Sincerely, {from}</p>
+            {/* Letter Content */}
+            {isOpen && (
+              <div
+                id="love-letter-content"
+                className="letter"
+              >
+                <p>Dear {to},</p>
 
-                </div>
-              )}
+                <p>{message}</p>
 
-            </div>
+                <p>
+                  Sincerely, {from}
+                </p>
+              </div>
+            )}
 
           </div>
-        )}
+        </button>
 
-      </div>
-
+      </section>
     </div>
   );
 }

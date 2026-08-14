@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { decodeData } from "../utils/encode";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
+import { decodeData } from "../utils/encode";
+
 import Sparkles from "../components/animations/Sparkles";
+import StoryCover from "../components/animations/StoryCover";
 import stampImage from '../assets/icons/stamp.png';
 
 import Intro from "../storyScenes/IntroScene";
@@ -29,6 +32,7 @@ export default function ViewStory() {
   
   const [currentScene, setCurrentScene] = useState(0);
   const [isView, setIsView] = useState(false);
+  const [isCoverAnimating, setIsCoverAnimating] = useState(false);
 
   useEffect(() => {
     try {
@@ -250,8 +254,17 @@ export default function ViewStory() {
     );
   }
 
+  {/* Story Scenes to be displayed */}
   const storyScenes = card
   ? [
+      {
+        id: "reveal",
+        component: StoryCover,
+        propes: {
+
+        }
+      }
+      ,
       {
         id: "intro",
         component: Intro,
@@ -265,6 +278,20 @@ export default function ViewStory() {
       }
     ]
   : [];
+
+  {/* Handle love story navigation */}
+  const handleStoryToggle = () => {
+    if (isView) {
+      // Reset story
+      setCurrentScene(0);
+      setIsView(false);
+      return;
+    }
+
+    // Begin story
+    setCurrentScene(0);
+    setIsView(true);
+  };
 
   return (
     <main className="view-message">
@@ -370,12 +397,12 @@ export default function ViewStory() {
         </button>
 
         {/* View Story Button */}
-        <button 
+        <button
           type="button"
-          onClick={() => setIsView((previous) => !previous)}
+          onClick={handleStoryToggle}
         >
-          {isView ? "Restart" : "Begin Love Story"}
-        </button> 
+          {isView ? "Reset" : "Begin Love Story"}
+        </button>
 
         {/* Forward Arrow */}
         <button
@@ -412,22 +439,28 @@ export default function ViewStory() {
       </p>
 
       {/* Story Preview */}
-      <div className={`story-preview ${isView ? "show" : ""}`}>
-
-
-        {/* Scene Content */}
-        <div 
-          className="story-scene"
-          aria-label={`Story scene ${currentScene + 1}`}
+      <div
+        className={`story-preview-view ${isView ? "show" : ""}`}
+      >
+        {/* Story */}
+        <div
+          className={`story-content ${
+            isView ? "story-content-open" : ""
+          }`}
         >
+          <div
+            className="story-scene"
+            aria-label={`Story scene ${currentScene + 1}`}
+            aria-hidden={!isView}
+          >
+            {storyScenes.length > 0 && (() => {
+              const Scene = storyScenes[currentScene].component;
+              const props = storyScenes[currentScene].props;
 
-          {storyScenes.length > 0 && (() => {
-            const Scene = storyScenes[currentScene].component;
-            const props = storyScenes[currentScene].props;
-            return <Scene {...props} />;
-          })()}
+              return <Scene {...props} />;
+            })()}
+          </div>
         </div>
-
 
       </div>
 

@@ -1,4 +1,37 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+
+const overlayVariants = {
+  closed: {
+    opacity: 1,
+  },
+
+  open: {
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+      delay: 0.1,
+      ease: "easeInOut",
+    },
+  },
+};
+
+const messageVariants = {
+  closed: {
+    opacity: 1,
+    scale: 1,
+  },
+
+  open: {
+    opacity: 0,
+    scale: 0.95,
+    transition: {
+      duration: 0.4,
+      delay: 0.1,
+      ease: "easeInOut",
+    },
+  },
+};
 
 const coverVariants = {
   closed: {
@@ -22,6 +55,7 @@ const heartVariants = {
       rotate: 0,
       scale: 1,
     },
+
     open: {
       opacity: 0,
       x: -120,
@@ -43,6 +77,7 @@ const heartVariants = {
       rotate: 0,
       scale: 1,
     },
+
     open: {
       opacity: 0,
       x: 120,
@@ -64,6 +99,7 @@ const heartVariants = {
       rotate: 0,
       scale: 1,
     },
+
     open: {
       opacity: 0,
       x: 0,
@@ -82,9 +118,10 @@ const heartVariants = {
       opacity: 1,
       x: 0,
       y: 0,
-      rotate: 0,
+      rotate: 20,
       scale: 1,
     },
+
     open: {
       opacity: 0,
       x: 0,
@@ -99,96 +136,265 @@ const heartVariants = {
   },
 };
 
-const hearts = [
-    { id: 1, img: "💗", left: "10%", top: "15%", size: 5, index: 5, variant: "exitLeft" },
-    { id: 2, img: "🤍", left: "50%", top: "40%", size: 3, index: 3, variant: "exitUp" },
-    { id: 3, img: "💕", left: "80%", top: "70%", size: 4, index: 6, variant: "exitRight" },
-];
-
 const emoji = ["💗", "🤍", "💕"];
-let left = 7;
-let top = 7;
-let tempTop = top;
-const variant = ["exitLeft", "exitUp", "exitRight"];
-let tempVariant = "";
-let heart = [];
+const variants = ["exitLeft", "exitUp", "exitRight"];
 
-// Loop runs until we run out of vertical space (top hits the bottom)
-while (top <= 83) {
-  
-  // Check if we reached the right edge of the row
-  if (left > 85) { 
-    left = Math.floor(Math.random() * 5) + 1;       // Reset left to the start of a new row
-    top += Math.floor(Math.random() * 10) + 1;      // Move 'top' down to the next row
-    tempTop = top;                                  // Sync tempTop to the new row baseline
-  } else {
-    left += Math.floor(Math.random() * 5) + 1;     // Move horizontally across the row
-    tempTop = top + (Math.floor(Math.random() * 5) - 2); // Wiggle slightly up/down
+/*
+-----------------------------------------
+Generate Hearts
+-----------------------------------------
+*/
+
+function generateHearts() {
+  const isMobile = window.innerWidth <= 600;
+
+  /*
+  ---------------------------------------
+  Responsive layout settings
+  ---------------------------------------
+  */
+
+  // How far across the screen hearts can be placed
+  const maxLeft = isMobile ? 68 : 80;
+  const maxTop = isMobile ? 86 : 77;
+
+  // Horizontal spacing between hearts
+  const horizontalMin = isMobile ? 5 : 3;
+  const horizontalRange = isMobile ? 6 : 7;
+
+  // Vertical spacing between rows
+  const verticalMin = isMobile ? 4 : 3;
+  const verticalRange = isMobile ? 9 : 10;
+
+  // Starting position
+  let left = isMobile ? 5 : 7;
+  let top = 7;
+
+  let tempTop = top;
+  let tempVariant = "";
+
+  const heart = [];
+
+  /*
+  ---------------------------------------
+  Generate heart positions
+  ---------------------------------------
+  */
+
+  while (top <= maxTop) {
+
+    // Check if we reached the right edge
+    if (left > maxLeft) {
+
+      // Start a new row
+      left = Math.floor(Math.random() * 5) + 2;
+
+      // Move down
+      top +=
+        Math.floor(Math.random() * verticalRange) +
+        verticalMin;
+
+      tempTop = top;
+
+    } else {
+
+      // Move horizontally
+      left +=
+        Math.floor(Math.random() * horizontalRange) +
+        horizontalMin;
+
+      // Slight vertical wiggle
+      tempTop =
+        top +
+        (Math.floor(Math.random() * 4) - 2);
+    }
+
+    // Safety check
+    if (top > 93) {
+      break;
+    }
+
+    /*
+    ---------------------------------------
+    Choose animation direction
+    ---------------------------------------
+    */
+
+    if (left <= 50) {
+
+      if (top < 40) {
+        tempVariant =
+          variants[Math.floor(Math.random() * 2)];
+      } else {
+        tempVariant = "exitLeft";
+      }
+
+    } else {
+
+      if (top < 40) {
+        tempVariant =
+          variants[Math.floor(Math.random() * 2) + 1];
+      } else {
+        tempVariant = "exitRight";
+      }
+    }
+
+    /*
+    ---------------------------------------
+    Add heart
+    ---------------------------------------
+    */
+
+    heart.push({
+      id: heart.length,
+
+      img:
+        emoji[
+          Math.floor(Math.random() * emoji.length)
+        ],
+
+      left: `${left}%`,
+
+      top: `${tempTop}%`,
+
+      // Slightly smaller range on mobile
+      size: isMobile
+        ? Math.floor(Math.random() * 5) + 2
+        : Math.floor(Math.random() * 5) + 2,
+
+      index:
+        Math.floor(Math.random() * 10) + 1,
+
+      variant: tempVariant,
+    });
   }
 
-  // Safety check: break immediately if the new row push put us past the bottom edge
-  if (top > 95) break;
-
-  // Variant checking logic
-  if (left <= 50) {
-    if (top < 40) {
-      tempVariant = variant[Math.floor(Math.random() * 2)];
-    } else {
-      tempVariant = "exitLeft";
-    }
-  } else if (left > 50) {
-    if (top < 40) {
-      tempVariant = variant[Math.floor(Math.random() * 2) + 1];
-    } else {
-      tempVariant = "exitRight";
-    }
-  }
-
-  heart.push({
-    id: heart.length,
-    img: emoji[Math.floor(Math.random() * emoji.length)],
-    left: `${left}%`,
-    top: `${tempTop}%`,
-    size: Math.floor(Math.random() * 5) + 1,
-    index: Math.floor(Math.random() * 10) + 1,
-    variant: tempVariant
-  });
+  return heart;
 }
 
-export default function StoryCover({ isOpen, onComplete }) {
-    return (
+/*
+-----------------------------------------
+Story Cover
+-----------------------------------------
+*/
 
-        // Outside Container - fixed
-        <motion.div
-            className="story-cover"
-            initial={false}
-            animate={isOpen ? "open" : "closed"}
-            variants={coverVariants}
-            onAnimationComplete={(definition) => {
-                if (definition === "open") {
-                onComplete();
-                }
+export default function StoryCover({
+  isOpen,
+  onComplete,
+}) {
+
+  const [heart, setHeart] = useState([]);
+
+  /*
+  ---------------------------------------
+  Generate initial hearts
+  ---------------------------------------
+  */
+
+  useEffect(() => {
+    setHeart(generateHearts());
+
+    let isMobile = window.innerWidth <= 600;
+    let resizeTimer;
+
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+
+      resizeTimer = setTimeout(() => {
+        const newIsMobile = window.innerWidth <= 600;
+
+        // Only regenerate if we crossed the mobile breakpoint
+        if (newIsMobile !== isMobile) {
+          isMobile = newIsMobile;
+          setHeart(generateHearts());
+        }
+      }, 150);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
+  return (
+
+    // Outside Container
+    <motion.div
+      className="story-cover"
+
+      initial={false}
+
+      animate={
+        isOpen
+          ? "open"
+          : "closed"
+      }
+
+      variants={coverVariants}
+
+      onAnimationComplete={(definition) => {
+
+        if (definition === "open") {
+          onComplete();
+        }
+
+      }}
+    >
+
+      <div className="story-cover-hearts">
+
+        {heart.map((heart) => (
+
+          <motion.span
+
+            key={heart.id}
+
+            className="story-cover-heart"
+
+            variants={
+              heartVariants[
+                heart.variant
+              ]
+            }
+
+            style={{
+              left: heart.left,
+              top: heart.top,
+
+              "--heart-size":
+                `${heart.size}rem`,
+
+              zIndex: heart.index,
             }}
-        >
-            <div className="story-cover-hearts">
 
-                {heart.map((heart) => (
-                    <motion.span
-                        key={heart.id}
-                        className="story-cover-heart"
-                        variants={heartVariants[heart.variant]}
-                        style={{
-                            left: heart.left,
-                            top: heart.top,
-                            fontSize: `${heart.size}rem`,
-                            zIndex: heart.index,
-                        }}
-                    >
-                        {heart.img}
-                    </motion.span>
-                ))}
-                
-            </div>
+          >
+
+            {heart.img}
+
+          </motion.span>
+
+        ))}
+
+        <motion.div
+          className="story-cover-overlay"
+          variants={overlayVariants}
+        >
+          <motion.div
+            className="story-cover-message"
+            variants={messageVariants}
+          >
+            <p>Ready to begin your love story?</p>
+
+            <span>
+              Press the button above
+            </span>
+          </motion.div>
         </motion.div>
-    );
+
+      </div>
+    </motion.div>
+  );
 }

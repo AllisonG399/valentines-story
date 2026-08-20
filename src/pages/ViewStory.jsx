@@ -245,7 +245,7 @@ export default function ViewStory() {
 
           <button
             type="submit"
-            className="generate-button"
+            className="generate-button unlock-card-button"
           >
             Unlock
           </button>
@@ -253,6 +253,12 @@ export default function ViewStory() {
       </main>
     );
   }
+
+  {/* Story Scene Directions */}
+  const sceneDirections = {
+    1: "Click the letter to open it",
+    
+  };
 
   {/* Story Scenes to be displayed */}
   const storyScenes = card
@@ -297,7 +303,7 @@ export default function ViewStory() {
     <main className="view-message">
 
       {/* Hero */}
-      <section className="hero view-hero">
+      <section className="hero view-hero view-story-hero">
 
         {/* Expiration Timer */}
         {card && timeLeft && (
@@ -423,6 +429,11 @@ export default function ViewStory() {
 
       </div>
 
+      {/* Scene Directions */}
+      <div className="scene-directions-cont">
+        <p>{sceneDirections[currentScene]}</p>
+      </div>
+
       {/* Scene Progress Bar */}
       <div 
         className="story-progress"
@@ -460,7 +471,11 @@ export default function ViewStory() {
               const Scene = storyScenes[currentScene].component;
               const props = storyScenes[currentScene].props;
 
-              return <Scene {...props} />;
+              return (
+                <div>
+                  <Scene {...props} />
+                </div>
+              );
             })()}
           </div>
         </div>

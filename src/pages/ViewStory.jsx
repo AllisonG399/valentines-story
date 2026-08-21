@@ -11,6 +11,7 @@ import StoryCover from "../components/animations/StoryCover";
 import stampImage from '../assets/icons/stamp.png';
 
 import Intro from "../storyScenes/IntroScene";
+import MakeMeFeelScene from "../storyScenes/MakeMeFeelScene";
 
 export default function ViewStory() {
   const [card, setCard] = useState(null);
@@ -281,7 +282,15 @@ export default function ViewStory() {
           sparkle: card.sparkle,
           color: card.color
         }
-      }
+      },
+      {
+        id: "feel",
+        component: MakeMeFeelScene,
+        props: {
+          theWayYou: card.theWayYou,
+          makeMeFeel: card.makeMeFeel
+        }
+      },
     ]
   : [];
 
@@ -484,11 +493,11 @@ export default function ViewStory() {
 
       {/* Send a Card Back Button */}
       <div className="send-back-container">
-          <button 
-              type="button"
-              className="send-back-btn"
-              onClick={() => window.location.hash = '#/'}
-          >Send a Love Letter Back!</button>
+        <button 
+          type="button"
+          className="send-back-btn"
+          onClick={() => window.location.hash = '#/'}
+        >Send a Love Letter Back!</button>
       </div>
       
     </main>

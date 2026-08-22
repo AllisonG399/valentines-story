@@ -7,9 +7,17 @@ export default function Intro({
   from = "Someone Who Adores You",
   message = "This is where your love letter will appear.",
   sparkle = "hearts",
-  color = "#ff6b81"
+  color = "#ff6b81",
+  onComplete,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleEnvelopeClick = () => {
+    const newIsOpen = !isOpen;
+
+    setIsOpen(newIsOpen);
+    onComplete(newIsOpen);
+  };
 
   return (
     <motion.div
@@ -33,7 +41,7 @@ export default function Intro({
         <button
           type="button"
           className="envelope-wrapper no-hover"
-          onClick={() => setIsOpen((previous) => !previous)}
+          onClick={handleEnvelopeClick}
           aria-expanded={isOpen}
           aria-label={
             isOpen

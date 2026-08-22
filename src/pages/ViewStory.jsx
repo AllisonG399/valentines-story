@@ -32,6 +32,7 @@ export default function ViewStory() {
   const [showCard, setShowCard] = useState(false);
   
   const [currentScene, setCurrentScene] = useState(0);
+  const [sceneComplete, setSceneComplete] = useState(false);
   const [isView, setIsView] = useState(false);
   const [isCoverAnimating, setIsCoverAnimating] = useState(false);
 
@@ -257,8 +258,17 @@ export default function ViewStory() {
 
   {/* Story Scene Directions */}
   const sceneDirections = {
-    1: "Click the letter to open it",
-    
+    0: {
+      initial: "Ready to begin your love story? Story scene guidance will appear here."
+    },
+    1: {
+      initial: "Click on the envelope to open it.",
+      complete: "Your next scene awaits, click the arrow to continue.",
+    },
+    2: {
+      initial: "Click",
+      complete: "Your next scene awaits, click the arrow to continue.",
+    }
   };
 
   {/* Story Scenes to be displayed */}
@@ -269,7 +279,10 @@ export default function ViewStory() {
         component: StoryCover,
         props: {
           isOpen: isView,
-          onComplete: () => setCurrentScene(1),
+          onComplete: () => {
+            setCurrentScene(1);
+            setSceneComplete(false);
+          },
         },
       },
       {
@@ -280,16 +293,22 @@ export default function ViewStory() {
           from: card.from,
           message: card.message,
           sparkle: card.sparkle,
-          color: card.color
-        }
+          color: card.color,
+          onComplete: (complete) => {
+            setSceneComplete(complete);
+          },
+        },
       },
       {
         id: "feel",
         component: MakeMeFeelScene,
         props: {
           theWayYou: card.theWayYou,
-          makeMeFeel: card.makeMeFeel
-        }
+          makeMeFeel: card.makeMeFeel,
+          onComplete: (complete) => {
+            setSceneComplete(complete);
+          },
+        },
       },
     ]
   : [];
@@ -297,15 +316,20 @@ export default function ViewStory() {
   {/* Handle love story navigation */}
   const handleStoryToggle = () => {
     if (isView) {
-      // Reset
       setCurrentScene(0);
+      setSceneComplete(false);
       setIsView(false);
       return;
     }
 
-    // Begin
     setCurrentScene(0);
+    setSceneComplete(false);
     setIsView(true);
+  };
+
+  const handleSceneChange = (scene) => {
+    setSceneComplete(false);
+    setCurrentScene(scene);
   };
 
   return (
@@ -400,11 +424,13 @@ export default function ViewStory() {
         {/* Back Arrow */}
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            setSceneComplete(false);
+
             setCurrentScene((prev) =>
               Math.max(prev - 1, 1)
-            )
-          }
+            );
+          }}
           aria-label="Previous story scene"
           disabled={currentScene <= 1}
         >
@@ -422,14 +448,20 @@ export default function ViewStory() {
         {/* Forward Arrow */}
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            setSceneComplete(false);
+
             setCurrentScene((prev) =>
-              Math.min(prev + 1, storyScenes.length - 1)
-            )
-          }
+              Math.min(
+                prev + 1,
+                storyScenes.length - 1
+              )
+            );
+          }}
           aria-label="Next story scene"
           disabled={
-            currentScene === 0 ||
+            !isView ||
+            (currentScene === 0 && !sceneComplete) ||
             currentScene === storyScenes.length - 1
           }
         >
@@ -440,7 +472,11 @@ export default function ViewStory() {
 
       {/* Scene Directions */}
       <div className="scene-directions-cont">
-        <p>{sceneDirections[currentScene]}</p>
+        <p>
+          {sceneDirections[currentScene]?.[
+            sceneComplete ? "complete" : "initial"
+          ]}
+        </p>
       </div>
 
       {/* Scene Progress Bar */}

@@ -452,31 +452,84 @@ export default function ViewStory() {
         </button>
 
         {/* Forward Arrow */}
-        <button
+        <motion.button
             className="view-story-nav-btn"
             type="button"
             onClick={() => {
                 setSceneComplete(false);
 
                 setCurrentScene((prev) =>
-                Math.min(
-                    prev + 1,
-                    storyScenes.length - 1
-                )
+                    Math.min(
+                        prev + 1,
+                        storyScenes.length - 1
+                    )
                 );
             }}
             aria-label="Next story scene"
+
             disabled={
                 !isView ||
-                (currentScene === 0 && !sceneComplete) ||
+                !sceneComplete ||
                 currentScene === storyScenes.length - 1
             }
+
+            animate={
+                sceneComplete &&
+                currentScene < storyScenes.length - 1
+                    ? "ready"
+                    : "idle"
+            }
+
+            whileHover={
+                sceneComplete
+                    ? {
+                        y: -6,
+                        cursor: "pointer"
+                    }
+                    : undefined
+            }
+
+            variants={{
+                idle: {
+                    scale: 1,
+                    x: 0,
+                    y: 0,
+                    boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
+                    borderColor: "transparent",
+                    pointerEvents: "none",
+
+                    transition: {
+                        duration: 0.3,
+                        ease: "easeOut",
+                    },
+                    
+                },
+
+                ready: {
+                    scale: 1,
+                    x: 0,
+                    borderColor: "var(--soft-pink)",
+
+                    boxShadow: [
+                        "0 0 14px rgba(214, 91, 116, 0.10)",
+                        "0 0 14px rgba(214, 91, 116, 0.30)",
+                        "0 0 14px rgba(214, 91, 116, 0.10)",
+                    ],
+
+                    transition: {
+                        duration: 1.6,
+                        repeat: Infinity,
+                        repeatDelay: 2,
+                        ease: "easeInOut",
+                    },
+                },
+            }}
         >
             <FontAwesomeIcon
                 icon={faArrowRight}
                 aria-hidden="true"
             />
-        </button>
+        </motion.button>
 
       </div>
 

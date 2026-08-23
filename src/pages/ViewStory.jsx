@@ -12,6 +12,7 @@ import stampImage from '../assets/icons/stamp.png';
 
 import Intro from "../storyScenes/IntroScene";
 import MakeMeFeelScene from "../storyScenes/MakeMeFeelScene";
+import MemoriesScene from "../storyScenes/MemoriesScene";
 
 export default function ViewStory() {
   const [card, setCard] = useState(null);
@@ -268,6 +269,10 @@ export default function ViewStory() {
     2: {
       initial: "Click on the fields to reveal the messages.",
       complete: "Your next scene awaits, click the arrow to continue.",
+    },
+    3: {
+        initial: "Swipe the cards away or click the arrow on the card to reveal the memories.",
+        complete: "Your next scene awaits, click the arrow to continue.",
     }
   };
 
@@ -309,6 +314,16 @@ export default function ViewStory() {
           onComplete: (complete) => {
             setSceneComplete(complete);
           },
+        },
+      },
+      {
+        id: "memories",
+        component: MemoriesScene,
+        props: {
+            memories: card.memories,
+            onComplete: (complete) => {
+                setSceneComplete(complete);
+            },
         },
       },
     ]

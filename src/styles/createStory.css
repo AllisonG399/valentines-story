@@ -345,7 +345,7 @@ Make Me Feel Scene
   position: relative;
 
   width: 100%;
-  min-height: 90px;
+  min-height: 70px;
 
   overflow: hidden;
 }
@@ -439,3 +439,7 @@ Make Me Feel Scene
         min-height: 50px;
     }
 }
+
+/*-----------------
+Memories
+-----------------*/

@@ -213,3 +213,196 @@ Intro Scene Page
   transform: none;
 }
 
+/*-----------------
+Make Me Feel Scene
+-----------------*/
+.make-me-feel-scene {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90vw;
+    max-width: 1200px;
+    height: 75vh;
+    max-height: 600px;
+    min-height: 500px;
+    padding: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            color-mix(in srgb, var(--feel-scene-color) 15%, transparent),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            color-mix(in srgb, var(--feel-scene-color) 10%, transparent),
+            transparent 45%
+        ),
+        var(--white-linen);
+
+    border-radius: 16px;
+}
+
+.make-me-feel-scene::before {
+  content: "♡";
+
+  position: absolute;
+
+  top: 15%;
+  left: 5%;
+
+  font-family: serif;
+  font-size: 12rem;
+
+  color: color-mix(
+    in srgb,
+    var(--feel-scene-color) 6%,
+    transparent
+  );
+
+  pointer-events: none;
+
+  transform: rotate(-15deg);
+}
+
+.make-me-feel-scene::after {
+  content: "♡";
+
+  position: absolute;
+
+  bottom: 5%;
+  right: 5%;
+
+  font-family: serif;
+  font-size: 10rem;
+
+  color: color-mix(
+    in srgb,
+    var(--feel-scene-color) 6%,
+    transparent
+  );
+
+  pointer-events: none;
+
+  transform: rotate(15deg);
+}
+
+.typing-cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  position: relative;
+
+  width: 100%;
+  max-width: 900px;
+
+  gap: 16px;
+}
+
+.typing-cont > p {
+  width: 50%;
+  text-align: end;
+}
+
+.hidden-cont {
+  position: relative;
+
+  width: 100%;
+  min-height: 90px;
+
+  overflow: hidden;
+}
+
+.hidden-cont > p {
+    width: 100%;
+    text-align: start;
+}
+
+.overlay-button {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  box-sizing: border-box;
+
+  z-index: 2;
+
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+  padding: 0;
+
+  color: var(--deep-rose);
+
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.0rem, 4vw, 1.4rem);
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
+
+
+
+  background:
+    linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--feel-scene-color) 35%, transparent),
+        color-mix(in srgb, var(--feel-scene-color) 10%, transparent)
+    );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(214, 91, 116, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.makes-me-feel-title {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    color: var(--deep-rose);
+    text-shadow: 0 2px 12px rgba(214, 91, 116, 0.15);
+    letter-spacing: 0.04em;
+}
+
+.makes-me-feel-text {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .typing-cont {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .typing-cont > p {
+        text-align: start;
+        width: 100%;
+    }
+
+    .hidden-cont > p {
+        text-align: center;
+    }
+
+    .hidden-cont {
+        min-height: 50px;
+    }
+}

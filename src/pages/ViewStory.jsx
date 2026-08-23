@@ -266,7 +266,7 @@ export default function ViewStory() {
       complete: "Your next scene awaits, click the arrow to continue.",
     },
     2: {
-      initial: "Click",
+      initial: "Click on the fields to reveal the messages.",
       complete: "Your next scene awaits, click the arrow to continue.",
     }
   };
@@ -305,6 +305,7 @@ export default function ViewStory() {
         props: {
           theWayYou: card.theWayYou,
           makeMeFeel: card.makeMeFeel,
+          color: card.color,
           onComplete: (complete) => {
             setSceneComplete(complete);
           },

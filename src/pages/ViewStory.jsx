@@ -489,18 +489,28 @@ export default function ViewStory() {
         </p>
       </div>
 
-      {/* Scene Progress Bar */}
-      <div 
-        className="story-progress"
-        aria-hidden="true"
-      >
-        {storyScenes.map((_, i) => (
-          <div
-            key={i}
-            className={`progress-bar ${i <= currentScene ? "active" : ""}`}
-          />
-        ))}
-      </div>
+        {/* Scene Progress Bar */}
+
+        {storyScenes.length > 0 && (() => {
+
+        const progress =
+            (currentScene / (storyScenes.length - 1)) * 100;
+
+        return (
+            <div
+            className="story-progress"
+            aria-hidden="true"
+            >
+            <div
+                className="story-progress-fill"
+                style={{
+                width: `${progress}%`,
+                }}
+            />
+            </div>
+        );
+
+        })()}
 
       {/* Screen Reader Status */}
       <p className="sr-only" role="status">

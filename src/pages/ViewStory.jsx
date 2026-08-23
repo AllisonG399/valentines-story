@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 import { decodeData } from "../utils/encode";
 
@@ -424,49 +424,58 @@ export default function ViewStory() {
 
         {/* Back Arrow */}
         <button
-          type="button"
-          onClick={() => {
-            setSceneComplete(false);
+            className="view-story-nav-btn"
+            type="button"
+            onClick={() => {
+                setSceneComplete(false);
 
-            setCurrentScene((prev) =>
-              Math.max(prev - 1, 1)
-            );
-          }}
-          aria-label="Previous story scene"
-          disabled={currentScene <= 1}
+                setCurrentScene((prev) =>
+                Math.max(prev - 1, 1)
+                );
+            }}
+            aria-label="Previous story scene"
+            disabled={currentScene <= 1}
         >
-          <span aria-hidden="true">←</span>
+            <FontAwesomeIcon
+                icon={faArrowLeft}
+                aria-hidden="true"
+            />
         </button>
 
         {/* View Story Button */}
         <button
-          type="button"
-          onClick={handleStoryToggle}
+            className="view-story-btn"
+            type="button"
+            onClick={handleStoryToggle}
         >
           {isView ? "Reset" : "Begin Love Story"}
         </button>
 
         {/* Forward Arrow */}
         <button
-          type="button"
-          onClick={() => {
-            setSceneComplete(false);
+            className="view-story-nav-btn"
+            type="button"
+            onClick={() => {
+                setSceneComplete(false);
 
-            setCurrentScene((prev) =>
-              Math.min(
-                prev + 1,
-                storyScenes.length - 1
-              )
-            );
-          }}
-          aria-label="Next story scene"
-          disabled={
-            !isView ||
-            (currentScene === 0 && !sceneComplete) ||
-            currentScene === storyScenes.length - 1
-          }
+                setCurrentScene((prev) =>
+                Math.min(
+                    prev + 1,
+                    storyScenes.length - 1
+                )
+                );
+            }}
+            aria-label="Next story scene"
+            disabled={
+                !isView ||
+                (currentScene === 0 && !sceneComplete) ||
+                currentScene === storyScenes.length - 1
+            }
         >
-          <span aria-hidden="true">→</span>
+            <FontAwesomeIcon
+                icon={faArrowRight}
+                aria-hidden="true"
+            />
         </button>
 
       </div>
@@ -528,14 +537,16 @@ export default function ViewStory() {
 
       </div>
 
-      {/* Send a Card Back Button */}
-      <div className="send-back-container">
-        <button 
-          type="button"
-          className="send-back-btn"
-          onClick={() => window.location.hash = '#/'}
-        >Send a Love Letter Back!</button>
-      </div>
+        {/* Send a Card Back Button */}
+        <div className="send-back-container">
+            <button 
+                type="button"
+                className="send-back-btn"
+                onClick={() => window.location.hash = '#/'}
+            >
+                Send a Love Letter Back!
+            </button>
+        </div>
       
     </main>
   );

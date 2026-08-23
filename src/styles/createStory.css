@@ -54,6 +54,18 @@
   max-width: 1200px;
 }
 
+.view-story-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-story-btn {
+    width: fit-content;
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    padding: 5px 10px;
+}
+
 .story-progress {
   margin-top: 3rem;
 }

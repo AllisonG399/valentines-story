@@ -5,12 +5,104 @@ import stampImage from '../assets/icons/stamp.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
-export default function ViewMessage() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [card, setCard] = useState(null);
+function getCardFromURL() {
+  try {
+    const hash = window.location.hash;
 
-  const [expired, setExpired] = useState(false);  // Card URL expired
-  const [invalid, setInvalid] = useState(false);  // Card URL does not exist
+    // Make sure the URL contains a message card route
+    if (!hash.startsWith("#/vm/")) {
+      return {
+        card: null,
+        invalid: true,
+        expired: false,
+      };
+    }
+
+    // Extract encoded card data
+    const encoded = hash.replace("#/vm/", "");
+
+    if (!encoded) {
+      return {
+        card: null,
+        invalid: true,
+        expired: false,
+      };
+    }
+
+    // Decode card data
+    const decoded = decodeData(encoded);
+
+    // Make sure decoded data is valid
+    if (!decoded || typeof decoded !== "object") {
+      return {
+        card: null,
+        invalid: true,
+        expired: false,
+      };
+    }
+
+    // Validate required card fields
+    if (
+      typeof decoded.to !== "string" ||
+      typeof decoded.message !== "string" ||
+      typeof decoded.from !== "string" ||
+      typeof decoded.passcode !== "string" ||
+      typeof decoded.color !== "string" ||
+      typeof decoded.sparkle !== "string"
+    ) {
+      return {
+        card: null,
+        invalid: true,
+        expired: false,
+      };
+    }
+
+    // Validate expiration
+    if (
+      typeof decoded.expiresAt !== "number" ||
+      !Number.isFinite(decoded.expiresAt)
+    ) {
+      return {
+        card: null,
+        invalid: true,
+        expired: false,
+      };
+    }
+
+    // Check expiration
+    if (Date.now() >= decoded.expiresAt) {
+      return {
+        card: null,
+        invalid: false,
+        expired: true,
+      };
+    }
+
+    return {
+      card: decoded,
+      invalid: false,
+      expired: false,
+    };
+
+  } catch (error) {
+    console.error("Invalid card data:", error);
+
+    return {
+      card: null,
+      invalid: true,
+      expired: false,
+    };
+  }
+}
+
+export default function ViewMessage() {
+  const initialCard = getCardFromURL();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [card, setCard] = useState(initialCard.card);
+
+  const [expired, setExpired] = useState(initialCard.expired);
+  const [invalid, setInvalid] = useState(initialCard.invalid);
 
   // Password
   const [enteredPasscode, setEnteredPasscode] = useState(""); // Entered password
@@ -24,93 +116,34 @@ export default function ViewMessage() {
   const [showReveal, setShowReveal] = useState(false);
   const [showCard, setShowCard] = useState(false);
 
-  useEffect(() => {
-    try {
-      const hash = window.location.hash;
-
-      // Make sure the URL contains a message card route
-      if (!hash.startsWith("#/vm/")) {
-        setInvalid(true);
-        return;
-      }
-
-      // Extract the encoded card data
-      const encoded = hash.replace("#/vm/", "");
-
-      if (!encoded) {
-        setInvalid(true);
-        return;
-      }
-
-      // Decode the card data
-      const decoded = decodeData(encoded);
-
-      // Make sure decoded data is valid
-      if (!decoded || typeof decoded !== "object") {
-        setInvalid(true);
-        return;
-      }
-
-      // Make sure required card fields are valid
-      if (
-        typeof decoded.to !== "string" ||
-        typeof decoded.message !== "string" ||
-        typeof decoded.from !== "string" ||
-        typeof decoded.passcode !== "string" ||
-        typeof decoded.color !== "string" ||
-        typeof decoded.sparkle !== "string"
-      ) {
-        setInvalid(true);
-        return;
-      }
-
-      // Make sure the expiration timestamp is valid
-      if (
-        typeof decoded.expiresAt !== "number" ||
-        !Number.isFinite(decoded.expiresAt)
-      ) {
-        setInvalid(true);
-        return;
-      }
-
-      // Check whether the card has already expired
-      if (Date.now() >= decoded.expiresAt) {
-        setExpired(true);
-        return;
-      }
-
-      // Store the decoded card
-      setCard(decoded);
-
-      // Set the initial countdown immediately
-      const initialTimeLeft = decoded.expiresAt - Date.now();
-
-      setTimeLeft(initialTimeLeft);
-      setExpirationAnnouncement(
-        `This Love Letter expires in ${formatTime(initialTimeLeft)}.`
-      );
-
-      // Update countdown every second
-      const interval = setInterval(() => {
-        const remaining = decoded.expiresAt - Date.now();
-
-        if (remaining <= 0) {
-          clearInterval(interval);
-          setTimeLeft(0);
-          setExpired(true);
-        } else {
-          setTimeLeft(remaining);
+    useEffect(() => {
+        if (!card) {
+            return;
         }
-      }, 1000);
 
-      // Clean up interval when component unmounts
-      return () => clearInterval(interval);
+        const initialTimeLeft = card.expiresAt - Date.now();
 
-    } catch (err) {
-      console.error("Invalid card data:", err);
-      setInvalid(true);
-    }
-  }, []);
+        setTimeLeft(initialTimeLeft);
+
+        setExpirationAnnouncement(
+            `This Love Letter expires in ${formatTime(initialTimeLeft)}.`
+        );
+
+        const interval = setInterval(() => {
+            const remaining = card.expiresAt - Date.now();
+
+            if (remaining <= 0) {
+            clearInterval(interval);
+            setTimeLeft(0);
+            setExpired(true);
+            } else {
+            setTimeLeft(remaining);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+
+    }, [card]);
 
   const handleUnlock = () => {
     if (enteredPasscode === card.passcode) {

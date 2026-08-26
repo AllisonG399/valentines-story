@@ -23,6 +23,8 @@ export default function App() {
     window.location.hash || '#/'
   );
 
+  const isStoryLink = route.startsWith('#/vs/');
+
   // Tracks whether the current page has information that would be lost if the user navigates away
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 

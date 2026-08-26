@@ -1,31 +1,20 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  faArrowRight,
-  faLocationDot,
-  faCalendar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faLocationDot, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function MemoriesScene({
   memories = [],
   onComplete,
 }) {
-  /*
-  --------------------------------
-  State
-  --------------------------------
-  */
 
   // Which memory are we currently viewing?
   const [currentMemory, setCurrentMemory] = useState(0);
 
-  // Determines whether we're showing the postcard
-  // or the associated polaroid.
+  // Determines whether we're showing the postcard or the associated polaroid.
   const [showPolaroid, setShowPolaroid] = useState(false);
 
-  // Prevents accidental interaction while an
-  // animation is taking place.
+  // Prevents accidental interaction while an animation is taking place.
   const [isAnimating, setIsAnimating] = useState(false);
 
   const [imageSrc, setImageSrc] = useState(null);
@@ -40,36 +29,32 @@ export default function MemoriesScene({
   const memory = memories[currentMemory];
 
 
-  if (!memory) {
-    return null;
-  }
+  
+useEffect(() => {
 
+    if (!memory?.image) {
+    setImageSrc(null);
+    return;
+    }
 
-    useEffect(() => {
+    // If the image is a File object
+    if (memory.image instanceof File) {
 
-        if (!memory?.image) {
-        setImageSrc(null);
-        return;
-        }
+    const url = URL.createObjectURL(memory.image);
 
-        // If the image is a File object
-        if (memory.image instanceof File) {
+    setImageSrc(url);
 
-        const url = URL.createObjectURL(memory.image);
+    // Clean up the object URL when
+    // the memory changes/unmounts
+    return () => {
+        URL.revokeObjectURL(url);
+    };
+    }
 
-        setImageSrc(url);
+    // If it's already a URL/base64 string
+    setImageSrc(memory.image);
 
-        // Clean up the object URL when
-        // the memory changes/unmounts
-        return () => {
-            URL.revokeObjectURL(url);
-        };
-        }
-
-        // If it's already a URL/base64 string
-        setImageSrc(memory.image);
-
-    }, [memory]);
+}, [memory]);
 
 
   /*
@@ -447,9 +432,10 @@ export default function MemoriesScene({
 
               {/* Image */}
 
-              <div className="polaroid-image">
+              <div className="polaroid">
 
                 <img
+                    className="polaroid-image"
                     src={imageSrc}
                     alt={
                         memory.description

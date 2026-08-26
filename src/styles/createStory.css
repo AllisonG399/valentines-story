@@ -443,3 +443,7 @@ Make Me Feel Scene
 /*-----------------
 Memories
 -----------------*/
+.polaroid-image {
+    max-width: 250px;
+    width: 95%;
+}

@@ -3,6 +3,7 @@ import { encodeData } from '../utils/encode';
 import Sparkles from "../components/animations/Sparkles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { compressImage } from "../utils/compressImage";
 
 const initialForm = {
   to: "",
@@ -98,7 +99,7 @@ export default function CreateStory({
   // -------------------------
   // Memory Management
   // -------------------------
-  const MAX_MEMORIES = 10;
+  const MAX_MEMORIES = 3;
 
   const handleAddMemory = () => {
     if (form.memories.length >= MAX_MEMORIES) return;
@@ -263,7 +264,7 @@ export default function CreateStory({
   };
 
   // Handle Generating the Link
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setError("");
 
     // Set expiration timer
@@ -275,33 +276,49 @@ export default function CreateStory({
 
     const expiresAt = Date.now() + expirationMap[form.expiration];
 
+    const memories = await Promise.all(
+        form.memories.map(async (memory) => ({
+            description: memory.description.trim(),
+            date: memory.date,
+            location: memory.location.trim(),
+
+            image: memory.image
+            ? await compressImage(memory.image)
+            : null,
+        }))
+    );
+
     const payload = {
-      to: form.to.trim(),
-      message: form.message.trim(),
-      from: form.from.trim(),
-      passcode: form.passcode.trim(),
+        to: form.to.trim(),
+        message: form.message.trim(),
+        from: form.from.trim(),
+        passcode: form.passcode.trim(),
 
-      color: form.color,
-      sparkle: form.sparkle,
+        color: form.color,
+        sparkle: form.sparkle,
 
-      memories: form.memories.map((memory) => ({
-        description: memory.description.trim(),
-        date: memory.date,
-        location: memory.location.trim(),
-        image: memory.image,
-      })),
+        memories,
 
-      theWayYou: form.theWayYou.trim(),
-      makeMeFeel: form.makeMeFeel.trim(),
+        theWayYou: form.theWayYou.trim(),
+        makeMeFeel: form.makeMeFeel.trim(),
 
-      favoriteThingYouDo: form.favoriteThingYouDo.trim(),
-      favoritePhysicalThingAboutYou: form.favoritePhysicalThingAboutYou.trim(),
-      favoriteThingYouSay: form.favoriteThingYouSay.trim(),
-      favoriteThingWeDoTogether: form.favoriteThingWeDoTogether.trim(),
+        favoriteThingYouDo:
+        form.favoriteThingYouDo.trim(),
 
-      toBeSaid: form.toBeSaid.map((item) => item.trim()),
+        favoritePhysicalThingAboutYou:
+        form.favoritePhysicalThingAboutYou.trim(),
 
-      expiresAt,
+        favoriteThingYouSay:
+        form.favoriteThingYouSay.trim(),
+
+        favoriteThingWeDoTogether:
+        form.favoriteThingWeDoTogether.trim(),
+
+        toBeSaid: form.toBeSaid.map((item) =>
+        item.trim()
+        ),
+
+        expiresAt,
     };
 
     // Encode and create link

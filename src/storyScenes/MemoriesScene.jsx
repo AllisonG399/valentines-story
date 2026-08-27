@@ -197,6 +197,7 @@ export default function MemoriesScene({
                                     index={index}
                                     position={position}
                                     isTopCard={isTopCard}
+                                    isLastMemory={index === memories.length - 1}
                                     hasImage={stackHasImage}
                                     imageSrc={
                                         isTopCard && index === currentMemory 
@@ -257,6 +258,7 @@ function MemoryCard({
     index,
     position,
     isTopCard,
+    isLastMemory,
     hasImage,
     imageSrc,
     variants,
@@ -265,8 +267,8 @@ function MemoryCard({
     disabled,
 }) {
 
-    {/* Image Memory - Polaroid */}
 
+    {/* Image Memory - Polaroid */}
     if (hasImage) {
         return (
             <motion.button
@@ -280,7 +282,7 @@ function MemoryCard({
                 initial="initial"
                 animate="visible"
                 exit="exit"
-                drag={isTopCard ? "x" : false}
+                drag={isTopCard && !isLastMemory ? "x" : false}
                 dragConstraints={{
                     left: 0,
                     right: 0,
@@ -341,7 +343,7 @@ function MemoryCard({
             initial="initial"
             animate="visible"
             exit="exit"
-            drag={isTopCard ? "x" : false}
+            drag={isTopCard && !isLastMemory ? "x" : false}
             dragConstraitns={{
                 left: 0, right: 0,
             }}

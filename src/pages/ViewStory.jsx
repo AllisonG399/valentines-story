@@ -296,7 +296,7 @@ export default function ViewStory() {
       complete: "Your next scene awaits, click the arrow to continue.",
     },
     3: {
-        initial: "Swipe the cards away or click the arrow on the card to reveal the memories.",
+        initial: "Swipe or click the cards to reveal the memories.",
         complete: "Your next scene awaits, click the arrow to continue.",
     }
   };

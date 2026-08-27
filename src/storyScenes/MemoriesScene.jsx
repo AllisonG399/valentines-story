@@ -61,7 +61,7 @@ export default function MemoriesScene({
             setCurrentMemory((previous) => + 1);
 
             setTimeout(() => {
-                setIsAnimated(false);
+                setIsAnimating(false);
             }, 600);
 
             return;
@@ -98,6 +98,24 @@ export default function MemoriesScene({
             memory,
             index: currentMemory + index,
         }));    
+
+    /*-----------
+    Scene Complete
+    ------------*/
+    useEffect(() => {
+
+        if (
+            memories.length > 0 &&
+            currentMemory === memories.length - 1
+        ) {
+            onComplete?.(true);
+        }
+
+    }, [
+        currentMemory,
+        memories.length,
+        onComplete,
+    ]);
 
 
     /*----------------

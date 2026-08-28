@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { faArrowRight, faLocationDot, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faLocationDot, faCalendar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function MemoriesScene({
@@ -233,11 +233,6 @@ export default function MemoriesScene({
                 </AnimatePresence>
             </div>
 
-            {/* Swipe Hint */}
-            <p className="memory-swipe-hint">
-                Swipe to uncover the next memory
-            </p>
-
             {/* Progress */}
             <div
                 className="memories-progress"
@@ -314,6 +309,21 @@ function MemoryCard({
                 }}
                 aria-label={isTopCard ? "Swipe to next memory" : undefined}
             >
+                <div className="polaroid-date">
+
+                    <span>
+                        {memory.date}
+                    </span>
+
+                    <FontAwesomeIcon
+                        icon={faHeart}
+                        aria-hidden="true"
+                    />
+
+                    <span>
+                        {memory.location}
+                    </span>
+                </div>
 
                 <div className="polaroid">
 
@@ -330,17 +340,6 @@ function MemoryCard({
                         {memory.description}
                     </p>
 
-                    <div className="polaroid-date">
-
-                        <FontAwesomeIcon
-                            icon={faCalendar}
-                            aria-hidden="true"
-                        />
-
-                        <span>
-                            {memory.date}
-                        </span>
-                    </div>
                 </div>
 
             </motion.button>
@@ -375,14 +374,6 @@ function MemoryCard({
             aria-label={isTopCard ? "Swipe to next memory" : undefined}
         >
 
-            {/* Postcard Stamp */}
-            <div
-                className="postcard-stamp"
-                aria-hidden="true"
-            >
-                Heart
-            </div>
-
             <div className="postcard-content">
 
                 <p className="postcard-label">
@@ -402,19 +393,22 @@ function MemoryCard({
                         </span>
                     </div>
                 )}
+
+                
             </div>
 
-            <div className="postcard-footer">
-
-                <span>
-                    Swipe for next memory
-                </span>
-
-                <FontAwesomeIcon
-                    icon={faArrowRight}
+            {/* Post Card Content - Right Side */}
+            <div>
+                {/* Postcard Stamp */}
+                <div
+                    className="postcard-stamp"
                     aria-hidden="true"
-                />
+                >
+                    Heart
+                </div>
             </div>
+
+        
 
         </motion.button>
     );

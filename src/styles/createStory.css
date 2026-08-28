@@ -577,9 +577,7 @@ Memories
     pointer-events: none;
 }
 
-/* ==============
-================== POSTCARD CONTENT ======
-========================== */ 
+/* Postcard Content */
 .postcard-content-left {
     margin: 0 auto;
     width: 40vw;

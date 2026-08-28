@@ -3,10 +3,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { faArrowRight, faLocationDot, faCalendar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import stamp1 from "../assets/icons/stamp_1.png";
+import stamp2 from "../assets/icons/stamp_2.png";
+import stamp3 from "../assets/icons/stamp_3.png";
+
 export default function MemoriesScene({
   memories = [],
   onComplete,
 }) {
+
+    const stamps = [
+        stamp1,
+        stamp2,
+        stamp3,
+    ];
+
     const [currentMemory, setCurrentMemory] = useState(0); 
     const [isAnimating, setIsAnimating] = useState(false);
 
@@ -190,7 +201,7 @@ export default function MemoriesScene({
         >
 
             {/* Header */}
-            <h2>
+            <h2 className="memories-header">
                 Our Memories - Little moments worth remembering
             </h2>
 
@@ -223,6 +234,7 @@ export default function MemoriesScene({
                                             : stackMemory.image
                                     }
                                     variants={cardVariants}
+                                    stamps={stamps}
                                     onSwipe={handleDragEnd}
                                     onAdvance={advanceMemory}
                                     disabled={!isTopCard || isAnimating}
@@ -275,6 +287,7 @@ function MemoryCard({
     hasImage,
     imageSrc,
     variants,
+    stamps,
     onSwipe,
     onAdvance,
     disabled,
@@ -361,7 +374,7 @@ function MemoryCard({
             animate="visible"
             exit="exit"
             drag={isTopCard && !isLastMemory ? "x" : false}
-            dragConstraitns={{
+            dragConstraints={{
                 left: 0, right: 0,
             }}
             dragElastic={0.8}
@@ -371,40 +384,62 @@ function MemoryCard({
             style={{
                 zIndex: 10 - position,
             }}
+            stamps={stamps}
             aria-label={isTopCard ? "Swipe to next memory" : undefined}
         >
 
-            <div className="postcard-content">
+            <div className="postcard-content-left">
 
                 <p className="postcard-label">
                     A Memory
                 </p>
 
-                {memory.location && (
-                    <div className="postcard-location">
-
-                        <FontAwesomeIcon
-                            icon={faLocationDot}
-                            aria-hidden="true"
-                        />
-
-                        <span>
-                            {memory.location}
-                        </span>
-                    </div>
-                )}
+                <div className="postcard-description">
+                    <p>
+                        {memory.description}
+                    </p>
+                </div>
 
                 
             </div>
 
+            <div className="vertical-divider-cont" aria-hidden="true">
+                <div className="vertical-divider-line"/>
+            </div>
+
             {/* Post Card Content - Right Side */}
-            <div>
+            <div className="postcard-content-right">
+
                 {/* Postcard Stamp */}
                 <div
                     className="postcard-stamp"
                     aria-hidden="true"
                 >
-                    Heart
+                    <p className="postcard-date">
+                        {memory.date || 
+                            (index % 2 === 0
+                                ? "Feels like yesterday"
+                                : "Seems like forever ago"
+                            )
+                        }
+                    </p>
+
+                    <img
+                        src={stamps[index % stamps.length]}
+                        alt=""
+                    />
+                </div>
+
+                {/* Memory Location */}
+                <div className="postcard-location">
+                    <p>
+                        {memory.location || 
+                            (index % 2 === 0 
+                                ? "My favorite place with you"
+                                : "My favorite place by your side"
+                            )
+                        }
+                    </p>
                 </div>
             </div>
 

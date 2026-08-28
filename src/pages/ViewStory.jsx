@@ -13,6 +13,7 @@ import stampImage from '../assets/icons/stamp.png';
 import Intro from "../storyScenes/IntroScene";
 import MakeMeFeelScene from "../storyScenes/MakeMeFeelScene";
 import MemoriesScene from "../storyScenes/MemoriesScene";
+import FavoriteThingsScene from "../storyScenes/FavoriteThingsScene";
 
 function getCardFromURL() {
   try {
@@ -298,7 +299,11 @@ export default function ViewStory() {
     3: {
         initial: "Swipe or click the cards to reveal the memories.",
         complete: "Your next scene awaits, click the arrow to continue.",
-    }
+    },
+    4: {
+        initial: "",
+        complete: "Your next scene awaits, click the arrow to continue.",
+    },
   };
 
   {/* Story Scenes to be displayed */}
@@ -346,6 +351,19 @@ export default function ViewStory() {
         component: MemoriesScene,
         props: {
             memories: card.memories,
+            onComplete: (complete) => {
+                setSceneComplete(complete);
+            },
+        },
+      },
+      {
+        id: "favorites",
+        component: FavoriteThingsScene,
+        props: {
+            favoriteThingYouDo: card.favoriteThingYouDo,
+            favoritePhysicalThingAboutYou: card.favoritePhysicalThingAboutYou,
+            favoriteThingYouSay: card.favoriteThingYouSay,
+            favoriteThingWeDoTogether: card.favoriteThingWeDoTogether,
             onComplete: (complete) => {
                 setSceneComplete(complete);
             },

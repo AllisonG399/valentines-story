@@ -69,7 +69,7 @@ export default function MemoriesScene({
         setIsAnimating(true);
 
         if (currentMemory < memories.length - 1) {
-            setCurrentMemory((previous) => + 1);
+            setCurrentMemory((previous) => previous + 1);
 
             setTimeout(() => {
                 setIsAnimating(false);
@@ -95,7 +95,7 @@ export default function MemoriesScene({
         const swipeDistance = Math.abs(info.offset.x);
         const swipeVelocity = Math.abs(info.velocity.x);
 
-        if (swipeDistance > 100 || swipeVelocity > 500) {
+        if (swipeDistance > 60 || swipeVelocity > 400) {
             advanceMemory();
         }
     };
@@ -164,7 +164,7 @@ export default function MemoriesScene({
         exit: {
             x: 600,
             y: -100,
-            roate: 18,
+            rotate: 18,
             opacity: 0,
 
             transition: {
@@ -313,7 +313,7 @@ function MemoryCard({
                     left: 0,
                     right: 0,
                 }}
-                dragElastic={0.8}
+                dragElastic={0.6}
                 onDragEnd={isTopCard ? onSwipe : undefined}
                 onClick={isTopCard ? onAdvance : undefined}
                 disabled={disabled}
@@ -377,7 +377,7 @@ function MemoryCard({
             dragConstraints={{
                 left: 0, right: 0,
             }}
-            dragElastic={0.8}
+            dragElastic={0.2}
             onDragEnd={isTopCard ? onSwipe : undefined}
             onClick={isTopCard ? onAdvance : undefined}
             disabled={disabled}

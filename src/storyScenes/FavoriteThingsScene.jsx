@@ -60,16 +60,12 @@ export default function FavoriteThingsScene({
     {/* Scene Complete */}
     useEffect(() => {
 
-        if (revealedThings.length === favoriteThings.length) {
-            const timer = setTimeout(() => {
-                onComplete?.(true);
-            }, 1200);
-
-            return () => clearTimeout(timer);
+        if (revealedThings.length === 4) {
+            onComplete?.(true);
         }
+
     }, [
         revealedThings,
-        favoriteThings.length,
         onComplete,
     ]);
 

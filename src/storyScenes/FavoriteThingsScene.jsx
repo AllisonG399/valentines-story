@@ -290,7 +290,7 @@ export default function FavoriteThingsScene({
                             }
 
                             whileHover={{
-                                scale: 1.15,
+                                scale: 1.2,
                             }}
 
                             whileTap={{
@@ -373,63 +373,7 @@ export default function FavoriteThingsScene({
 
             </div>
 
-
-            {/* Hint */}
-
-            {!allRevealed && (
-
-                <motion.p
-                    className="favorite-hint"
-
-                    initial={{
-                        opacity: 0,
-                    }}
-
-                    animate={{
-                        opacity: 0.6,
-                    }}
-
-                    transition={{
-                        delay: 1,
-                        duration: 0.5,
-                    }}
-                >
-                    Tap the hearts to discover the little
-                    things I love
-                </motion.p>
-
-            )}
-
-
-            {/* Completion */}
-
-            <AnimatePresence>
-
-                {allRevealed && (
-
-                    <motion.div
-                        className="favorite-complete"
-
-                        initial={{
-                            opacity: 0,
-                            scale: 0.8,
-                        }}
-
-                        animate={{
-                            opacity: 1,
-                            scale: 1,
-                        }}
-
-                        transition={{
-                            duration: 0.7,
-                        }}
-                    >
-                        ✦
-                    </motion.div>
-
-                )}
-
-            </AnimatePresence>
+            
 
         </motion.div>
     );

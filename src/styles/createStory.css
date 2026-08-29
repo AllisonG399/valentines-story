@@ -788,7 +788,10 @@ Favorite Things
 
     transform: translate(-50%, -50%);
 
-    font-size: 0.45rem;
+    font-size: 0.6rem;
+
+    margin-left: -3px;
+    margin-top: -6px;
 
     color: var(--soft-pink);
 
@@ -814,7 +817,7 @@ Favorite Things
     border: none;
     background: transparent;
 
-    font-size: 1.8rem;
+    font-size: 2rem;
     line-height: 1;
 
     cursor: pointer;
@@ -822,8 +825,8 @@ Favorite Things
     z-index: 10;
 
     /* Center the button on the constellation point */
-    margin-left: -17px;
-    margin-top: -12px;
+    margin-left: -20px;
+    margin-top: -17px;
 }
 
 .favorite-heart:hover {
@@ -833,6 +836,9 @@ Favorite Things
         drop-shadow(
             0 0 8px rgba(255, 192, 203, 0.8)
         );
+
+    border: none;
+    box-shadow: none;
 }
 
 .favorite-heart-revealed {
@@ -844,28 +850,8 @@ Favorite Things
         );
 }
 
-.favorite-heart-top {
-    left: 50%;
-    top: 8%;
-}
-
-.favorite-heart-left {
-    left: 22%;
-    top: 28%;
-}
-
-.favorite-heart-right {
-    left: 78%;
-    top: 28%;
-}
-
-.favorite-heart-bottom {
-    left: 50%;
-    top: 86%;
-}
-
 .favorite-reveal-area {
-    width: min(80vw, 500px);
+    width: min(80vw, 900px);
 
     min-height: 100px;
 
@@ -879,7 +865,7 @@ Favorite Things
 .favorite-message {
     width: 100%;
 
-    padding: 12px 20px;
+    padding: 5px 20px;
 
     text-align: center;
 }
@@ -908,17 +894,6 @@ Favorite Things
     color: var(--text-primary);
 }
 
-
-.favorite-hint {
-    margin: 0;
-
-    text-align: center;
-
-    font-size: 0.75rem;
-
-    color: var(--text-secondary);
-}
-
 .favorite-complete {
     position: absolute;
 
@@ -932,4 +907,33 @@ Favorite Things
     color: var(--soft-pink);
 
     pointer-events: none;
+}
+
+@media (max-width: 600px) {
+    .favorites-scene {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .favorite-constellation {
+        width: 70vw;
+        height: 35vh;
+        transform: translateY(-10px) scale(0.85);
+        flex-shrink: 0;
+    }
+
+    .favorites-header {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .favorite-reveal-area {
+        min-height: 100px;
+        margin: 0 auto;
+    }
+
+    .favorite-message-text {
+        font-size: 0.9rem;
+    }
 }

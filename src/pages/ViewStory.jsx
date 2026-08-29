@@ -301,7 +301,7 @@ export default function ViewStory() {
         complete: "Your next scene awaits, click the arrow to continue.",
     },
     4: {
-        initial: "",
+        initial: "Tap the hearts to discover the little things your sender loves",
         complete: "Your next scene awaits, click the arrow to continue.",
     },
   };

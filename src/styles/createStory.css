@@ -730,4 +730,206 @@ Memories
 /*-----------------
 Favorite Things
 -----------------*/
+.favorites-scene {
+    width: 90vw;
+    max-width: 1200px;
+    height: 75vh;
+    max-height: 600px;
+    min-height: 500px;
+    padding: 15px;
+    border-radius: 16px;
+}
 
+.favorites-header {
+    text-align: center;
+    margin: 0 0 10px;
+}
+
+.favorite-constellation {
+    position: relative;
+
+    width: min(80vw, 500px);
+    height: min(55vh, 400px);
+
+    margin: 0 auto;
+
+    transition:
+        filter 0.8s ease,
+        transform 0.8s ease;
+}
+
+.favorite-constellation.constellation-complete {
+    filter: drop-shadow(
+        0 0 12px rgba(255, 192, 203, 0.7)
+    );
+}
+
+.constellation-lines {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: visible;
+
+    pointer-events: none;
+}
+
+.constellation-lines line {
+    stroke: var(--soft-pink);
+    stroke-width: 0.35;
+    vector-effect: non-scaling-stroke;
+}
+
+.constellation-star {
+    position: absolute;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 0.45rem;
+
+    color: var(--soft-pink);
+
+    pointer-events: none;
+
+    text-shadow:
+        0 0 5px rgba(255, 192, 203, 0.5);
+}
+
+.favorite-heart {
+    position: absolute;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+
+    font-size: 1.8rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    /* Center the button on the constellation point */
+    margin-left: -17px;
+    margin-top: -12px;
+}
+
+.favorite-heart:hover {
+    color: var(--deep-rose);
+
+    filter:
+        drop-shadow(
+            0 0 8px rgba(255, 192, 203, 0.8)
+        );
+}
+
+.favorite-heart-revealed {
+    color: var(--deep-rose);
+
+    filter:
+        drop-shadow(
+            0 0 8px rgba(255, 192, 203, 0.8)
+        );
+}
+
+.favorite-heart-top {
+    left: 50%;
+    top: 8%;
+}
+
+.favorite-heart-left {
+    left: 22%;
+    top: 28%;
+}
+
+.favorite-heart-right {
+    left: 78%;
+    top: 28%;
+}
+
+.favorite-heart-bottom {
+    left: 50%;
+    top: 86%;
+}
+
+.favorite-reveal-area {
+    width: min(80vw, 500px);
+
+    min-height: 100px;
+
+    margin: 5px auto 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.favorite-message {
+    width: 100%;
+
+    padding: 12px 20px;
+
+    text-align: center;
+}
+
+.favorite-message-title {
+    margin: 0 0 5px;
+
+    font-size: 0.75rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    color: var(--deep-rose);
+}
+
+.favorite-message-text {
+    margin: 0;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.15rem;
+
+    line-height: 1.5;
+
+    color: var(--text-primary);
+}
+
+
+.favorite-hint {
+    margin: 0;
+
+    text-align: center;
+
+    font-size: 0.75rem;
+
+    color: var(--text-secondary);
+}
+
+.favorite-complete {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 2rem;
+
+    color: var(--soft-pink);
+
+    pointer-events: none;
+}

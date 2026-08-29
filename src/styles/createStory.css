@@ -438,6 +438,18 @@ Make Me Feel Scene
     .hidden-cont {
         min-height: 50px;
     }
+
+    .make-me-feel-scene::before {
+        font-size: 9rem;
+        top: 22%;
+        left: 9%;
+    }
+
+    .make-me-feel-scene::after {
+        font-size: 7rem;
+        bottom: 9%;
+        right: 10%;
+    }
 }
 
 /*-----------------

@@ -14,6 +14,7 @@ import Intro from "../storyScenes/IntroScene";
 import MakeMeFeelScene from "../storyScenes/MakeMeFeelScene";
 import MemoriesScene from "../storyScenes/MemoriesScene";
 import FavoriteThingsScene from "../storyScenes/FavoriteThingsScene";
+import ToBeSaidScene from "../storyScenes/ToBeSaidScene";
 
 function getCardFromURL() {
   try {
@@ -304,6 +305,10 @@ export default function ViewStory() {
         initial: "Tap the hearts to discover the little things your sender loves",
         complete: "Your next scene awaits, click the arrow to continue.",
     },
+    5: {
+        initial: "Click on the envelope to reveal what is not said enough",
+        complete: "Your story card is complete!",
+    },
   };
 
   {/* Story Scenes to be displayed */}
@@ -364,6 +369,18 @@ export default function ViewStory() {
             favoritePhysicalThingAboutYou: card.favoritePhysicalThingAboutYou,
             favoriteThingYouSay: card.favoriteThingYouSay,
             favoriteThingWeDoTogether: card.favoriteThingWeDoTogether,
+            onComplete: (complete) => {
+                setSceneComplete(complete);
+            },
+        },
+      },
+      {
+        id: "said",
+        component: ToBeSaidScene,
+        props: {
+            toBeSaid: card.toBeSaid,
+            color: card.color,
+            sparkle: card.sparkle,
             onComplete: (complete) => {
                 setSceneComplete(complete);
             },

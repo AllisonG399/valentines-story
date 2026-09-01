@@ -379,6 +379,7 @@ export default function ViewStory() {
         component: ToBeSaidScene,
         props: {
             toBeSaid: card.toBeSaid,
+            color: card.color,
             onComplete: (complete) => {
                 setSceneComplete(complete);
             },

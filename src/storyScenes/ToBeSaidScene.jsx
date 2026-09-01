@@ -30,50 +30,55 @@ export default function ToBeSaidScene({
             )}
 
             {/* Envelope */}
-            <button
-                type="button"
-                className="button-wrapper-envelope"
-                onClick={handleEnvelopeClick}
-                aria-expanded={isOpened}
-                aria-label={
-                    isOpened
-                        ? "Envelope is closing soon"
-                        : "Open envelope to view next note"
-                }
-                aria-controls="said-content"
-            >
 
-                <div className={`said-envelope-wrapper`}>
+            <div className="said-envelope-cont">
 
-                    {/* Envelope Front Flap */}
-                    <div
-                        className="front-flap-envelope"
-                        style={{
-                            backgroundColor: lightenColor(color, 5)
-                        }}
-                        aria-hidden="true"
-                    />
+                <button
+                    type="button"
+                    className="button-wrapper-envelope"
+                    onClick={handleEnvelopeClick}
+                    aria-expanded={isOpened}
+                    aria-label={
+                        isOpened
+                            ? "Envelope is closing soon"
+                            : "Open envelope to view next note"
+                    }
+                    aria-controls="said-content"
+                >
 
-                    {/* Envelope Back Flap */}
-                    <div
-                        className="back-flap-envelope"
-                        style={{
-                            backgroundColor: darkenColor(color, 5)
-                        }}
-                        aria-hidden="true"
-                    />
+                    <div className={`said-envelope-wrapper ${isOpened ? "open" : ""}`}>
 
-                    {/* Envelope Body */}
-                    <div
-                        className="body-envelope"
-                        style={{
-                            backgroundColor: color
-                        }}
-                        aria-hidden="true"
-                    />
-                </div>
+                        {/* Envelope Front Flap */}
+                        <div
+                            className="front-flap-envelope"
+                            style={{
+                                backgroundColor: lightenColor(color, 5)
+                            }}
+                            aria-hidden="true"
+                        />
 
-            </button>
+                        {/* Envelope Back Flap */}
+                        <div
+                            className="back-flap-envelope"
+                            style={{
+                                backgroundColor: darkenColor(color, 5)
+                            }}
+                            aria-hidden="true"
+                        />
+
+                        {/* Envelope Body */}
+                        <div
+                            className="body-envelope"
+                            style={{
+                                backgroundColor: color
+                            }}
+                            aria-hidden="true"
+                        />
+                    </div>
+
+                </button>
+
+            </div>
 
         </div>
     );

@@ -306,8 +306,8 @@ export default function ViewStory() {
         complete: "Your next scene awaits, click the arrow to continue.",
     },
     5: {
-        initial: "",
-        complete: "",
+        initial: "Click on the envelope to reveal what is not said enough",
+        complete: "Your story card is complete!",
     },
   };
 

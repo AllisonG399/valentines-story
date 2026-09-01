@@ -10,6 +10,7 @@ export default function ToBeSaidScene({
     const [isOpened, setIsOpened] = useState(false); // Track if the envelope gets opened
     const [currentNote, setCurrentNote] = useState(0);
     const [visibleNotes, setVisibleNotes] = useState([]);
+    const [isComplete, setIsComplete] = useState(false);
 
     {/* Opens envelope for select duration, adds to be said note to top of stack - hides envelope when no more notes are left */}
     const handleEnvelopeClick = () => {
@@ -42,19 +43,10 @@ export default function ToBeSaidScene({
     };
 
     useEffect(() => {
-
-        if (
-            toBeSaid.length > 0 &&
-            visibleNotes.length === toBeSaid.length
-        ) {
-
-            const timer = setTimeout(() => {
-                onComplete?.(true);
-            }, 1200);
-
-            return () => clearTimeout(timer);
+        if ( toBeSaid.length > 0 && visibleNotes.length === toBeSaid.length) {
+            setIsComplete(true);
+            onComplete?.(true);
         }
-
     }, [
         visibleNotes,
         toBeSaid.length,
@@ -144,54 +136,70 @@ export default function ToBeSaidScene({
 
             {/* Envelope */}
 
-            <div className="said-envelope-cont">
+            <AnimatePresence>
+                {!isComplete && (
+                    <motion.div
+                        className="said-envelope-cont"
+                        initial={{
+                            opacity: 1
+                        }}
+                        exit={{
+                            opacity: 0,
+                        }}
+                        transition={{
+                            duration: 1.2,
+                            ease: "easeOut",
+                        }}
+                    >
 
-                <button
-                    type="button"
-                    className="button-wrapper-envelope"
-                    onClick={handleEnvelopeClick}
-                    aria-expanded={isOpened}
-                    aria-label={
-                        isOpened
-                            ? "Envelope is closing soon"
-                            : "Open envelope to view next note"
-                    }
-                    aria-controls="said-content"
-                >
+                        <button
+                            type="button"
+                            className="button-wrapper-envelope"
+                            onClick={handleEnvelopeClick}
+                            aria-expanded={isOpened}
+                            aria-label={
+                                isOpened
+                                    ? "Envelope is closing soon"
+                                    : "Open envelope to view next note"
+                            }
+                            aria-controls="said-content"
+                        >
 
-                    <div className={`said-envelope-wrapper ${isOpened ? "open" : ""}`}>
+                            <div className={`said-envelope-wrapper ${isOpened ? "open" : ""}`}>
 
-                        {/* Envelope Front Flap */}
-                        <div
-                            className="front-flap-envelope"
-                            style={{
-                                backgroundColor: lightenColor(color, 5)
-                            }}
-                            aria-hidden="true"
-                        />
+                                {/* Envelope Front Flap */}
+                                <div
+                                    className="front-flap-envelope"
+                                    style={{
+                                        backgroundColor: lightenColor(color, 5)
+                                    }}
+                                    aria-hidden="true"
+                                />
 
-                        {/* Envelope Back Flap */}
-                        <div
-                            className="back-flap-envelope"
-                            style={{
-                                backgroundColor: darkenColor(color, 5)
-                            }}
-                            aria-hidden="true"
-                        />
+                                {/* Envelope Back Flap */}
+                                <div
+                                    className="back-flap-envelope"
+                                    style={{
+                                        backgroundColor: darkenColor(color, 5)
+                                    }}
+                                    aria-hidden="true"
+                                />
 
-                        {/* Envelope Body */}
-                        <div
-                            className="body-envelope"
-                            style={{
-                                backgroundColor: color
-                            }}
-                            aria-hidden="true"
-                        />
-                    </div>
+                                {/* Envelope Body */}
+                                <div
+                                    className="body-envelope"
+                                    style={{
+                                        backgroundColor: color
+                                    }}
+                                    aria-hidden="true"
+                                />
+                            </div>
 
-                </button>
+                        </button>
 
-            </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
         </motion.div>
     );

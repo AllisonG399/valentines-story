@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Sparkles from "../components/animations/Sparkles";
 
 export default function ToBeSaidScene({
     toBeSaid=[""],
     color="#ff6b81",
+    sparkle = "hearts",
     onComplete
 }) {
 
@@ -11,6 +13,7 @@ export default function ToBeSaidScene({
     const [currentNote, setCurrentNote] = useState(0);
     const [visibleNotes, setVisibleNotes] = useState([]);
     const [isComplete, setIsComplete] = useState(false);
+    const [showSparkles, setShowSparkles] = useState(false);
 
     {/* Opens envelope for select duration, adds to be said note to top of stack - hides envelope when no more notes are left */}
     const handleEnvelopeClick = () => {
@@ -44,6 +47,7 @@ export default function ToBeSaidScene({
 
     useEffect(() => {
         if ( toBeSaid.length > 0 && visibleNotes.length === toBeSaid.length) {
+            setShowSparkles(true);
             setIsComplete(true);
             onComplete?.(true);
         }
@@ -131,11 +135,16 @@ export default function ToBeSaidScene({
                         </motion.div>
                     );
                 })}
+            </div>
 
+            {/* Sparkles */}
+            <div className="said-sparkles-container">
+                {showSparkles && (
+                    <Sparkles type={sparkle} />
+                )}
             </div>
 
             {/* Envelope */}
-
             <AnimatePresence>
                 {!isComplete && (
                     <motion.div
@@ -148,6 +157,7 @@ export default function ToBeSaidScene({
                         }}
                         transition={{
                             duration: 1.2,
+                            delay: 1,
                             ease: "easeOut",
                         }}
                     >

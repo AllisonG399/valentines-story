@@ -1140,6 +1140,22 @@ Said Scene
     overflow-y: auto;
 }
 
+/* Animation Sparkles */
+.said-sparkles-container {
+    position: absolute;
+    left: 45%;
+    bottom: 40px;
+
+    width: 55vw;
+    max-width: 1000px;
+    height: 250px;
+
+    transform: translateX(-50%);
+
+    pointer-events: none;
+    z-index: 6;
+}
+
 /* Mobile */
 @media (max-width: 600px) {
 

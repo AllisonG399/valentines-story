@@ -380,6 +380,7 @@ export default function ViewStory() {
         props: {
             toBeSaid: card.toBeSaid,
             color: card.color,
+            sparkle: card.sparkle,
             onComplete: (complete) => {
                 setSceneComplete(complete);
             },

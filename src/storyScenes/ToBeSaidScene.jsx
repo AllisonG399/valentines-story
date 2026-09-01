@@ -62,10 +62,26 @@ export default function ToBeSaidScene({
     ]);
 
     return (
-        <div
+        <motion.div
             className="said-scene"
+
+            initial={{
+                opacity: 0,
+            }}
+
+            animate={{
+                opacity: 1,
+            }}
+
+            transition={{
+                duration: 0.6,
+            }}
         >
 
+            {/* Header */}
+            <h2 className="said-header">
+                Things I Don't Say Enough
+            </h2>
             
             {/* Sticky Note Stack */}
             <div className="said-note-stack">
@@ -80,15 +96,7 @@ export default function ToBeSaidScene({
                             className="said-note"
 
                             style={{
-                                zIndex: index + 1,
-                                transform: `
-                                    translateX(
-                                        ${position % 2 === 0 ? "-8px" : "8px"}
-                                    )
-                                    rotate(
-                                        ${position % 2 === 0 ? "-2deg" : "2deg"}
-                                    )
-                                `,
+                                backgroundColor: lightenColor(color, 75)
                             }}
 
                             initial={{
@@ -99,8 +107,18 @@ export default function ToBeSaidScene({
 
                             animate={{
                                 opacity: 1,
-                                y: 0,
+                                x: position === 0
+                                    ? 0
+                                    : position % 2 === 0
+                                        ? -10
+                                        : 10,
+                                y: position * 2,
                                 scale: 1,
+                                rotate: position === 0
+                                    ? 0
+                                    : position % 2 === 0
+                                        ? -1.5
+                                        : 1.5,
                             }}
 
                             transition={{
@@ -108,6 +126,13 @@ export default function ToBeSaidScene({
                                 ease: "easeOut",
                             }}
                         >
+                            <div 
+                                className="said-note-header"
+                                style={{
+                                    backgroundColor: lightenColor(color, 70)
+                                }}
+                            />
+
                             <p>
                                 {note}
                             </p>
@@ -168,7 +193,7 @@ export default function ToBeSaidScene({
 
             </div>
 
-        </div>
+        </motion.div>
     );
 }
 

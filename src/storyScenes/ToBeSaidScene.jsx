@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ToBeSaidScene({
     toBeSaid=[""],
@@ -7,11 +8,58 @@ export default function ToBeSaidScene({
 }) {
 
     const [isOpened, setIsOpened] = useState(false); // Track if the envelope gets opened
-    const [isNotesLeft, setIsNotesLeft] = useState(true); // Track if there is any notes left to be said
+    const [currentNote, setCurrentNote] = useState(0);
+    const [visibleNotes, setVisibleNotes] = useState([]);
 
+    {/* Opens envelope for select duration, adds to be said note to top of stack - hides envelope when no more notes are left */}
     const handleEnvelopeClick = () => {
+
+        if (isOpened) {
+            return;
+        }
+
+        if (currentNote >= toBeSaid.length) {
+            return;
+        }
+
+        const nextNote = toBeSaid[currentNote];
+
+        // Add the new note to the stack
+        setVisibleNotes((previous) => [
+            ...previous,
+            nextNote,
+        ]);
+
+        setCurrentNote((previous) => previous + 1);
+
+        // Open envelope
         setIsOpened(true);
-    }
+
+        // Automatically close envelope
+        setTimeout(() => {
+            setIsOpened(false);
+        }, 1000);
+    };
+
+    useEffect(() => {
+
+        if (
+            toBeSaid.length > 0 &&
+            visibleNotes.length === toBeSaid.length
+        ) {
+
+            const timer = setTimeout(() => {
+                onComplete?.(true);
+            }, 1200);
+
+            return () => clearTimeout(timer);
+        }
+
+    }, [
+        visibleNotes,
+        toBeSaid.length,
+        onComplete,
+    ]);
 
     return (
         <div
@@ -19,15 +67,55 @@ export default function ToBeSaidScene({
         >
 
             
-            {/* Sticky Note */}
-            {isOpened && (
-                <div
-                    id="said-content"
-                >
+            {/* Sticky Note Stack */}
+            <div className="said-note-stack">
 
+                {visibleNotes.map((note, index) => {
 
-                </div>
-            )}
+                    const position = visibleNotes.length - 1 - index;
+
+                    return (
+                        <motion.div
+                            key={`said-note-${index}`}
+                            className="said-note"
+
+                            style={{
+                                zIndex: index + 1,
+                                transform: `
+                                    translateX(
+                                        ${position % 2 === 0 ? "-8px" : "8px"}
+                                    )
+                                    rotate(
+                                        ${position % 2 === 0 ? "-2deg" : "2deg"}
+                                    )
+                                `,
+                            }}
+
+                            initial={{
+                                opacity: 0,
+                                y: 100,
+                                scale: 0.85,
+                            }}
+
+                            animate={{
+                                opacity: 1,
+                                y: 0,
+                                scale: 1,
+                            }}
+
+                            transition={{
+                                duration: 0.7,
+                                ease: "easeOut",
+                            }}
+                        >
+                            <p>
+                                {note}
+                            </p>
+                        </motion.div>
+                    );
+                })}
+
+            </div>
 
             {/* Envelope */}
 

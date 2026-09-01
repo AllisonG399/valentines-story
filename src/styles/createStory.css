@@ -954,6 +954,7 @@ Favorite Things
 Said Scene
 -----------------*/
 .said-scene {
+    position: relative;
     width: 90vw;
     max-width: 1200px;
     height: 75vh;
@@ -1041,5 +1042,65 @@ Said Scene
     filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.08));
 }
 
+/* Sticky Note Stack */
+.said-note-stack {
+    position: absolute;
 
+    width: 80vw;
+    max-width: 400px;
+
+    height: 45vh;
+    max-height: 300px;
+
+    left: 50%;
+    bottom: 23vh;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: none;
+}
+
+.said-note {
+    position: absolute;
+
+    width: 75%;
+    min-height: 130px;
+    max-height: 220px;
+
+    padding: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #fff8a8;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.12);
+
+    border-radius: 2px;
+
+    transform-origin: center center;
+
+    transition:
+        transform 0.5s ease,
+        box-shadow 0.3s ease;
+}
+
+.said-note p {
+    margin: 0;
+
+    text-align: center;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.2rem;
+    line-height: 1.5;
+
+    color: var(--text-primary);
+}
 

@@ -39,7 +39,7 @@ export default function FavoriteThingsScene({
     const [revealedThings, setRevealedThings] = useState([]);
     const [activeThing, setActiveThing] = useState(null);
 
-    {/* Reveal  favorite thing */}
+    /* Reveal favorite thing */
     const revealThing = (thing) => {
 
         setActiveThing(thing);
@@ -57,13 +57,12 @@ export default function FavoriteThingsScene({
         });
     };
 
-    {/* Scene Complete */}
+    /* Scene Complete */
     useEffect(() => {
 
         if (revealedThings.length === 4) {
             onComplete?.(true);
         }
-
     }, [
         revealedThings,
         onComplete,
@@ -71,7 +70,7 @@ export default function FavoriteThingsScene({
 
     const allRevealed = revealedThings.length === favoriteThings.length;
 
-    {/* Constellation Points */}
+    /* Constellation Points */
     const constellationPoints = [
         { id: 2, x: 32, y: 15 },
         { id: 3, x: 70, y: 15 },
@@ -89,7 +88,7 @@ export default function FavoriteThingsScene({
         { id: 15, x: 50, y: 86 },
     ];
 
-    {/* Connections */}
+    /* Connections */
     const connections = [
         [2, 4],
         [2, 5],
@@ -117,6 +116,7 @@ export default function FavoriteThingsScene({
     ];
 
     return (
+
         <motion.div
             className="favorites-scene"
             initial={{
@@ -150,15 +150,17 @@ export default function FavoriteThingsScene({
 
             {/* Constellation */}
             <motion.div
-                className={`favorite-constellation ${
-                    allRevealed
+                className={`favorite-constellation 
+                    ${allRevealed
                         ? "constellation-complete"
                         : ""
-                }`}
+                    }
+                `}
+                role="group"
+                aria-label="Things I love about you"
             >
 
                 {/* Connecting Lines */}
-
                 <svg
                     className="constellation-lines"
                     viewBox="0 0 100 100"
@@ -169,39 +171,31 @@ export default function FavoriteThingsScene({
                     {connections.map(
                         ([from, to]) => {
 
-                            const start =
-                                constellationPoints.find(
-                                    (point) =>
-                                        point.id === from
-                                );
+                            const start = constellationPoints.find(
+                                (point) =>
+                                    point.id === from
+                            );
 
-                            const end =
-                                constellationPoints.find(
-                                    (point) =>
-                                        point.id === to
-                                );
+                            const end = constellationPoints.find(
+                                (point) =>
+                                    point.id === to
+                            );
 
                             return (
                                 <motion.line
                                     key={`${from}-${to}`}
-
                                     x1={start.x}
                                     y1={start.y}
-
                                     x2={end.x}
                                     y2={end.y}
-
                                     initial={{
                                         opacity: 0,
                                     }}
-
                                     animate={{
-                                        opacity:
-                                            allRevealed
-                                                ? 0.7
-                                                : 0.25,
+                                        opacity: allRevealed
+                                            ? 0.7
+                                            : 0.25,
                                     }}
-
                                     transition={{
                                         duration: 0.8,
                                     }}
@@ -209,117 +203,95 @@ export default function FavoriteThingsScene({
                             );
                         }
                     )}
-
                 </svg>
 
-
                 {/* Decorative Stars */}
-
                 {constellationPoints.map(
                     (point) => (
 
                         <motion.div
                             key={point.id}
-
                             className="constellation-star"
-
                             style={{
                                 left: `${point.x}%`,
                                 top: `${point.y}%`,
                             }}
-
                             initial={{
                                 opacity: 0,
                                 scale: 0,
                             }}
-
                             animate={{
                                 opacity: 1,
                                 scale: 1,
                             }}
-
                             transition={{
                                 duration: 0.5,
                                 delay: point.id * 0.05,
                             }}
+                            aria-hidden="true"
                         >
                             ✦
                         </motion.div>
-
                     )
                 )}
 
-
                 {/* Interactive Hearts */}
-
                 {favoriteThings.map((thing) => {
 
                     const point = constellationPoints.find(
                         (point) => point.id === thing.point
                     );
 
-                    const isRevealed =
-                        revealedThings.includes(thing.id);
+                    const isRevealed = revealedThings.includes(thing.id);
 
                     return (
                         <motion.button
                             key={thing.id}
-
                             type="button"
-
                             className={`
                                 favorite-heart
-                                ${
-                                    isRevealed
-                                        ? "favorite-heart-revealed"
-                                        : ""
+                                ${isRevealed
+                                    ? "favorite-heart-revealed"
+                                    : ""
                                 }
                             `}
-
                             style={{
                                 left: `${point.x}%`,
                                 top: `${point.y}%`,
                             }}
-
-                            onClick={() =>
-                                revealThing(thing)
-                            }
-
+                            onClick={() => revealThing(thing) }
                             whileHover={{
                                 scale: 1.2,
                             }}
-
                             whileTap={{
                                 scale: 0.9,
                             }}
-
                             animate={
                                 isRevealed
-                                    ? {
-                                        scale: [1, 1.2, 1],
-                                    }
-                                    : {
-                                        scale: 1,
-                                    }
+                                    ? { scale: [1, 1.2, 1], }
+                                    : { scale: 1, }
                             }
-
-                            transition={{
-                                duration: 0.4,
+                            transition={{  
+                                duration: 0.4, 
                             }}
-
-                            aria-label={`Reveal ${thing.title}`}
+                            aria-label={ 
+                                isRevealed
+                                    ? `Showing ${thing.title}`
+                                    : `Reveal ${thing.title}`
+                            }
                         >
                             {isRevealed ? "♥" : "♡"}
                         </motion.button>
                     );
                 })}
-
             </motion.div>
 
-
             {/* Revealed Message */}
-
-            <div className="favorite-reveal-area">
+            <div 
+                className="favorite-reveal-area"
+                aria-live="polite"
+                aria-atomic="true"
+            >
 
                 <AnimatePresence mode="wait">
 
@@ -327,27 +299,22 @@ export default function FavoriteThingsScene({
 
                         <motion.div
                             key={activeThing.id}
-
                             className="favorite-message"
-
                             initial={{
                                 opacity: 0,
                                 y: 15,
                                 scale: 0.95,
                             }}
-
                             animate={{
                                 opacity: 1,
                                 y: 0,
                                 scale: 1,
                             }}
-
                             exit={{
                                 opacity: 0,
                                 y: -10,
                                 scale: 0.95,
                             }}
-
                             transition={{
                                 duration: 0.4,
                             }}
@@ -360,17 +327,10 @@ export default function FavoriteThingsScene({
                             <p className="favorite-message-text">
                                 {activeThing.message}
                             </p>
-
                         </motion.div>
-
                     )}
-
                 </AnimatePresence>
-
             </div>
-
-            
-
         </motion.div>
     );
 }

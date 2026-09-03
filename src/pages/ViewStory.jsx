@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 import { decodeData } from "../utils/encode";
 
-import Sparkles from "../components/animations/Sparkles";
 import StoryCover from "../components/animations/StoryCover";
 import stampImage from '../assets/icons/stamp.png';
 
@@ -17,709 +16,759 @@ import FavoriteThingsScene from "../storyScenes/FavoriteThingsScene";
 import ToBeSaidScene from "../storyScenes/ToBeSaidScene";
 
 function getCardFromURL() {
-  try {
-    const hash = window.location.hash;
 
-    if (!hash.startsWith("#/vs/")) {
-      return {
-        card: null,
-        invalid: true,
-        expired: false,
-      };
-    }
+  	try {
 
-    const encoded = hash.replace("#/vs/", "");
+		// Get the current URL hash
+		const hash = window.location.hash;
 
-    if (!encoded) {
-      return {
-        card: null,
-        invalid: true,
-        expired: false,
-      };
-    }
+		// Veirfy that the URL uses the expected card route
+		if (!hash.startsWith("#/vs/")) {
 
-    const decoded = decodeData(encoded);
+			return {
+				card: null,
+				invalid: true,
+				expired: false,
+			};
+		}
 
-    if (!decoded || typeof decoded !== "object") {
-      return {
-        card: null,
-        invalid: true,
-        expired: false,
-      };
-    }
+		// Remove the route prefix
+		const encoded = hash.replace("#/vs/", "");
 
-    if (
-      typeof decoded.to !== "string" ||
-      typeof decoded.message !== "string" ||
-      typeof decoded.from !== "string" ||
-      typeof decoded.passcode !== "string" ||
-      typeof decoded.color !== "string" ||
-      typeof decoded.sparkle !== "string"
-    ) {
-      return {
-        card: null,
-        invalid: true,
-        expired: false,
-      };
-    }
+		// Reject the URL if no card data is provided
+		if (!encoded) {
 
-    if (
-      typeof decoded.expiresAt !== "number" ||
-      !Number.isFinite(decoded.expiresAt)
-    ) {
-      return {
-        card: null,
-        invalid: true,
-        expired: false,
-      };
-    }
+			return {
+				card: null,
+				invalid: true,
+				expired: false,
+			};
+		}
 
-    if (Date.now() >= decoded.expiresAt) {
-      return {
-        card: null,
-        invalid: false,
-        expired: true,
-      };
-    }
+		// Decode the card data from the URL
+		const decoded = decodeData(encoded);
 
-    return {
-      card: decoded,
-      invalid: false,
-      expired: false,
-    };
+		// Make sure the decoded data is a valid object
+		if (!decoded || typeof decoded !== "object") {
 
-  } catch (error) {
-    console.error("Invalid card data", error);
+			return {
+				card: null,
+				invalid: true,
+				expired: false,
+			};
+		}
 
-    return {
-      card: null,
-      invalid: true,
-      expired: false,
-    };
-  }
+		// Validate that all required card properties have the correct data types
+		if (
+			typeof decoded.to !== "string" ||
+			typeof decoded.message !== "string" ||
+			typeof decoded.from !== "string" ||
+			typeof decoded.passcode !== "string" ||
+			typeof decoded.color !== "string" ||
+			typeof decoded.sparkle !== "string"
+		) {
+
+			return {
+				card: null,
+				invalid: true,
+				expired: false,
+			};
+		}
+
+		// Validate that the expiration timestamp is a valid number
+		if (
+			typeof decoded.expiresAt !== "number" ||
+			!Number.isFinite(decoded.expiresAt)
+		) {
+
+			return {
+				card: null,
+				invalid: true,
+				expired: false,
+			};
+		}
+
+		// Check whether the card has passed its expiration time
+		if (Date.now() >= decoded.expiresAt) {
+
+			return {
+				card: null,
+				invalid: false,
+				expired: true,
+			};
+		}
+
+		// Return the validated and unexpired card data
+		return {
+			card: decoded,
+			invalid: false,
+			expired: false,
+		};
+
+	} catch (error) {
+
+		// Handle malformed or undecodable card data
+		console.error("Invalid card data", error);
+
+		return {
+			card: null,
+			invalid: true,
+			expired: false,
+		};
+	}
 }
 
 export default function ViewStory() {
-    const initialCard = getCardFromURL();
-
-    const [card, setCard] = useState(initialCard.card);
-    const [expired, setExpired] = useState(initialCard.expired);
-    const [invalid, setInvalid] = useState(initialCard.invalid);
-
-    // Password
-    const [enteredPasscode, setEnteredPasscode] = useState(""); // Entered password
-    const [showPasscode, setShowPasscode] = useState(false);    // Toggling passcode field visibility
-    const [passcodeError, setPasscodeError] = useState("");     // Wrong password alert
-    const [unlocked, setUnlocked] = useState(false);            // Toggling unlocking card
-
-    const [timeLeft, setTimeLeft] = useState(null);
-    const [expirationAnnouncement, setExpirationAnnouncement] = useState("");
-
-    const [showReveal, setShowReveal] = useState(false);
-    const [showCard, setShowCard] = useState(false);
-    
-    const [currentScene, setCurrentScene] = useState(0);
-    const [sceneComplete, setSceneComplete] = useState(false);
-    const [isView, setIsView] = useState(false);
-    const [isCoverAnimating, setIsCoverAnimating] = useState(false);
-
-    useEffect(() => {
-        if (!card) {
-            return;
-        }
-
-        const initialTimeLeft = card.expiresAt - Date.now();
-
-        setTimeLeft(initialTimeLeft);
-
-        setExpirationAnnouncement(
-            `This Love Letter expires in ${formatTime(initialTimeLeft)}.`
-        );
-
-        const interval = setInterval(() => {
-            const remaining = card.expiresAt - Date.now();
-
-            if (remaining <= 0) {
-            clearInterval(interval);
-            setTimeLeft(0);
-            setExpired(true);
-            } else {
-            setTimeLeft(remaining);
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-
-    }, [card]);
-
-  const handleUnlock = () => {
-    if (enteredPasscode === card.passcode) {
-      setPasscodeError("");
-      setUnlocked(true);
-
-      // Start reveal sequence
-      setShowReveal(true);
-
-      setTimeout(() => {
-        setShowReveal(false);
-      }, 6000);
-
-      return;
-    }
-
-    setPasscodeError("Incorrect passcode. Please try again.");
-  };
-
-  // -------------------------
-  // Invalid URL
-  // -------------------------
-  if (invalid) {
-    return (
-      <main className="view-message">
-        <h1>
-          Invalid Love Letter Link <span aria-hidden="true">💔</span>
-        </h1>
-        <p>
-          This link appears to be corrupted, incomplete, or no longer valid.
-          Please check that you have the complete link and try again.
-        </p>
-      </main>
-    );
-  }
-
-  // -------------------------
-  // Expired Message
-  // -------------------------
-  if (expired) {
-    return (
-      <main className="view-message">
-        <h1>
-          This Love Letter Has Expired <span aria-hidden="true">💔</span>
-        </h1>
-        <p>The message is no longer available because its expiration time has passed.</p>
-      </main>
-    );
-  }
-
-  // -------------------------
-  // Passcode Gate
-  // -------------------------
-  if (card && card.passcode && !unlocked) {
-
-    return (
-      <main className="view-message">
-
-        <section className="hero view-hero passcode-hero">
-
-          <h1 className="hero-title">
-            This Card Is Locked <span aria-hidden="true">🔒</span>
-          </h1>
-
-          <p className="hero-subtitle">
-            Enter the passcode to reveal your Love Letter
-          </p>
-        </section>
-
-        
-        <form
-          className="passcode-container"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleUnlock();
-          }}
-        >
-          
-
-          <div className="passcode-input-wrapper">
-
-            <label htmlFor="card-passcode" className="sr-only">
-              Passcode
-            </label>
-
-            <input
-              id="card-passcode"
-              type={showPasscode ? "text" : "password"}
-              placeholder="Enter passcode"
-              value={enteredPasscode}
-              onChange={(e) => {
-                setEnteredPasscode(e.target.value);
-                setPasscodeError("");
-              }}
-              aria-invalid={!!passcodeError}
-              aria-describedby={passcodeError ? "passcode-error" : undefined}
-              autoComplete="off"
-            />
-
-            <button
-                type="button"
-                className="passcode-toggle"
-                onClick={() => setShowPasscode((previous) => !previous)}
-                aria-label={showPasscode ? "Hide passcode" : "Show passcode"}
-              >
-                <FontAwesomeIcon
-                  icon={showPasscode ? faEyeSlash : faEye}
-                  aria-hidden="true"
-                />
-              </button>
-          </div>
-
-          {passcodeError && (
-            <p
-              id="passcode-error"
-              className="form-error"
-              role="alert"
-            >
-              {passcodeError}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="generate-button unlock-card-button"
-          >
-            Unlock
-          </button>
-        </form>
-      </main>
-    );
-  }
-
-  {/* Story Scene Directions */}
-  const sceneDirections = {
-    0: {
-      initial: "Ready to begin your love story? Story scene guidance will appear here."
-    },
-    1: {
-      initial: "Click on the envelope to open it.",
-      complete: "Your next scene awaits, click the arrow to continue.",
-    },
-    2: {
-      initial: "Click on the fields to reveal the messages.",
-      complete: "Your next scene awaits, click the arrow to continue.",
-    },
-    3: {
-        initial: "Swipe or click the cards to reveal the memories.",
-        complete: "Your next scene awaits, click the arrow to continue.",
-    },
-    4: {
-        initial: "Tap the hearts to discover the little things your sender loves",
-        complete: "Your next scene awaits, click the arrow to continue.",
-    },
-    5: {
-        initial: "Click on the envelope to reveal what is not said enough",
-        complete: "Your story card is complete!",
-    },
-  };
-
-  {/* Story Scenes to be displayed */}
-  const storyScenes = card
-  ? [
-      {
-        id: "reveal",
-        component: StoryCover,
-        props: {
-          isOpen: isView,
-          onComplete: () => {
-            setCurrentScene(1);
-            setSceneComplete(false);
-          },
-        },
-      },
-      {
-        id: "intro",
-        component: Intro,
-        props: {
-          to: card.to,
-          from: card.from,
-          message: card.message,
-          sparkle: card.sparkle,
-          color: card.color,
-          onComplete: (complete) => {
-            setSceneComplete(complete);
-          },
-        },
-      },
-      {
-        id: "feel",
-        component: MakeMeFeelScene,
-        props: {
-          theWayYou: card.theWayYou,
-          makeMeFeel: card.makeMeFeel,
-          color: card.color,
-          onComplete: (complete) => {
-            setSceneComplete(complete);
-          },
-        },
-      },
-      {
-        id: "memories",
-        component: MemoriesScene,
-        props: {
-            memories: card.memories,
-            onComplete: (complete) => {
-                setSceneComplete(complete);
-            },
-        },
-      },
-      {
-        id: "favorites",
-        component: FavoriteThingsScene,
-        props: {
-            favoriteThingYouDo: card.favoriteThingYouDo,
-            favoritePhysicalThingAboutYou: card.favoritePhysicalThingAboutYou,
-            favoriteThingYouSay: card.favoriteThingYouSay,
-            favoriteThingWeDoTogether: card.favoriteThingWeDoTogether,
-            onComplete: (complete) => {
-                setSceneComplete(complete);
-            },
-        },
-      },
-      {
-        id: "said",
-        component: ToBeSaidScene,
-        props: {
-            toBeSaid: card.toBeSaid,
-            color: card.color,
-            sparkle: card.sparkle,
-            onComplete: (complete) => {
-                setSceneComplete(complete);
-            },
-        },
-      },
-    ]
-  : [];
-
-  {/* Handle love story navigation */}
-  const handleStoryToggle = () => {
-    if (isView) {
-      setCurrentScene(0);
-      setSceneComplete(false);
-      setIsView(false);
-      return;
-    }
-
-    setCurrentScene(0);
-    setSceneComplete(false);
-    setIsView(true);
-  };
-
-  const handleSceneChange = (scene) => {
-    setSceneComplete(false);
-    setCurrentScene(scene);
-  };
-
-  return (
-    <main className="view-message">
-
-      {/* Hero */}
-      <section className="hero view-hero view-story-hero">
-
-        {/* Expiration Timer */}
-        {card && timeLeft && (
-          <>
-            <div 
-              className="expiration-banner"
-              aria-hidden="true"
-            >
-              <span style={{ fontStyle: "normal" }}>💌</span> This message expires in {formatTime(timeLeft)}
-            </div>
-
-            {/* Screen reader announcement */}
-            <p 
-              className="sr-only"
-              role="status"
-            >
-              {expirationAnnouncement}
-            </p>
-          </>
-        )}
-
-        {/* Header */}
-        <h1 className="hero-title">
-          Your Love Letter Message
-        </h1>
-
-        <p className="hero-subtitle">
-          Below is the Love Letter Story Card written for you. Click the Begin button to
-          start viewing your message!
-        </p>
-
-        <div 
-          className="divider-heart"
-          aria-hidden="true"
-        >
-          <div className="divider" />
-          <span className="heart">♥</span>
-          <div className="divider" />
-        </div>
-      </section>
-
-      {/* Reveal Overlay */}
-      {showReveal && card && (
-        <div className="reveal-overlay">
-          <div className="reveal-content">
-
-            {/* Announcement */}
-            <div className="reveal-message">
-              <p role="status">
-                You have a Love Letter!
-              </p>
-            </div>
-
-            <div
-              className="envelope-back"
-              style={{
-                backgroundColor: card.color,
-                color: getContrastTextColor(card.color)
-              }}
-            >
-
-              {/* From */}
-              <p className="envelope-back-from">
-                <strong>From:</strong> {card.from}
-              </p>
-
-              {/* Stamp */}
-              <div
-                className="envelope-back-stamp"
-                style={{ backgroundImage: `url(${stampImage})` }}
-                aria-hidden="true"
-              />
-
-              <p className="envelope-back-to">
-                <strong>To:</strong> {card.to}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Navigation */}
-      <div className="story-nav-cont">
-
-        {/* Back Arrow */}
-        <button
-            className="view-story-nav-btn"
-            type="button"
-            onClick={() => {
-                setSceneComplete(false);
-
-                setCurrentScene((prev) =>
-                Math.max(prev - 1, 1)
-                );
-            }}
-            aria-label="Previous story scene"
-            disabled={currentScene <= 1}
-        >
-            <FontAwesomeIcon
-                icon={faArrowLeft}
-                aria-hidden="true"
-            />
-        </button>
-
-        {/* View Story Button */}
-        <button
-            className="view-story-btn"
-            type="button"
-            onClick={handleStoryToggle}
-        >
-          {isView ? "Reset" : "Begin Love Story"}
-        </button>
-
-        {/* Forward Arrow */}
-        <motion.button
-            className="view-story-nav-btn"
-            type="button"
-            onClick={() => {
-                setSceneComplete(false);
-
-                setCurrentScene((prev) =>
-                    Math.min(
-                        prev + 1,
-                        storyScenes.length - 1
-                    )
-                );
-            }}
-            aria-label="Next story scene"
-
-            disabled={
-                !isView ||
-                !sceneComplete ||
-                currentScene === storyScenes.length - 1
-            }
-
-            animate={
-                sceneComplete &&
-                currentScene < storyScenes.length - 1
-                    ? "ready"
-                    : "idle"
-            }
-
-            whileHover={
-                sceneComplete
-                    ? {
-                        y: -6,
-                        cursor: "pointer"
-                    }
-                    : undefined
-            }
-
-            variants={{
-                idle: {
-                    scale: 1,
-                    x: 0,
-                    y: 0,
-                    boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
-                    borderColor: "transparent",
-                    pointerEvents: "none",
-
-                    transition: {
-                        duration: 0.3,
-                        ease: "easeOut",
-                    },
-                    
-                },
-
-                ready: {
-                    scale: 1,
-                    x: 0,
-                    borderColor: "var(--soft-pink)",
-
-                    boxShadow: [
-                        "0 0 14px rgba(214, 91, 116, 0.10)",
-                        "0 0 14px rgba(214, 91, 116, 0.30)",
-                        "0 0 14px rgba(214, 91, 116, 0.10)",
-                    ],
-
-                    transition: {
-                        duration: 1.6,
-                        repeat: Infinity,
-                        repeatDelay: 2,
-                        ease: "easeInOut",
-                    },
-                },
-            }}
-        >
-            <FontAwesomeIcon
-                icon={faArrowRight}
-                aria-hidden="true"
-            />
-        </motion.button>
-
-      </div>
-
-      {/* Scene Directions */}
-      <div className="scene-directions-cont">
-        <p>
-          {sceneDirections[currentScene]?.[
-            sceneComplete ? "complete" : "initial"
-          ]}
-        </p>
-      </div>
-
-        {/* Scene Progress Bar */}
-
-        {storyScenes.length > 0 && (() => {
-
-        const progress =
-            (currentScene / (storyScenes.length - 1)) * 100;
-
-        return (
-            <div
-            className="story-progress"
-            aria-hidden="true"
-            >
-            <div
-                className="story-progress-fill"
-                style={{
-                width: `${progress}%`,
-                }}
-            />
-            </div>
-        );
-
-        })()}
-
-      {/* Screen Reader Status */}
-      <p className="sr-only" role="status">
-        Story scene {currentScene + 1} of {storyScenes.length}
-      </p>
-
-      {/* Story Preview */}
-      <div
-        className={`story-preview-view ${isView ? "show" : ""}`}
-      >
-        {/* Story */}
-        <div
-          className={`story-content ${
-            isView ? "story-content-open" : ""
-          }`}
-        >
-          <div
-            className="story-scene"
-            aria-label={`Story scene ${currentScene + 1}`}
-            aria-hidden={!isView}
-          >
-            {storyScenes.length > 0 && (() => {
-              const Scene = storyScenes[currentScene].component;
-              const props = storyScenes[currentScene].props;
-
-              return (
-                <div>
-                  <Scene {...props} />
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-
-      </div>
-
-        {/* Send a Card Back Button */}
-        <div className="send-back-container">
-            <button 
-                type="button"
-                className="send-back-btn"
-                onClick={() => window.location.hash = '#/'}
-            >
-                Send a Love Letter Back!
-            </button>
-        </div>
-      
-    </main>
-  );
+	const initialCard = getCardFromURL();
+
+	const [card, setCard] = useState(initialCard.card);
+	const [expired, setExpired] = useState(initialCard.expired);
+	const [invalid, setInvalid] = useState(initialCard.invalid);
+
+	// Password
+	const [enteredPasscode, setEnteredPasscode] = useState(""); // Entered password
+	const [showPasscode, setShowPasscode] = useState(false);    // Toggling passcode field visibility
+	const [passcodeError, setPasscodeError] = useState("");     // Wrong password alert
+	const [unlocked, setUnlocked] = useState(false);            // Toggling unlocking card
+
+	const [timeLeft, setTimeLeft] = useState(null);
+	const [expirationAnnouncement, setExpirationAnnouncement] = useState("");
+
+	const [showReveal, setShowReveal] = useState(false);
+	
+	const [currentScene, setCurrentScene] = useState(0);
+	const [sceneComplete, setSceneComplete] = useState(false);
+	const [isView, setIsView] = useState(false);
+
+	/* Track the remaining time until the Love Letter expires */
+	useEffect(() => {
+
+		// Do not start expiration timer if there is no card
+		if (!card) {
+			return;
+		}
+
+		// Calculate the initial time remaining until expiration
+		const initialTimeLeft = card.expiresAt - Date.now();
+
+		setTimeLeft(initialTimeLeft);
+
+		// Anounce the initial expiration time to screen readers
+		setExpirationAnnouncement(
+			`This Love Letter expires in ${formatTime(initialTimeLeft)}.`
+		);
+
+		// Update the remaining time every second
+		const interval = setInterval(() => {
+
+			const remaining = card.expiresAt - Date.now();
+
+			// Mark the card as expired once the expiration time is reached
+			if (remaining <= 0) {
+				clearInterval(interval);
+				setTimeLeft(0);
+				setExpired(true);
+			} else {
+				setTimeLeft(remaining);
+			}
+		}, 1000);
+
+		// Clean upu the interval when the card changes or component unmounts
+		return () => clearInterval(interval);
+
+	}, [card]);
+
+	/* Verify the entered passcode and unlock */
+	const handleUnlock = () => {
+
+		if (enteredPasscode === card.passcode) {
+
+			// Clear any previous error message and unlock
+			setPasscodeError("");
+			setUnlocked(true);
+
+			// Start reveal sequence
+			setShowReveal(true);
+
+			setTimeout(() => {
+				setShowReveal(false);
+			}, 6000);
+
+			return;
+		}
+
+		// Display an error when the entered passcode is incorrect
+		setPasscodeError("Incorrect passcode. Please try again.");
+	};
+
+	/* Invalid URL */
+	if (invalid) {
+
+		return (
+
+			<main className="view-message">
+
+				<h1>
+					Invalid Love Letter Link <span aria-hidden="true">💔</span>
+				</h1>
+
+				<p>
+					This link appears to be corrupted, incomplete, or no longer valid.
+					Please check that you have the complete link and try again.
+				</p>
+			</main>
+		);
+	}
+
+	/* Expired Message */
+	if (expired) {
+
+		return (
+
+			<main className="view-message">
+
+				<h1>
+					This Love Letter Has Expired <span aria-hidden="true">💔</span>
+				</h1>
+
+				<p>
+					The message is no longer available because its expiration time has passed.
+				</p>
+			</main>
+		);
+	}
+
+  	/* Passcode Gate */
+  	if (card && card.passcode && !unlocked) {
+
+		return (
+
+			<main className="view-message">
+
+				{/* Passcode Gate Header */}
+				<section className="hero view-hero passcode-hero">
+
+					<h1 className="hero-title">
+						This Card Is Locked <span aria-hidden="true">🔒</span>
+					</h1>
+
+					<p className="hero-subtitle">
+						Enter the passcode to reveal your Love Letter
+					</p>
+				</section>
+
+				{/* Passcode Form */}
+				<form
+					className="passcode-container"
+					onSubmit={(event) => {
+						event.preventDefault();
+						handleUnlock();
+					}}
+				>
+
+		  			<div className="passcode-input-wrapper">
+
+						<label htmlFor="card-passcode" className="sr-only">
+						Passcode
+						</label>
+
+						<input
+							id="card-passcode"
+							type={showPasscode ? "text" : "password"}
+							placeholder="Enter passcode"
+							value={enteredPasscode}
+							onChange={(e) => {
+								setEnteredPasscode(e.target.value);
+								setPasscodeError("");
+							}}
+							aria-invalid={!!passcodeError}
+							aria-describedby={passcodeError ? "passcode-error" : undefined}
+							autoComplete="off"
+						/>
+
+						{/* Toggle passcode visibility */}
+						<button
+							type="button"
+							className="passcode-toggle"
+							onClick={() => setShowPasscode((previous) => !previous)}
+							aria-label={showPasscode ? "Hide passcode" : "Show passcode"}
+						>
+
+							<FontAwesomeIcon
+								icon={showPasscode ? faEyeSlash : faEye}
+								aria-hidden="true"
+							/>
+						</button>
+		  			</div>
+
+					{/* Display passcode validation errors */}
+					{passcodeError && (
+
+						<p
+							id="passcode-error"
+							className="form-error"
+							role="alert"
+						>
+							{passcodeError}
+						</p>
+					)}
+
+					{/* Submit the passcode */}
+					<button
+						type="submit"
+						className="generate-button unlock-card-button"
+					>
+						Unlock
+					</button>
+				</form>
+	  		</main>
+		);
+  	}
+
+	/* Story Scene Directions */
+	const sceneDirections = {
+		0: {
+			initial: "Ready to begin your love story? Story scene guidance will appear here."
+		},
+		1: {
+			initial: "Click on the envelope to open it.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		2: {
+			initial: "Click on the fields to reveal the messages.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		3: {
+			initial: "Swipe or click the cards to reveal the memories.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		4: {
+			initial: "Tap the hearts to discover the little things your sender loves",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		5: {
+			initial: "Click on the envelope to reveal what is not said enough",
+			complete: "Your story card is complete!",
+		},
+	};
+
+	/* Story Scenes to be displayed */
+	const storyScenes = card
+	? [
+		{
+			id: "reveal",
+			title: "Cover",
+			component: StoryCover,
+			props: {
+				isOpen: isView,
+				onComplete: () => {
+					setCurrentScene(1);
+					setSceneComplete(false);
+				},
+			},
+		},
+		{
+			id: "intro",
+			title: "Introductory card",
+			component: Intro,
+			props: {
+				to: card.to,
+				from: card.from,
+				message: card.message,
+				sparkle: card.sparkle,
+				color: card.color,
+				onComplete: (complete) => {
+					setSceneComplete(complete);
+				},
+			},
+		},
+		{
+			id: "feel",
+			title: "How you make me feel",
+			component: MakeMeFeelScene,
+			props: {
+				theWayYou: card.theWayYou,
+				makeMeFeel: card.makeMeFeel,
+				color: card.color,
+				onComplete: (complete) => {
+					setSceneComplete(complete);
+				},
+			},
+		},
+		{
+			id: "memories",
+			title: "Our Memories",
+			component: MemoriesScene,
+			props: {
+				memories: card.memories,
+				onComplete: (complete) => {
+					setSceneComplete(complete);
+				},
+			},
+		},
+		{
+			id: "favorites",
+			title: "My favorite things about you",
+			component: FavoriteThingsScene,
+			props: {
+				favoriteThingYouDo: card.favoriteThingYouDo,
+				favoritePhysicalThingAboutYou: card.favoritePhysicalThingAboutYou,
+				favoriteThingYouSay: card.favoriteThingYouSay,
+				favoriteThingWeDoTogether: card.favoriteThingWeDoTogether,
+				onComplete: (complete) => {
+					setSceneComplete(complete);
+				},
+			},
+		},
+		{
+			id: "said",
+			title: "Things that go left unsaid",
+			component: ToBeSaidScene,
+			props: {
+				toBeSaid: card.toBeSaid,
+				color: card.color,
+				sparkle: card.sparkle,
+				onComplete: (complete) => {
+					setSceneComplete(complete);
+				},
+			},
+		},
+	]: [];
+
+	/* Handle love story navigation */
+	const handleStoryToggle = () => {
+		if (isView) {
+		setCurrentScene(0);
+		setSceneComplete(false);
+		setIsView(false);
+		return;
+		}
+
+		setCurrentScene(0);
+		setSceneComplete(false);
+		setIsView(true);
+	};
+
+  	return (
+
+		<main className="view-message">
+
+			{/* Hero */}
+			<section className="hero view-hero view-story-hero">
+
+				{/* Expiration Timer */}
+				{card && timeLeft && (
+
+					<>
+						<div 
+							className="expiration-banner"
+							aria-hidden="true"
+						>
+
+							<span style={{ fontStyle: "normal" }}>💌</span> This message expires in {formatTime(timeLeft)}
+						</div>
+
+						{/* Screen reader announcement */}
+						<p 
+							className="sr-only"
+							role="status"
+						>
+							{expirationAnnouncement}
+						</p>
+					</>
+				)}
+
+				{/* Header */}
+				<h1 className="hero-title">
+					Your Love Letter Message
+				</h1>
+
+				{/* Subheader */}
+				<p className="hero-subtitle">
+					Below is the Love Letter Story Card written for you. Click the Begin button to
+					start viewing your message!
+				</p>
+
+				{/* Divider */}
+				<div 
+					className="divider-heart"
+					aria-hidden="true"
+				>
+
+					<div className="divider" />
+
+					<span className="heart">♥</span>
+					
+					<div className="divider" />
+				</div>
+	  		</section>
+
+	  		{/* Reveal Overlay */}
+	  		{showReveal && card && (
+
+				<div className="reveal-overlay">
+
+		  			<div className="reveal-content">
+
+						{/* Announcement */}
+						<div className="reveal-message">
+
+							<p role="status">
+								You have a Love Letter!
+							</p>
+						</div>
+
+						<div
+							className="envelope-back"
+							style={{
+								backgroundColor: card.color,
+								color: getContrastTextColor(card.color)
+							}}
+						>
+
+							{/* From */}
+							<p className="envelope-back-from">
+								<strong>From:</strong> {card.from}
+							</p>
+
+							{/* Stamp */}
+							<div
+								className="envelope-back-stamp"
+								style={{ backgroundImage: `url(${stampImage})` }}
+								aria-hidden="true"
+							/>
+
+							{/* To */}
+							<p className="envelope-back-to">
+								<strong>To:</strong> {card.to}
+							</p>
+						</div>
+		  			</div>
+				</div>
+	  		)}
+
+	  		{/* Navigation */}
+	  		<div className="story-nav-cont">
+
+				{/* Back Arrow */}
+				<button
+					className="view-story-nav-btn"
+					type="button"
+					onClick={() => {
+						setSceneComplete(false);
+
+						setCurrentScene((prev) =>
+						Math.max(prev - 1, 1)
+						);
+					}}
+					aria-label="Go to previous story scene"
+					disabled={currentScene <= 1}
+				>
+					<FontAwesomeIcon
+						icon={faArrowLeft}
+						aria-hidden="true"
+					/>
+				</button>
+
+				{/* View Story Button */}
+				<button
+					className="view-story-btn"
+					type="button"
+					onClick={handleStoryToggle}
+				>
+					{isView ? "Reset" : "Begin Love Story"}
+				</button>
+
+				{/* Forward Arrow */}
+				<motion.button
+					className="view-story-nav-btn"
+					type="button"
+					onClick={() => {
+						setSceneComplete(false);
+						setCurrentScene((prev) =>
+							Math.min(
+								prev + 1,
+								storyScenes.length - 1
+							)
+						);
+					}}
+					aria-label="Go to next story scene"
+					disabled={
+						!isView ||
+						!sceneComplete ||
+						currentScene === storyScenes.length - 1
+					}
+					animate={
+						sceneComplete &&
+						currentScene < storyScenes.length - 1
+							? "ready"
+							: "idle"
+					}
+					whileHover={
+						sceneComplete
+							? {
+								y: -6,
+								cursor: "pointer"
+							}
+							: undefined
+					}
+					variants={{
+						idle: {
+							scale: 1,
+							x: 0,
+							y: 0,
+							boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
+							borderColor: "transparent",
+							pointerEvents: "none",
+							transition: {
+								duration: 0.3,
+								ease: "easeOut",
+							},
+						},
+						ready: {
+							scale: 1,
+							x: 0,
+							borderColor: "var(--soft-pink)",
+							boxShadow: [
+								"0 0 14px rgba(214, 91, 116, 0.10)",
+								"0 0 14px rgba(214, 91, 116, 0.30)",
+								"0 0 14px rgba(214, 91, 116, 0.10)",
+							],
+							transition: {
+								duration: 1.6,
+								repeat: Infinity,
+								repeatDelay: 2,
+								ease: "easeInOut",
+							},
+						},
+					}}
+				>
+					<FontAwesomeIcon
+						icon={faArrowRight}
+						aria-hidden="true"
+					/>
+				</motion.button>
+	  		</div>
+
+			{/* Scene Directions */}
+			<div 
+				className="scene-directions-cont"
+				role="status"
+				aria-live="polite"
+			>
+				<p>
+					{sceneDirections[currentScene]?.[
+						sceneComplete ? "complete" : "initial"
+					]}
+				</p>
+			</div>
+
+			{/* Scene Progress Bar */}
+			{storyScenes.length > 0 && (() => {
+
+				const progress =
+					(currentScene / (storyScenes.length - 1)) * 100;
+
+				return (
+
+					<div
+						className="story-progress"
+						aria-hidden="true"
+					>
+						<div
+							className="story-progress-fill"
+							style={{
+								width: `${progress}%`,
+							}}
+						/>
+					</div>
+				);
+			})()}
+
+			{/* Screen Reader Status */}
+			<p className="sr-only" role="status">
+				{storyScenes[currentScene]?.title}.
+				Story scene {currentScene + 1} of {storyScenes.length}
+			</p>
+
+			{/* Story Preview */}
+			<div
+				className={`story-preview-view ${isView ? "show" : ""}`}
+			>
+
+				{/* Story */}
+				<div
+					className={`story-content ${
+						isView ? "story-content-open" : ""
+					}`}
+				>
+
+					<div
+						className="story-scene"
+						role="region"
+						aria-label={`Story scene ${currentScene + 1} of ${storyScenes.length}`}
+						aria-hidden={!isView}
+					>
+
+						{storyScenes.length > 0 && (() => {
+							const Scene = storyScenes[currentScene].component;
+							const props = storyScenes[currentScene].props;
+
+							return (
+								<div>
+								<Scene {...props} />
+								</div>
+							);
+						})()}
+					</div>
+				</div>
+			</div>
+
+			{/* Send a Card Back Button */}
+			<div className="send-back-container">
+
+				<button 
+					type="button"
+					className="send-back-btn"
+					onClick={() => window.location.hash = '#/'}
+				>
+					Send a Love Letter Back!
+				</button>
+			</div>
+		</main>
+  	);
 }
 
 function formatTime(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
+	const totalSeconds = Math.floor(ms / 1000);
 
-  const days = Math.floor(totalSeconds / (3600 * 24));
-  const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
+	const days = Math.floor(totalSeconds / (3600 * 24));
+	const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+	const minutes = Math.floor((totalSeconds % 3600) / 60);
+	const seconds = totalSeconds % 60;
 
-  if (days > 0) {
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  }
+	if (days > 0) {
+		return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+	}
 
-  if (hours > 0) {
-    return `${hours}h ${minutes}m ${seconds}s`;
-  }
+	if (hours > 0) {
+		return `${hours}h ${minutes}m ${seconds}s`;
+	}
 
-  return `${minutes}m ${seconds}s`;
+	return `${minutes}m ${seconds}s`;
 }
 
 function getContrastTextColor(hex) {
-  const cleaned = hex.replace("#", "");
+	const cleaned = hex.replace("#", "");
 
-  const r = parseInt(cleaned.substring(0, 2), 16);
-  const g = parseInt(cleaned.substring(2, 4), 16);
-  const b = parseInt(cleaned.substring(4, 6), 16);
+	const r = parseInt(cleaned.substring(0, 2), 16);
+	const g = parseInt(cleaned.substring(2, 4), 16);
+	const b = parseInt(cleaned.substring(4, 6), 16);
 
-  // Perceived brightness formula
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+	// Perceived brightness formula
+	const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
-  return brightness > 155
-    ? "var(--text-primary)"   // dark text
-    : "var(--white-linen)";   // light text
+	return brightness > 155
+		? "var(--text-primary)"   // dark text
+		: "var(--white-linen)";   // light text
 };

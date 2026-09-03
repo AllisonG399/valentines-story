@@ -2,399 +2,352 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const overlayVariants = {
-  closed: {
-    opacity: 1,
-  },
+	closed: {
+		opacity: 1,
+	},
 
-  open: {
-    opacity: 0,
-    transition: {
-      duration: 0.5,
-      delay: 0.1,
-      ease: "easeInOut",
-    },
-  },
+	open: {
+		opacity: 0,
+		transition: {
+			duration: 0.5,
+			delay: 0.1,
+			ease: "easeInOut",
+		},
+	},
 };
 
 const messageVariants = {
-  closed: {
-    opacity: 1,
-    scale: 1,
-  },
+	closed: {
+		opacity: 1,
+		scale: 1,
+	},
 
-  open: {
-    opacity: 0,
-    scale: 0.95,
-    transition: {
-      duration: 0.4,
-      delay: 0.1,
-      ease: "easeInOut",
-    },
-  },
+	open: {
+		opacity: 0,
+		scale: 0.95,
+		transition: {
+			duration: 0.4,
+			delay: 0.1,
+			ease: "easeInOut",
+		},
+	},
 };
 
 const coverVariants = {
-  closed: {
-    opacity: 1,
-  },
+	closed: {
+		opacity: 1,
+	},
 
-  open: {
-    opacity: 0,
-    transition: {
-      duration: 0.8,
-    },
-  },
+	open: {
+		opacity: 0,
+		transition: {
+			duration: 0.8,
+		},
+	},
 };
 
 const heartVariants = {
-  exitLeft: {
-    closed: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      rotate: 0,
-      scale: 1,
-    },
+	exitLeft: {
+		closed: {
+			opacity: 1,
+			x: 0,
+			y: 0,
+			rotate: 0,
+			scale: 1,
+		},
 
-    open: {
-      opacity: 0,
-      x: -120,
-      y: -30,
-      rotate: -35,
-      scale: 0.7,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-      },
-    },
-  },
+		open: {
+			opacity: 0,
+			x: -120,
+			y: -30,
+			rotate: -35,
+			scale: 0.7,
+			transition: {
+					duration: 0.8,
+					ease: "easeInOut",
+			},
+		},
+	},
 
-  exitRight: {
-    closed: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      rotate: 0,
-      scale: 1,
-    },
+	exitRight: {
+		closed: {
+			opacity: 1,
+			x: 0,
+			y: 0,
+			rotate: 0,
+			scale: 1,
+		},
 
-    open: {
-      opacity: 0,
-      x: 120,
-      y: -30,
-      rotate: 35,
-      scale: 0.7,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-      },
-    },
-  },
+		open: {
+			opacity: 0,
+			x: 120,
+			y: -30,
+			rotate: 35,
+			scale: 0.7,
+			transition: {
+				duration: 0.8,
+				ease: "easeInOut",
+			},
+		},
+	},
 
-  exitUp: {
-    closed: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      rotate: 0,
-      scale: 1,
-    },
+	exitUp: {
+		closed: {
+			opacity: 1,
+			x: 0,
+			y: 0,
+			rotate: 0,
+			scale: 1,
+		},
 
-    open: {
-      opacity: 0,
-      x: 0,
-      y: -100,
-      rotate: -20,
-      scale: 0.7,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-      },
-    },
-  },
+		open: {
+			opacity: 0,
+			x: 0,
+			y: -100,
+			rotate: -20,
+			scale: 0.7,
+			transition: {
+				duration: 0.8,
+				ease: "easeInOut",
+			},
+		},
+	},
 
-  exitDown: {
-    closed: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      rotate: 20,
-      scale: 1,
-    },
+	exitDown: {
+		closed: {
+			opacity: 1,
+			x: 0,
+			y: 0,
+			rotate: 20,
+			scale: 1,
+		},
 
-    open: {
-      opacity: 0,
-      x: 0,
-      y: 100,
-      rotate: 20,
-      scale: 0.7,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-      },
-    },
-  },
+		open: {
+			opacity: 0,
+			x: 0,
+			y: 100,
+			rotate: 20,
+			scale: 0.7,
+			transition: {
+				duration: 0.8,
+				ease: "easeInOut",
+			},
+		},
+	},
 };
 
 const emoji = ["💗", "🤍", "💕"];
 const variants = ["exitLeft", "exitUp", "exitRight"];
 
-/*
------------------------------------------
-Generate Hearts
------------------------------------------
-*/
-
+/* Generate Hearts */
 function generateHearts() {
-  const isMobile = window.innerWidth <= 600;
 
-  /*
-  ---------------------------------------
-  Responsive layout settings
-  ---------------------------------------
-  */
+	const isMobile = window.innerWidth <= 600;
 
-  // How far across the screen hearts can be placed
-  const maxLeft = isMobile ? 68 : 80;
-  const maxTop = isMobile ? 86 : 77;
+	/* Responsive Layout Settings */
 
-  // Horizontal spacing between hearts
-  const horizontalMin = isMobile ? 5 : 3;
-  const horizontalRange = isMobile ? 6 : 7;
+	/* How far across the screen hearts can be placed */
+	const maxLeft = isMobile ? 68 : 80;
+	const maxTop = isMobile ? 86 : 77;
 
-  // Vertical spacing between rows
-  const verticalMin = isMobile ? 4 : 3;
-  const verticalRange = isMobile ? 9 : 10;
+	/* Horizontal spacing between hearts */
+	const horizontalMin = isMobile ? 5 : 3;
+	const horizontalRange = isMobile ? 6 : 7;
 
-  // Starting position
-  let left = isMobile ? 5 : 7;
-  let top = 7;
+	/* Vertical spacing between rows */
+	const verticalMin = isMobile ? 4 : 3;
+	const verticalRange = isMobile ? 9 : 10;
 
-  let tempTop = top;
-  let tempVariant = "";
+	/* Starting position */
+	let left = isMobile ? 5 : 7;
+	let top = 7;
 
-  const heart = [];
+	let tempTop = top;
+	let tempVariant = "";
 
-  /*
-  ---------------------------------------
-  Generate heart positions
-  ---------------------------------------
-  */
+	const heart = [];
+	
+	/* Generate heart positions */
+	while (top <= maxTop) {
 
-  while (top <= maxTop) {
+		/* Check if we reached the right edge */
+		if (left > maxLeft) {
 
-    // Check if we reached the right edge
-    if (left > maxLeft) {
+			/* Start a new row */
+			left = Math.floor(Math.random() * 5) + 2;
 
-      // Start a new row
-      left = Math.floor(Math.random() * 5) + 2;
+			/* Move down */
+			top +=
+				Math.floor(Math.random() * verticalRange) +
+				verticalMin;
 
-      // Move down
-      top +=
-        Math.floor(Math.random() * verticalRange) +
-        verticalMin;
+			tempTop = top;
 
-      tempTop = top;
+		} else {
 
-    } else {
+			/* Move horizontally */
+			left +=
+				Math.floor(Math.random() * horizontalRange) +
+				horizontalMin;
 
-      // Move horizontally
-      left +=
-        Math.floor(Math.random() * horizontalRange) +
-        horizontalMin;
+			/* Slight vertical wiggle */
+			tempTop =
+				top +
+				(Math.floor(Math.random() * 4) - 2);
+		}
 
-      // Slight vertical wiggle
-      tempTop =
-        top +
-        (Math.floor(Math.random() * 4) - 2);
-    }
+		/* Safety check */
+		if (top > 93) {
+			break;
+		}
 
-    // Safety check
-    if (top > 93) {
-      break;
-    }
+		/* Choose animation direction */
+		if (left <= 50) {
 
-    /*
-    ---------------------------------------
-    Choose animation direction
-    ---------------------------------------
-    */
+			if (top < 40) {
+				tempVariant =
+				variants[Math.floor(Math.random() * 2)];
+			} else {
+				tempVariant = "exitLeft";
+			}
 
-    if (left <= 50) {
+		} else {
 
-      if (top < 40) {
-        tempVariant =
-          variants[Math.floor(Math.random() * 2)];
-      } else {
-        tempVariant = "exitLeft";
-      }
+			if (top < 40) {
+				tempVariant =
+				variants[Math.floor(Math.random() * 2) + 1];
+			} else {
+				tempVariant = "exitRight";
+			}
+		}
 
-    } else {
+		/* Add heart */
+		heart.push({
+			id: heart.length,
 
-      if (top < 40) {
-        tempVariant =
-          variants[Math.floor(Math.random() * 2) + 1];
-      } else {
-        tempVariant = "exitRight";
-      }
-    }
+			img:
+				emoji[
+				Math.floor(Math.random() * emoji.length)
+				],
 
-    /*
-    ---------------------------------------
-    Add heart
-    ---------------------------------------
-    */
+			left: `${left}%`,
 
-    heart.push({
-      id: heart.length,
+			top: `${tempTop}%`,
 
-      img:
-        emoji[
-          Math.floor(Math.random() * emoji.length)
-        ],
+			/* Slightly smaller range on mobile */
+			size: isMobile
+				? Math.floor(Math.random() * 5) + 2
+				: Math.floor(Math.random() * 5) + 2,
 
-      left: `${left}%`,
+			index:
+				Math.floor(Math.random() * 10) + 1,
 
-      top: `${tempTop}%`,
+			variant: tempVariant,
+		});
+	}
 
-      // Slightly smaller range on mobile
-      size: isMobile
-        ? Math.floor(Math.random() * 5) + 2
-        : Math.floor(Math.random() * 5) + 2,
-
-      index:
-        Math.floor(Math.random() * 10) + 1,
-
-      variant: tempVariant,
-    });
-  }
-
-  return heart;
+	return heart;
 }
 
-/*
------------------------------------------
-Story Cover
------------------------------------------
-*/
-
+/* Story Cover */
 export default function StoryCover({
-  isOpen,
-  onComplete,
+  	isOpen,
+  	onComplete,
 }) {
 
-  const [heart, setHeart] = useState([]);
+  	const [heart, setHeart] = useState([]);
 
-  /*
-  ---------------------------------------
-  Generate initial hearts
-  ---------------------------------------
-  */
+  	/* Generate initial hearts */
+	useEffect(() => {
+		setHeart(generateHearts());
 
-  useEffect(() => {
-    setHeart(generateHearts());
+		let isMobile = window.innerWidth <= 600;
+		let resizeTimer;
 
-    let isMobile = window.innerWidth <= 600;
-    let resizeTimer;
+		const handleResize = () => {
+			clearTimeout(resizeTimer);
 
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => {
+				const newIsMobile = window.innerWidth <= 600;
 
-      resizeTimer = setTimeout(() => {
-        const newIsMobile = window.innerWidth <= 600;
+				/* Only regenerate if crossed the mobile breakpoint */
+				if (newIsMobile !== isMobile) {
+					isMobile = newIsMobile;
+					setHeart(generateHearts());
+				}
+			}, 150);
+		};
 
-        // Only regenerate if we crossed the mobile breakpoint
-        if (newIsMobile !== isMobile) {
-          isMobile = newIsMobile;
-          setHeart(generateHearts());
-        }
-      }, 150);
-    };
+		window.addEventListener("resize", handleResize);
 
-    window.addEventListener("resize", handleResize);
+		return () => {
+			window.removeEventListener("resize", handleResize);
+			clearTimeout(resizeTimer);
+		};
+	}, []);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(resizeTimer);
-    };
-  }, []);
+  	return (
 
-  return (
+		<motion.div
+			className="story-cover"
+			initial={false}
+			animate={ isOpen
+				? "open"
+				: "closed"
+			}
+			variants={coverVariants}
+			onAnimationComplete={(definition) => {
+				if (definition === "open") {
+					onComplete();
+				}
+			}}
+		>
 
-    // Outside Container
-    <motion.div
-      className="story-cover"
+	  		<div className="story-cover-hearts">
 
-      initial={false}
+				{heart.map((heart) => (
 
-      animate={
-        isOpen
-          ? "open"
-          : "closed"
-      }
+		  			<motion.span
+						key={heart.id}
+						className="story-cover-heart"
+						variants={
+							heartVariants[
+								heart.variant
+							]
+						}
+						style={{
+							left: heart.left,
+							top: heart.top,
+							"--heart-size": `${heart.size}rem`,
+							zIndex: heart.index,
+						}}
+						aria-hidden="true"
+		  			>
+						{heart.img}
+		  			</motion.span>
 
-      variants={coverVariants}
+				))}
 
-      onAnimationComplete={(definition) => {
+				<motion.div
+					className="story-cover-overlay"
+					variants={overlayVariants}
+				>
 
-        if (definition === "open") {
-          onComplete();
-        }
+					<motion.div
+						className="story-cover-message"
+						variants={messageVariants}
+					>
 
-      }}
-    >
+						<p>
+							Ready to begin your love story?
+						</p>
 
-      <div className="story-cover-hearts">
-
-        {heart.map((heart) => (
-
-          <motion.span
-
-            key={heart.id}
-
-            className="story-cover-heart"
-
-            variants={
-              heartVariants[
-                heart.variant
-              ]
-            }
-
-            style={{
-              left: heart.left,
-              top: heart.top,
-
-              "--heart-size":
-                `${heart.size}rem`,
-
-              zIndex: heart.index,
-            }}
-
-          >
-
-            {heart.img}
-
-          </motion.span>
-
-        ))}
-
-        <motion.div
-          className="story-cover-overlay"
-          variants={overlayVariants}
-        >
-          <motion.div
-            className="story-cover-message"
-            variants={messageVariants}
-          >
-            <p>Ready to begin your love story?</p>
-
-            <span>
-              Press the button above
-            </span>
-          </motion.div>
-        </motion.div>
-
-      </div>
-    </motion.div>
-  );
+						<span>
+							Press the button above
+						</span>
+		  			</motion.div>
+				</motion.div>
+	  		</div>
+		</motion.div>
+  	);
 }

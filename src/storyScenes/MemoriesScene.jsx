@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { faArrowRight, faLocationDot, faCalendar, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import stamp1 from "../assets/icons/stamp_1.png";
@@ -8,8 +8,8 @@ import stamp2 from "../assets/icons/stamp_2.png";
 import stamp3 from "../assets/icons/stamp_3.png";
 
 export default function MemoriesScene({
-  memories = [],
-  onComplete,
+    memories = [],
+    onComplete,
 }) {
 
     const stamps = [
@@ -21,10 +21,7 @@ export default function MemoriesScene({
     const [currentMemory, setCurrentMemory] = useState(0); 
     const [isAnimating, setIsAnimating] = useState(false);
 
-    /*-----------------
-    Current Memory
-    ------------------*/
-    
+    /* Current Memory */
     const memory = memories[currentMemory];
     const [imageSrc, setImageSrc] = useState(null);
 
@@ -35,31 +32,26 @@ export default function MemoriesScene({
         return;
         }
 
-        // File Object
+        /* File Object */
         if (memory.image instanceof File) {
 
             const url = URL.createObjectURL(memory.image);
             setImageSrc(url);
 
-            // Clean up the object URL when the memory changes/unmounts
+            /* Clean up the object URL when the memory changes/unmounts */
             return () => {
                 URL.revokeObjectURL(url);
             };
         }
 
-        // URL / base64
+        /* URL / base64 */
         setImageSrc(memory.image);
     }, [memory]);
 
-
-    // Has Image?
+    /* Has Image? */
     const hasImage = Boolean(memory?.image);
 
-
-    /*----------------
-    Advance Memory
-    -----------------*/
-
+    /* Advance Memory */
     const advanceMemory = () => {
 
         if (isAnimating) {
@@ -78,18 +70,14 @@ export default function MemoriesScene({
             return;
         }
 
-        // Last memory
+        /* Last memory */
         setTimeout(() => {
             setIsAnimating(false);
             onComplete?.(true);
         }, 500);
     };
 
-
-    /*--------------
-    Swipe Handler
-    ---------------*/
-
+    /* Swipe Handler */
     const handleDragEnd = (event, info) => {
 
         const swipeDistance = Math.abs(info.offset.x);
@@ -100,9 +88,7 @@ export default function MemoriesScene({
         }
     };
 
-    /*----------
-    Card Stack
-    -----------*/
+    /* Card Stack */
     const visibleMemories = memories
         .slice(currentMemory, currentMemory + 3)
         .map((memory, index) => ({
@@ -110,9 +96,7 @@ export default function MemoriesScene({
             index: currentMemory + index,
         }));    
 
-    /*-----------
-    Scene Complete
-    ------------*/
+    /* Scene Complete */
     useEffect(() => {
 
         if (
@@ -121,18 +105,13 @@ export default function MemoriesScene({
         ) {
             onComplete?.(true);
         }
-
     }, [
         currentMemory,
         memories.length,
         onComplete,
     ]);
 
-
-    /*----------------
-    Card Variants
-    ----------------*/
-
+    /* Card Variants */
     const cardVariants = {
         initial: {
             opacity: 0,
@@ -141,18 +120,19 @@ export default function MemoriesScene({
         },
 
         visible: (position) => ({
-            opacity: position === 0 ? 1 : 0.75,
+            opacity: position === 0 
+                ? 1 
+                : 0.75,
             y: position * 14,
             x: position === 0
                 ? 0
                 : position === 1
-                ? 18
-                : -18,
+                    ? 18
+                    : -18,
             scale: 1 - position * 0.04,
-            rotate:
-                position === 0
-                    ? -2
-                    : position === 1
+            rotate: position === 0
+                ? -2
+                : position === 1
                     ? 3
                     : -4,
             transition: {
@@ -174,10 +154,7 @@ export default function MemoriesScene({
         },
     };
 
-
-    /*-------
-    Render
-    --------*/
+    /* Render */
     if (!memory) {
         return null;
     }
@@ -201,14 +178,20 @@ export default function MemoriesScene({
         >
 
             {/* Header */}
-            <h2 className="memories-header">
+            <h2 
+                id="memories-heading"
+                className="memories-header"
+            >
                 Our Memories - Little moments worth remembering
             </h2>
 
 
             {/* Memory Stack */}
-
-            <div className="memory-stack">
+            <div 
+                className="memory-stack"
+                role="region"
+                aria-labelledby="memories-heading"
+            >
 
                 <AnimatePresence>
                     {visibleMemories
@@ -220,6 +203,7 @@ export default function MemoriesScene({
                             const stackHasImage = Boolean(stackMemory?.image);
 
                             return (
+
                                 <MemoryCard
                                     key={`memory-${index}`}
                                     memory={stackMemory}
@@ -248,10 +232,19 @@ export default function MemoriesScene({
             {/* Progress */}
             <div
                 className="memories-progress"
-                aria-label={`Memory ${currentMemory + 1} of ${memories.length}`}
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
             >
 
-                <div className="memories-progress-track">
+                <div 
+                    className="memories-progress-track"
+                    role="progressbar"
+                    aria-valuemin="1"
+                    aria-valuemax={memories.length}
+                    aria-valuenow={currentMemory + 1}
+                    aria-label="Memory progress"
+                >
 
                     <motion.div
                         className="memories-progress-fill"
@@ -269,16 +262,12 @@ export default function MemoriesScene({
                     {currentMemory + 1} / {memories.length}
                 </p>
             </div>
-
         </motion.div>
     );
 }
 
-/*-------------
-Memory Card
--------------*/
-
-function MemoryCard({
+/* Memory */
+function MemoryCard ({
     memory,
     index,
     position,
@@ -293,10 +282,11 @@ function MemoryCard({
     disabled,
 }) {
 
-
-    {/* Image Memory - Polaroid */}
+    /* Image Memory - Polaroid */
     if (hasImage) {
+
         return (
+
             <motion.button
                 key={`polaroid-${index}`}
                 type="button"
@@ -322,8 +312,11 @@ function MemoryCard({
                 }}
                 aria-label={isTopCard ? "Swipe to next memory" : undefined}
             >
+
+                {/* Data and Location Container */}
                 <div className="polaroid-date">
 
+                    {/* Date */}
                     <span>
                         {memory.date}
                     </span>
@@ -333,11 +326,13 @@ function MemoryCard({
                         aria-hidden="true"
                     />
 
+                    {/* Location */}
                     <span>
                         {memory.location}
                     </span>
                 </div>
 
+                {/* Polaroid image */}
                 <div className="polaroid">
 
                     <img
@@ -347,21 +342,20 @@ function MemoryCard({
                     />
                 </div>
 
+                {/* Polaroid caption */}
                 <div className="polaroid-caption">
 
                     <p className="polaroid-description">
                         {memory.description}
                     </p>
-
                 </div>
-
             </motion.button>
         );
     }
 
-    {/* No Image - Postcard */}
-
+    /* No Image - Postcard */
     return (
+
         <motion.button
             key={`postcard-${index}`}
             type="button"
@@ -388,21 +382,22 @@ function MemoryCard({
             aria-label={isTopCard ? "Swipe to next memory" : undefined}
         >
 
+            {/* Postcard Memory - Left Side*/}
             <div className="postcard-content-left">
 
                 <p className="postcard-label">
                     A Memory
                 </p>
 
+                {/* Memory Description */}
                 <div className="postcard-description">
                     <p>
                         {memory.description}
                     </p>
                 </div>
-
-                
             </div>
 
+            {/* Vertical Dividing Line */}
             <div className="vertical-divider-cont" aria-hidden="true">
                 <div className="vertical-divider-line"/>
             </div>
@@ -413,8 +408,9 @@ function MemoryCard({
                 {/* Postcard Stamp */}
                 <div
                     className="postcard-stamp"
-                    aria-hidden="true"
                 >
+
+                    {/* Memory Date or Alternate generic holder */}
                     <p className="postcard-date">
                         {memory.date || 
                             (index % 2 === 0
@@ -424,14 +420,17 @@ function MemoryCard({
                         }
                     </p>
 
+                    {/* Stamp Image */}
                     <img
                         src={stamps[index % stamps.length]}
                         alt=""
+                        aria-hidden="true"
                     />
                 </div>
 
                 {/* Memory Location */}
                 <div className="postcard-location">
+
                     <p>
                         {memory.location || 
                             (index % 2 === 0 
@@ -442,9 +441,6 @@ function MemoryCard({
                     </p>
                 </div>
             </div>
-
-        
-
         </motion.button>
     );
 }

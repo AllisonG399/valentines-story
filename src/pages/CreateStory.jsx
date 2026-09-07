@@ -444,7 +444,49 @@ export default function CreateStory({
         copyLinkButtonRef.current?.focus();
     }, [generatedLink]);
 
-  
+    /* Scenes to be rendered for card preview */
+    const renderPreviewScene = () => {
+        switch (selectedAnimation) {
+            case "intro":
+                return (
+                    <Intro
+                        to={to}
+                        from={from}
+                        message={message}
+                        sparkle={sparkle}
+                        color={color}
+                    />
+                );
+            case "memories":
+                return (
+                    <MemoriesScene
+                        memories={memories}
+                        color={color}
+                    />
+                );
+            case "favoriteThings":
+                return (
+                    <FavoriteThingsScene
+                        favoriteThingYouDo={favoriteThingYouDo}
+                        favoritePhysicalThingAboutYou={favoritePhysicalThingAboutYou}
+                        favoriteThingYouSay={favoriteThingYouSay}
+                        favoriteThingWeDoTogether={favoriteThingWeDoTogether}
+                        color={color}
+                    />
+                )
+            case "toBeSaid":
+                return (
+                    <ToBeSaidScene
+                        toBeSaid={toBeSaid}
+                        sparkle={sparkle}
+                        color={color}
+                    />
+                );
+
+            default:
+                return null;
+        }
+    };
 
     return (
         <main className="create-message">
@@ -1119,7 +1161,11 @@ export default function CreateStory({
                     <div className="divider" aria-hidden="false"/>
 
                     {/* Preview Animation */}
-
+                    {isPreviewing && (
+                        <div className="preview-animation">
+                            {renderPreviewScene()}
+                        </div>
+                    )}
 
                     {/* Preview Animation Button */}
                     <div className="animation-btn-cont">

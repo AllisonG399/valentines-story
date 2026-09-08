@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { encodeData } from '../utils/encode';
 import Sparkles from "../components/animations/Sparkles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faArrowLeft, faArrowRight, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { compressImage } from "../utils/compressImage";
 
 import StoryCover from "../components/animations/StoryCover";
@@ -62,6 +62,8 @@ export default function CreateStory({
     const [currentScene, setCurrentScene] = useState(0);
 	const [sceneComplete, setSceneComplete] = useState(false);
 	const [isView, setIsView] = useState(false);
+
+    const memoryImageRefs = useRef([]);
 
     const updateForm = (field, value) => {
         setForm((previous) => ({
@@ -805,6 +807,61 @@ export default function CreateStory({
                         </div>
                     </fieldset>
 
+                    {/* How You Make Me Feel Section */}
+                    <h3 className="sub-section">
+                        How You Make Me Feel
+                    </h3>
+
+                    <div className="divider" aria-hidden="true"/>
+
+                    {/* The Way You... */}
+                    <label htmlFor="the-way-you">
+                        The Way You...
+                    </label>
+
+                    <textarea
+                        id="the-way-you"
+                        className="memory-input"
+                        value={`${theWayYouTemplate}${form.theWayYou}`}
+                        onChange={(e) => {
+                            const fullText = e.target.value;
+
+                            if (!fullText.startsWith(theWayYouTemplate)) {
+                                return;
+                            }
+
+                            const userText = fullText.slice(theWayYouTemplate.length);
+
+                            updateForm("theWayYou", userText);
+                        }}
+                        rows={2}
+                        required
+                    />
+
+                    {/* Makes Me Feel... */}
+                    <label htmlFor="make-me-feel">
+                        Makes Me Feel...
+                    </label>
+
+                    <textarea
+                        id="make-me-feel"
+                        className="memory-input"
+                        value={`${makesMeFeelTemplate}${form.makeMeFeel}`}
+                        onChange={(e) => {
+                            const fullText = e.target.value;
+
+                            if (!fullText.startsWith(makesMeFeelTemplate)) {
+                                return;
+                            }
+
+                            const userText = fullText.slice(makesMeFeelTemplate.length);
+
+                            updateForm("makeMeFeel", userText);
+                        }}
+                        rows={2}
+                        required
+                    />
+
                     {/* Favorite Memories */}
                     <h3 className="sub-section">Favorite Memories</h3>
                     <div className="divider" aria-hidden="true" />
@@ -894,19 +951,46 @@ export default function CreateStory({
                                 Image <span>(optional)</span>:
                             </label>
 
-                            <input
-                                id={`memory-image-${index}`}
-                                className="memory-input"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) =>
-                                handleMemoryChange(
-                                    index,
-                                    "image",
-                                    e.target.files?.[0] || null
-                                )
-                                }
-                            />
+                            <div className="memory-file-input">
+
+                                <input
+                                    ref={(element) => {
+                                        memoryImageRefs.current[index] = element;
+                                    }}
+                                    id={`memory-image-${index}`}
+                                    className="memory-image-input"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                        handleMemoryChange(
+                                            index,
+                                            "image",
+                                            e.target.files?.[0] || null
+                                        )
+                                    }
+                                />
+
+                                {memory.image && (
+                                    <button
+                                        type="button"
+                                        className="remove-image-btn"
+                                        onClick={() => {
+                                            handleMemoryChange(index, "image", null);
+
+                                            if (memoryImageRefs.current[index]) {
+                                                memoryImageRefs.current[index].value = "";
+                                            }
+                                        }}
+                                        aria-label="Remove selected image"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSquareXmark}
+                                            aria-hidden="true"
+                                            className="xmark-icon"
+                                        />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ))}
 
@@ -917,62 +1001,6 @@ export default function CreateStory({
                     >
                         Add Another Memory
                     </button>
-
-                    {/* How You Make Me Feel Section */}
-                    <h3 className="sub-section">
-                        How You Make Me Feel
-                    </h3>
-
-                    <div className="divider" aria-hidden="true"/>
-
-                    {/* The Way You... */}
-                    <label htmlFor="the-way-you">
-                        The Way You...
-                    </label>
-
-                    <textarea
-                        id="the-way-you"
-                        className="memory-input"
-                        value={`${theWayYouTemplate}${form.theWayYou}`}
-                        onChange={(e) => {
-                            const fullText = e.target.value;
-
-                            if (!fullText.startsWith(theWayYouTemplate)) {
-                                return;
-                            }
-
-                            const userText = fullText.slice(theWayYouTemplate.length);
-
-                            updateForm("theWayYou", userText);
-                        }}
-                        rows={2}
-                        required
-                    />
-
-                    {/* Makes Me Feel... */}
-                    <label htmlFor="make-me-feel">
-                        Makes Me Feel...
-                    </label>
-
-                    <textarea
-                        id="make-me-feel"
-                        className="memory-input"
-                        value={`${makesMeFeelTemplate}${form.makeMeFeel}`}
-                        onChange={(e) => {
-                            const fullText = e.target.value;
-
-                            if (!fullText.startsWith(makesMeFeelTemplate)) {
-                                return;
-                            }
-
-                            const userText = fullText.slice(makesMeFeelTemplate.length);
-
-                            updateForm("makeMeFeel", userText);
-                        }}
-                        rows={2}
-                        required
-                    />
-
 
                     {/* Favorite Things About You Section */}
                     <h3 className="sub-section">
@@ -1364,10 +1392,6 @@ export default function CreateStory({
                                 ]}
                             </p>
                         </div>
-
-                        
-
-                        
 
                         {/* Scene Progress Bar */}
                         {storyScenes.length > 0 && (() => {

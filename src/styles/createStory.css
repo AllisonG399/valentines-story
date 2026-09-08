@@ -10,6 +10,10 @@
   flex-direction: column;
 }
 
+.memory-block label {
+    margin-bottom: 5px;
+}
+
 .memory-remove-btn {
   position: absolute;
   right: 10px;
@@ -31,6 +35,60 @@
   margin-top: 5px;
 }
 
+.memory-file-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    border: 1px solid var(--pearl-blush);
+}
+
+.memory-image-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+}
+
+.remove-image-btn {
+    flex-shrink: 0;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 4px 8px 4px 0;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
+.remove-image-btn:hover {
+    transform: none;
+    box-shadow: none;
+    border: none;
+}
+
+.xmark-icon {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.xmark-icon:hover {
+    color: #ff4d4d;
+}
+
+.memory-input {
+    margin-bottom: 12px;
+}
+
 .sub-section {
   margin-top: 50px;
   margin-bottom: 0;
@@ -39,10 +97,6 @@
 
 .memory-label {
   display: inline-block;
-  margin-bottom: 10px;
-}
-
-.memory-input {
   margin-bottom: 10px;
 }
 
@@ -179,7 +233,10 @@
     max-width: 100%;
 }
 
-
+.story-preview-view-preview .make-me-feel-scene::before,
+.story-preview-view-preview .make-me-feel-scene::after {
+    display: none;
+}
 
 .unlock-card-button {
   margin-bottom: 100px;
@@ -725,12 +782,13 @@ Memories
     font-family: "Manrope", sans-serif;
     font-weight: 500;
     font-style: italic;
+    padding: 0 8px 0 0;
 }
 
 .postcard-stamp img {
-    width: 10vw;
-    max-width: 75px;
-    height: 10vw;
+    width: 8vw;
+    max-width: 65px;
+    height: 8vw;
     max-height: 75px;
     object-fit: contain;
 }

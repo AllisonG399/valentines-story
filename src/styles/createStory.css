@@ -81,10 +81,6 @@
     margin: 0;
 }
 
-.xmark-icon:hover {
-    color: #ff4d4d;
-}
-
 .memory-input {
     margin-bottom: 12px;
 }
@@ -236,6 +232,19 @@
 .story-preview-view-preview .make-me-feel-scene::before,
 .story-preview-view-preview .make-me-feel-scene::after {
     display: none;
+}
+
+.story-preview-view-preview .favorite-constellation {
+    width: min(100%, 500px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 600px) {
+
+  .story-preview-view-preview .memory-card {
+    scale: 0.8;
+  }
 }
 
 .unlock-card-button {

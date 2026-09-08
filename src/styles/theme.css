@@ -215,6 +215,11 @@ input, textarea {
     .envelope-wrapper:hover {
         border: none;
     }
+
+    .xmark-icon:hover {
+        color: #ff4d4d;
+    }
+
 }
 
 /* Classes */

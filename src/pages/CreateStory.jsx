@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion } from "framer-motion";
 import { encodeData } from '../utils/encode';
 import Sparkles from "../components/animations/Sparkles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { compressImage } from "../utils/compressImage";
 
 import StoryCover from "../components/animations/StoryCover";
@@ -57,6 +58,10 @@ export default function CreateStory({
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const [linkCopied, setLinkCopied] = useState(false);
+
+    const [currentScene, setCurrentScene] = useState(0);
+	const [sceneComplete, setSceneComplete] = useState(false);
+	const [isView, setIsView] = useState(false);
 
     const updateForm = (field, value) => {
         setForm((previous) => ({
@@ -444,49 +449,129 @@ export default function CreateStory({
         copyLinkButtonRef.current?.focus();
     }, [generatedLink]);
 
-    /* Scenes to be rendered for card preview */
-    const renderPreviewScene = () => {
-        switch (selectedAnimation) {
-            case "intro":
-                return (
-                    <Intro
-                        to={to}
-                        from={from}
-                        message={message}
-                        sparkle={sparkle}
-                        color={color}
-                    />
-                );
-            case "memories":
-                return (
-                    <MemoriesScene
-                        memories={memories}
-                        color={color}
-                    />
-                );
-            case "favoriteThings":
-                return (
-                    <FavoriteThingsScene
-                        favoriteThingYouDo={favoriteThingYouDo}
-                        favoritePhysicalThingAboutYou={favoritePhysicalThingAboutYou}
-                        favoriteThingYouSay={favoriteThingYouSay}
-                        favoriteThingWeDoTogether={favoriteThingWeDoTogether}
-                        color={color}
-                    />
-                )
-            case "toBeSaid":
-                return (
-                    <ToBeSaidScene
-                        toBeSaid={toBeSaid}
-                        sparkle={sparkle}
-                        color={color}
-                    />
-                );
+    /* Story Scene Directions */
+	const sceneDirections = {
+		0: {
+			initial: "Ready to begin your love story? Story scene guidance will appear here."
+		},
+		1: {
+			initial: "Click on the envelope to open it.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		2: {
+			initial: "Click on the fields to reveal the messages.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		3: {
+			initial: "Swipe or click the cards to reveal the memories.",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		4: {
+			initial: "Tap the hearts to discover the little things your sender loves",
+			complete: "Your next scene awaits, click the arrow to continue.",
+		},
+		5: {
+			initial: "Click on the envelope to reveal what is not said enough",
+			complete: "Your story card is complete!",
+		},
+	};
 
-            default:
-                return null;
-        }
-    };
+    /* Scenes to be rendered for card preview */
+    const storyScenes = form
+    ? [
+        {
+            id: "reveal",
+            title: "Cover",
+            component: StoryCover,
+            props: {
+                isOpen: isView,
+                onComplete: () => {
+                    setCurrentScene(1);
+                    setSceneComplete(false);
+                },
+            },
+        },
+        {
+            id: "intro",
+            title: "Introductory card",
+            component: Intro,
+            props: {
+                to: form.to,
+                from: form.from,
+                message: form.message,
+                sparkle: form.sparkle,
+                color: form.color,
+                onComplete: (complete) => {
+                    setSceneComplete(complete);
+                },
+            },
+        },
+        {
+            id: "feel",
+            title: "How you make me feel",
+            component: MakeMeFeelScene,
+            props: {
+                theWayYou: form.theWayYou,
+                makeMeFeel: form.makeMeFeel,
+                color: form.color,
+                onComplete: (complete) => {
+                    setSceneComplete(complete);
+                },
+            },
+        },
+        {
+            id: "memories",
+            title: "Our Memories",
+            component: MemoriesScene,
+            props: {
+                memories: form.memories,
+                onComplete: (complete) => {
+                    setSceneComplete(complete);
+                },
+            },
+        },
+        {
+            id: "favorites",
+            title: "My favorite things about you",
+            component: FavoriteThingsScene,
+            props: {
+                favoriteThingYouDo: form.favoriteThingYouDo,
+                favoritePhysicalThingAboutYou: form.favoritePhysicalThingAboutYou,
+                favoriteThingYouSay: form.favoriteThingYouSay,
+                favoriteThingWeDoTogether: form.favoriteThingWeDoTogether,
+                onComplete: (complete) => {
+                    setSceneComplete(complete);
+                },
+            },
+        },
+        {
+            id: "said",
+            title: "Things that go left unsaid",
+            component: ToBeSaidScene,
+            props: {
+                toBeSaid: form.toBeSaid,
+                color: form.color,
+                sparkle: form.sparkle,
+                onComplete: (complete) => {
+                    setSceneComplete(complete);
+                },
+            },
+        },
+    ]: [];
+
+    /* Handle love story navigation */
+	const handleStoryToggle = () => {
+		if (isView) {
+            setCurrentScene(0);
+            setSceneComplete(false);
+            setIsView(false);
+            return;
+		}
+
+		setCurrentScene(0);
+		setSceneComplete(false);
+		setIsView(true);
+	};
 
     return (
         <main className="create-message">
@@ -1158,26 +1243,193 @@ export default function CreateStory({
                         Card Preview
                     </h2>
 
+                    {/* Horizontal Divider Line */}
                     <div className="divider" aria-hidden="false"/>
 
-                    {/* Preview Animation */}
-                    {isPreviewing && (
-                        <div className="preview-animation">
-                            {renderPreviewScene()}
-                        </div>
-                    )}
+                    <div className="preview-scene-cont">
 
-                    {/* Preview Animation Button */}
-                    <div className="animation-btn-cont">
-                        <div className="divider animation-btn-divider" aria-hidden="true"/>
-
-                        <button 
-                            className="generate-button"
-                            type="button"
-                            onClick={() => setIsPreviewing(!isPreviewing)}
+                        {/* Scene Directions */}
+                        <div 
+                            className="scene-directions-cont"
+                            role="status"
+                            aria-live="polite"
                         >
-                            {isPreviewing ? "Close Preview" : "Preview Animation"}
-                        </button>
+                            <p>
+                                {sceneDirections[currentScene]?.[
+                                    sceneComplete ? "complete" : "initial"
+                                ]}
+                            </p>
+                        </div>
+
+                        {/* Scene Progress Bar */}
+                        {storyScenes.length > 0 && (() => {
+
+                            const progress =
+                                (currentScene / (storyScenes.length - 1)) * 100;
+
+                            return (
+
+                                <div
+                                    className="story-progress"
+                                    aria-hidden="true"
+                                >
+                                    <div
+                                        className="story-progress-fill"
+                                        style={{
+                                            width: `${progress}%`,
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })()}
+
+                        {/* Screen Reader Status */}
+                        <p className="sr-only" role="status">
+                            {storyScenes[currentScene]?.title}.
+                            Story scene {currentScene + 1} of {storyScenes.length}
+                        </p>
+
+                        {/* Story Preview */}
+                        <div
+                            className={`story-preview-view ${isView ? "show" : ""}`}
+                        >
+
+                            {/* Story */}
+                            <div
+                                className={`story-content ${
+                                    isView ? "story-content-open" : ""
+                                }`}
+                            >
+
+                                <div
+                                    className="story-scene"
+                                    role="region"
+                                    aria-label={`Story scene ${currentScene + 1} of ${storyScenes.length}`}
+                                    aria-hidden={!isView}
+                                >
+
+                                    {storyScenes.length > 0 && (() => {
+                                        const Scene = storyScenes[currentScene].component;
+                                        const props = storyScenes[currentScene].props;
+
+                                        return (
+                                            <div>
+                                            <Scene {...props} />
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Preview Animation Button */}
+                        <div className="animation-btn-cont">
+
+                            {/* Horizontal Divider Line */}
+                            <div className="divider animation-btn-divider" aria-hidden="true"/>
+
+                            <div className="story-nav-cont">
+                            
+                                {/* Back Arrow */}
+                                <button
+                                    className="view-story-nav-btn"
+                                    type="button"
+                                    onClick={() => {
+                                        setSceneComplete(false);
+                
+                                        setCurrentScene((prev) =>
+                                        Math.max(prev - 1, 1)
+                                        );
+                                    }}
+                                    aria-label="Go to previous story scene"
+                                    disabled={currentScene <= 1}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faArrowLeft}
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                
+                                {/* View Story Button */}
+                                <button
+                                    className="view-story-btn"
+                                    type="button"
+                                    onClick={handleStoryToggle}
+                                >
+                                    {isView ? "Reset" : "Begin Love Story"}
+                                </button>
+                
+                                {/* Forward Arrow */}
+                                <motion.button
+                                    className="view-story-nav-btn"
+                                    type="button"
+                                    onClick={() => {
+                                        setSceneComplete(false);
+                                        setCurrentScene((prev) =>
+                                            Math.min(
+                                                prev + 1,
+                                                storyScenes.length - 1
+                                            )
+                                        );
+                                    }}
+                                    aria-label="Go to next story scene"
+                                    disabled={
+                                        !isView ||
+                                        !sceneComplete ||
+                                        currentScene === storyScenes.length - 1
+                                    }
+                                    animate={
+                                        sceneComplete &&
+                                        currentScene < storyScenes.length - 1
+                                            ? "ready"
+                                            : "idle"
+                                    }
+                                    whileHover={
+                                        sceneComplete
+                                            ? {
+                                                y: -6,
+                                                cursor: "pointer"
+                                            }
+                                            : undefined
+                                    }
+                                    variants={{
+                                        idle: {
+                                            scale: 1,
+                                            x: 0,
+                                            y: 0,
+                                            boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
+                                            borderColor: "transparent",
+                                            pointerEvents: "none",
+                                            transition: {
+                                                duration: 0.3,
+                                                ease: "easeOut",
+                                            },
+                                        },
+                                        ready: {
+                                            scale: 1,
+                                            x: 0,
+                                            borderColor: "var(--soft-pink)",
+                                            boxShadow: [
+                                                "0 0 14px rgba(214, 91, 116, 0.10)",
+                                                "0 0 14px rgba(214, 91, 116, 0.30)",
+                                                "0 0 14px rgba(214, 91, 116, 0.10)",
+                                            ],
+                                            transition: {
+                                                duration: 1.6,
+                                                repeat: Infinity,
+                                                repeatDelay: 2,
+                                                ease: "easeInOut",
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faArrowRight}
+                                        aria-hidden="true"
+                                    />
+                                </motion.button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

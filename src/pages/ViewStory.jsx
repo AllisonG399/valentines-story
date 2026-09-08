@@ -438,10 +438,10 @@ export default function ViewStory() {
 	/* Handle love story navigation */
 	const handleStoryToggle = () => {
 		if (isView) {
-		setCurrentScene(0);
-		setSceneComplete(false);
-		setIsView(false);
-		return;
+			setCurrentScene(0);
+			setSceneComplete(false);
+			setIsView(false);
+			return;
 		}
 
 		setCurrentScene(0);

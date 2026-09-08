@@ -54,6 +54,14 @@
   max-width: 1200px;
 }
 
+.preview-scene-cont {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
 .view-story-nav-btn {
     display: flex;
     align-items: center;

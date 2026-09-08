@@ -54,6 +54,13 @@
   max-width: 1200px;
 }
 
+.story-nav-cont-preview {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .preview-scene-cont {
     width: 100%;
     max-width: 100%;
@@ -85,6 +92,15 @@
   border-radius: 999px;
 
   overflow: hidden;
+}
+
+.story-progress-preview {
+    margin-top: .5rem;
+    width: 100%;
+    height: 6px;
+    background: rgba(248, 218, 226, 0.95);
+    border-radius: 999px;
+    overflow: hidden;
 }
 
 .story-progress-fill {
@@ -127,6 +143,44 @@
   justify-content: center;
 }
 
+.story-preview-view-preview {
+    background-color: var(--white-linen);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    width: 100%;
+    height: 75vh;
+    max-height: 600px;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.story-content-preview {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.story-scene-preview {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.story-preview-view-preview .story-cover,
+.story-preview-view-preview .intro-scene,
+.story-preview-view-preview .make-me-feel-scene,
+.story-preview-view-preview .memories-scene,
+.story-preview-view-preview .favorites-scene,
+.story-preview-view-preview .said-scene {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+
 .unlock-card-button {
   margin-bottom: 100px;
 }
@@ -135,6 +189,12 @@
     margin-top: 2rem;
     width: 90vw;
     max-width: 1200px;
+    text-align: center;
+}
+
+.scene-directions-cont-preview {
+    margin-top: 2rem;
+    width: 100%;
     text-align: center;
 }
 
@@ -871,7 +931,8 @@ Favorite Things
 }
 
 .favorite-reveal-area {
-    width: min(80vw, 900px);
+    width: 100%;
+    max-width: 900px;
 
     min-height: 100px;
 

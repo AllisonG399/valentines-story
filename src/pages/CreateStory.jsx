@@ -599,11 +599,11 @@ export default function CreateStory({
                 </div>
             </section>
 
-            <section className="message-container">
+            <section className="story-message-container">
 
                 {/* Form */}
                 <form 
-                    className="form-container" 
+                    className="story-form-container" 
                     onSubmit={handleSubmit}
                     aria-labelledby="story-card-title"
                 >
@@ -1236,7 +1236,7 @@ export default function CreateStory({
                 </form>
 
                 {/* Preview */}
-                <div className="preview-container">
+                <div className="story-preview-container">
 
                     {/* Preview Header */}
                     <h2 className="static-card">
@@ -1248,9 +1248,113 @@ export default function CreateStory({
 
                     <div className="preview-scene-cont">
 
+                        {/* Preview Animation Button */}
+                        <div className="story-nav-cont-preview">
+                        
+                            {/* Back Arrow */}
+                            <button
+                                className="view-story-nav-btn"
+                                type="button"
+                                onClick={() => {
+                                    setSceneComplete(false);
+            
+                                    setCurrentScene((prev) =>
+                                    Math.max(prev - 1, 1)
+                                    );
+                                }}
+                                aria-label="Go to previous story scene"
+                                disabled={currentScene <= 1}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    aria-hidden="true"
+                                />
+                            </button>
+            
+                            {/* View Story Button */}
+                            <button
+                                className="view-story-btn"
+                                type="button"
+                                onClick={handleStoryToggle}
+                            >
+                                {isView ? "Reset" : "Begin Love Story"}
+                            </button>
+            
+                            {/* Forward Arrow */}
+                            <motion.button
+                                className="view-story-nav-btn"
+                                type="button"
+                                onClick={() => {
+                                    setSceneComplete(false);
+                                    setCurrentScene((prev) =>
+                                        Math.min(
+                                            prev + 1,
+                                            storyScenes.length - 1
+                                        )
+                                    );
+                                }}
+                                aria-label="Go to next story scene"
+                                disabled={
+                                    !isView ||
+                                    !sceneComplete ||
+                                    currentScene === storyScenes.length - 1
+                                }
+                                animate={
+                                    sceneComplete &&
+                                    currentScene < storyScenes.length - 1
+                                        ? "ready"
+                                        : "idle"
+                                }
+                                whileHover={
+                                    sceneComplete
+                                        ? {
+                                            y: -6,
+                                            cursor: "pointer"
+                                        }
+                                        : undefined
+                                }
+                                variants={{
+                                    idle: {
+                                        scale: 1,
+                                        x: 0,
+                                        y: 0,
+                                        boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
+                                        borderColor: "transparent",
+                                        pointerEvents: "none",
+                                        transition: {
+                                            duration: 0.3,
+                                            ease: "easeOut",
+                                        },
+                                    },
+                                    ready: {
+                                        scale: 1,
+                                        x: 0,
+                                        borderColor: "var(--soft-pink)",
+                                        boxShadow: [
+                                            "0 0 14px rgba(214, 91, 116, 0.10)",
+                                            "0 0 14px rgba(214, 91, 116, 0.30)",
+                                            "0 0 14px rgba(214, 91, 116, 0.10)",
+                                        ],
+                                        transition: {
+                                            duration: 1.6,
+                                            repeat: Infinity,
+                                            repeatDelay: 2,
+                                            ease: "easeInOut",
+                                        },
+                                    },
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faArrowRight}
+                                    aria-hidden="true"
+                                />
+                            </motion.button>
+                        </div>
+                        
+
                         {/* Scene Directions */}
                         <div 
-                            className="scene-directions-cont"
+                            className="scene-directions-cont-preview"
                             role="status"
                             aria-live="polite"
                         >
@@ -1261,6 +1365,10 @@ export default function CreateStory({
                             </p>
                         </div>
 
+                        
+
+                        
+
                         {/* Scene Progress Bar */}
                         {storyScenes.length > 0 && (() => {
 
@@ -1270,7 +1378,7 @@ export default function CreateStory({
                             return (
 
                                 <div
-                                    className="story-progress"
+                                    className="story-progress-preview"
                                     aria-hidden="true"
                                 >
                                     <div
@@ -1291,18 +1399,18 @@ export default function CreateStory({
 
                         {/* Story Preview */}
                         <div
-                            className={`story-preview-view ${isView ? "show" : ""}`}
+                            className={`story-preview-view-preview ${isView ? "show" : ""}`}
                         >
 
                             {/* Story */}
                             <div
-                                className={`story-content ${
+                                className={`story-content-preview ${
                                     isView ? "story-content-open" : ""
                                 }`}
                             >
 
                                 <div
-                                    className="story-scene"
+                                    className="story-scene-preview"
                                     role="region"
                                     aria-label={`Story scene ${currentScene + 1} of ${storyScenes.length}`}
                                     aria-hidden={!isView}
@@ -1322,114 +1430,9 @@ export default function CreateStory({
                             </div>
                         </div>
 
-                        {/* Preview Animation Button */}
-                        <div className="animation-btn-cont">
+                        {/* Horizontal Divider Line */}
+                        <div className="divider preview-story-divider" aria-hidden="true"/>
 
-                            {/* Horizontal Divider Line */}
-                            <div className="divider animation-btn-divider" aria-hidden="true"/>
-
-                            <div className="story-nav-cont">
-                            
-                                {/* Back Arrow */}
-                                <button
-                                    className="view-story-nav-btn"
-                                    type="button"
-                                    onClick={() => {
-                                        setSceneComplete(false);
-                
-                                        setCurrentScene((prev) =>
-                                        Math.max(prev - 1, 1)
-                                        );
-                                    }}
-                                    aria-label="Go to previous story scene"
-                                    disabled={currentScene <= 1}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faArrowLeft}
-                                        aria-hidden="true"
-                                    />
-                                </button>
-                
-                                {/* View Story Button */}
-                                <button
-                                    className="view-story-btn"
-                                    type="button"
-                                    onClick={handleStoryToggle}
-                                >
-                                    {isView ? "Reset" : "Begin Love Story"}
-                                </button>
-                
-                                {/* Forward Arrow */}
-                                <motion.button
-                                    className="view-story-nav-btn"
-                                    type="button"
-                                    onClick={() => {
-                                        setSceneComplete(false);
-                                        setCurrentScene((prev) =>
-                                            Math.min(
-                                                prev + 1,
-                                                storyScenes.length - 1
-                                            )
-                                        );
-                                    }}
-                                    aria-label="Go to next story scene"
-                                    disabled={
-                                        !isView ||
-                                        !sceneComplete ||
-                                        currentScene === storyScenes.length - 1
-                                    }
-                                    animate={
-                                        sceneComplete &&
-                                        currentScene < storyScenes.length - 1
-                                            ? "ready"
-                                            : "idle"
-                                    }
-                                    whileHover={
-                                        sceneComplete
-                                            ? {
-                                                y: -6,
-                                                cursor: "pointer"
-                                            }
-                                            : undefined
-                                    }
-                                    variants={{
-                                        idle: {
-                                            scale: 1,
-                                            x: 0,
-                                            y: 0,
-                                            boxShadow: "0 0 0 rgba(214, 91, 116, 0)",
-                                            borderColor: "transparent",
-                                            pointerEvents: "none",
-                                            transition: {
-                                                duration: 0.3,
-                                                ease: "easeOut",
-                                            },
-                                        },
-                                        ready: {
-                                            scale: 1,
-                                            x: 0,
-                                            borderColor: "var(--soft-pink)",
-                                            boxShadow: [
-                                                "0 0 14px rgba(214, 91, 116, 0.10)",
-                                                "0 0 14px rgba(214, 91, 116, 0.30)",
-                                                "0 0 14px rgba(214, 91, 116, 0.10)",
-                                            ],
-                                            transition: {
-                                                duration: 1.6,
-                                                repeat: Infinity,
-                                                repeatDelay: 2,
-                                                ease: "easeInOut",
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faArrowRight}
-                                        aria-hidden="true"
-                                    />
-                                </motion.button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>

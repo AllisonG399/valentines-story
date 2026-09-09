@@ -215,6 +215,11 @@ input, textarea {
     .envelope-wrapper:hover {
         border: none;
     }
+
+    .xmark-icon:hover {
+        color: #ff4d4d;
+    }
+
 }
 
 /* Classes */
@@ -381,7 +386,7 @@ input, textarea {
   border: 1px solid var(--soft-pink);
 }
 
-.form-container, .preview-container {
+.form-container, .preview-container, .story-form-container, .story-preview-container {
     background-color: var(--white-linen);
     border-radius: 16px; 
     border: 1px solid rgba(0, 0, 0, 0.05);

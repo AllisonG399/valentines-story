@@ -302,6 +302,10 @@
   width: 100%;
 }
 
+.preview-story-divider {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
 
 
 /* Desktop / devices with a real hover */

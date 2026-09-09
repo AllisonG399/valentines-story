@@ -35,6 +35,10 @@ function getCardFromURL() {
 		// Remove the route prefix
 		const encoded = hash.replace("#/vs/", "");
 
+        console.log("Full URL:", window.location.href);
+        console.log("Hash:", hash);
+        console.log("Encoded:", encoded);
+
 		// Reject the URL if no card data is provided
 		if (!encoded) {
 
@@ -45,8 +49,12 @@ function getCardFromURL() {
 			};
 		}
 
+        console.log("Attempting to decode:", encoded);
+
 		// Decode the card data from the URL
 		const decoded = decodeData(encoded);
+
+        console.log("Decoded:", decoded);
 
 		// Make sure the decoded data is a valid object
 		if (!decoded || typeof decoded !== "object") {
@@ -206,7 +214,7 @@ export default function ViewStory() {
 
 		return (
 
-			<main className="view-message">
+			<main className="view-message invalid-url">
 
 				<h1>
 					Invalid Love Letter Link <span aria-hidden="true">💔</span>
@@ -225,7 +233,7 @@ export default function ViewStory() {
 
 		return (
 
-			<main className="view-message">
+			<main className="view-message invalid-url">
 
 				<h1>
 					This Love Letter Has Expired <span aria-hidden="true">💔</span>

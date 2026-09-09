@@ -264,6 +264,10 @@
     text-align: center;
 }
 
+.invalid-url {
+    padding: 10px;
+}
+
 /*-----------------
 Story Cover Hearts
 -----------------*/

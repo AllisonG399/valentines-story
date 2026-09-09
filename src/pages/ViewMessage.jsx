@@ -168,7 +168,7 @@ export default function ViewMessage() {
   // -------------------------
   if (invalid) {
     return (
-      <main className="view-message">
+      <main className="view-message invalid-url">
         <h1>
           Invalid Love Letter Link <span aria-hidden="true">💔</span>
         </h1>
@@ -185,7 +185,7 @@ export default function ViewMessage() {
   // -------------------------
   if (expired) {
     return (
-      <main className="view-message">
+      <main className="view-message invalid-url">
         <h1>
           This Love Letter Has Expired <span aria-hidden="true">💔</span>
         </h1>

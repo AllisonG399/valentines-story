@@ -165,7 +165,7 @@ export default function CreateMessage({
     // Encode and create link
     const encoded = encodeData(payload);
 
-    const link = `${window.location.origin}/#/vm/${encoded}`;
+    const link = `${window.location.origin}${import.meta.env.BASE_URL}#/vm/${encoded}`;
 
     setGeneratedLink(link);
 

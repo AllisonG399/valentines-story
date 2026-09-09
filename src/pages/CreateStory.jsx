@@ -334,7 +334,7 @@ export default function CreateStory({
         // Encode and create link
         const encoded = encodeData(payload);
 
-        const link = `${window.location.origin}/#/vs/${encoded}`;
+        const link = `${window.location.origin}${import.meta.env.BASE_URL}#/vs/${encoded}`;
 
         setGeneratedLink(link);
 

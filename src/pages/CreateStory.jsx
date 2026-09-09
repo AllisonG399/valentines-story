@@ -149,7 +149,7 @@ export default function CreateStory({
     const makesMeFeelTemplate = "Makes me feel... ";
 
     /* Things I dont say enough */
-    const MAX_TO_BE_SAID = 10;
+    const MAX_TO_BE_SAID = 5;
 
     const handleToBeSaidAdd = () => {
         if (form.toBeSaid.length >= MAX_TO_BE_SAID) return;
@@ -881,9 +881,7 @@ export default function CreateStory({
                             )}
 
                             <h4 className="memory-label">
-                                {index === 0
-                                ? "Most Favorite Memory"
-                                : `Memory ${index + 1}`}
+                                Memory - {index + 1} / {MAX_MEMORIES}
                             </h4>
 
                             {/* Description */}
@@ -994,13 +992,15 @@ export default function CreateStory({
                         </div>
                     ))}
 
-                    <button
-                        type="button"
-                        className="add-memory-btn"
-                        onClick={handleAddMemory}
-                    >
-                        Add Another Memory
-                    </button>
+                    {form.memories.length < MAX_MEMORIES && (
+                        <button
+                            type="button"
+                            className="add-memory-btn"
+                            onClick={handleAddMemory}
+                        >
+                            Add Another Memory
+                        </button>
+                    )}
 
                     {/* Favorite Things About You Section */}
                     <h3 className="sub-section">
@@ -1097,10 +1097,7 @@ export default function CreateStory({
                                 htmlFor={`to-be-said-${index}`}
                                 className="memory-label"
                             >
-                                {index === 0
-                                    ? "Most Important Thing I Don't Say Enough:"
-                                    : `Item ${index + 1}:`
-                                }
+                                What I Don't Say Enough - {index + 1} / {MAX_TO_BE_SAID}
                             </label>
 
                             <textarea
@@ -1117,13 +1114,15 @@ export default function CreateStory({
                     ))}
 
                     {/* Add another item */}
-                    <button
-                        type="button"
-                        className="add-memory-btn"
-                        onClick={handleToBeSaidAdd}
-                    >
-                        Add Another
-                    </button>
+                    {form.toBeSaid.length < MAX_TO_BE_SAID && (
+                        <button
+                            type="button"
+                            className="add-memory-btn"
+                            onClick={handleToBeSaidAdd}
+                        >
+                            Add Another
+                        </button>
+                    )}
 
                     <div className="divider" aria-hidden="true"/>
 
